@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
+import { IPayload } from './interfaces/payload';
+import { LoginDto } from '../auth/dto/login.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +16,11 @@ export class UsersService {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
+  /**
+   * Create new user
+   * @param {CreateUserInput} createUserInput
+   * @returns {object} user infos
+   */
   async create(createUserInput: CreateUserInput) {
     const { email, provider } = createUserInput;
     const user = await this.repo.findOne({ email });
@@ -31,18 +38,33 @@ export class UsersService {
       .then((e) => CreateUserInput.fromEntity(e));
   }
 
+  /**
+   * Finds all users related with (user role & role permissions)
+   * @returns  {Array} of users info
+   */
   async findAll() {
     return await this.repo
       .find({ relations: ['role', 'role.permissions'] })
       .then((users) => users.map((e) => CreateUserInput.fromEntity(e)));
   }
 
+  /**
+   * Finds one user
+   * @param {string} id of user
+   * @returns  {object} user infos
+   */
   async findOne(id: string) {
     return await this.repo
       .findOne(id)
       .then((user) => CreateUserInput.fromEntity(user));
   }
 
+  /**
+   * Updates user
+   * @param {string} id of user
+   * @param {UpdateUserInput} updateUserInput
+   * @returns {object} user infos or exeption
+   */
   async update(id: string, updateUserInput: UpdateUserInput) {
     const user = await this.repo.findOne({ id });
     if (!user) {
@@ -57,6 +79,11 @@ export class UsersService {
       .then((e) => CreateUserInput.fromEntity(e));
   }
 
+  /**
+   * Removes user
+   * @param {string} id of user
+   * @returns {object} removed user data or exeption
+   */
   async remove(id: string) {
     const userToDelete = await this.findOne(id);
     if (!userToDelete) {
@@ -69,8 +96,13 @@ export class UsersService {
     return userToDelete;
   }
 
-  async findByLogin(userDTO: any): Promise<any> {
-    const { email, password } = userDTO;
+  /**
+   * Finds user by email and password
+   * @param {LoginDto} userDTO
+   * @returns {object} user info or exeption
+   */
+  async findByLogin(loginDTO: LoginDto): Promise<any> {
+    const { email, password } = loginDTO;
     const user = await this.repo.findOne({ email });
 
     if (!user) {
@@ -90,8 +122,15 @@ export class UsersService {
     }
   }
 
-  async findByPayload(payload: any): Promise<any> {
-    const { email } = payload;
-    return await this.repo.findOne({ email });
+  /**
+   * Finds by payload
+   * @param {IPayload} payload
+   * @returns {User} user data
+   */
+  async findByPayload(payload: IPayload): Promise<any> {
+    const { email, username } = payload;
+    return await this.repo.findOne({
+      where: [{ email }, { username }],
+    });
   }
 }

@@ -1,6 +1,6 @@
 export interface IPayload {
   email: string;
-  username?: string;
+  username: string;
   iat?: number;
   expiresIn?: string;
 }

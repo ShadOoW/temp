@@ -1,3 +1,4 @@
+// functions permission actions
 export enum Actions {
   Manage = 'manage',
   Create = 'create',

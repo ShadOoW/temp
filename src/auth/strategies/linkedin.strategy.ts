@@ -11,11 +11,14 @@ export class LinkedinStrategy extends PassportStrategy(Strategy, 'linkedin') {
     super({
       clientID: process.env.LINKEDIN_APP_ID,
       clientSecret: process.env.LINKEDIN_APP_SECRET,
-      callbackURL: 'http://localhost:3000/api/v1/auth/linkedin/redirect',
+      callbackURL: process.env.LINKEDIN_CALLBACK,
       scope: ['r_emailaddress', 'r_liteprofile'],
     });
   }
-
+  /**
+   * Validate linkedin strategy
+   * @returns {User} linkedin user infos
+   */
   async validate(
     token,
     tokenSecret,
@@ -23,9 +26,7 @@ export class LinkedinStrategy extends PassportStrategy(Strategy, 'linkedin') {
     done: (error: any, user?: any, info?: any) => void,
   ): Promise<any> {
     const { name, emails, provider, id, photos } = profile;
-    console.log(profile);
     const user = {
-      //   ...profile,
       providerId: id,
       provider,
       email: emails[0].value,

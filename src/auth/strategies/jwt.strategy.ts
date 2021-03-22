@@ -15,6 +15,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * Validate JWT strategy
+   * @returns {User} user infos
+   */
   async validate(
     payload: IPayload,
     done: VerifiedCallback,

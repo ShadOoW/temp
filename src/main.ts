@@ -1,10 +1,15 @@
-import 'dotenv/config';
+/**
+ * Main.ts is the bootstrap of the App start with AppModule
+ * The App use Swagger for documenting, and Express for APIs
+ * All routes strat with prefix API/V1 means first version of the app
+ */
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as Express from 'express';
-import * as cors from 'cors';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as Express from 'express';
+import * as cors from 'cors';
+import 'dotenv/config';
+import { AppModule } from './app.module';
 import { configService } from './config/config.service';
 
 const server = Express();

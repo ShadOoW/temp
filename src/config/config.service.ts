@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+/**
+ * ConfigService responsible for get values and status from the environment file
+ */
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 require('dotenv').config();
@@ -29,6 +32,7 @@ class ConfigService {
     return mode != 'DEV';
   }
 
+  // Configuration of database with postgress
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
