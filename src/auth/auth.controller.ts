@@ -9,11 +9,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { CreateUserInput } from '../users/dto/create-user.input';
+import { UserDto } from '../users/dto/user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../users/entities/user.entity';
+import { IUser } from '../users/interfaces/user';
 
 @Controller('auth')
 export class AuthController {
@@ -24,13 +24,13 @@ export class AuthController {
 
   /**
    * Register user with local provider
-   * @param {CreateUserInput} userDTO
+   * @param {UserDto} userDTO
    * @returns {Object} user info with access token
    */
   @Post('register')
   async register(
-    @Body() userDTO: CreateUserInput,
-  ): Promise<{ user: User; token: string }> {
+    @Body() userDTO: UserDto,
+  ): Promise<{ user: IUser; token: string }> {
     return await this.authService.registerUser(userDTO);
   }
 
@@ -50,8 +50,10 @@ export class AuthController {
    */
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req) {
-    const userDTO: CreateUserInput = req.user;
+  async googleAuthRedirect(
+    @Req() req,
+  ): Promise<{ user: IUser; token: string }> {
+    const userDTO: UserDto = req.user;
     return await this.authService.registerUser(userDTO);
   }
 
@@ -71,8 +73,10 @@ export class AuthController {
    */
   @Get('facebook/redirect')
   @UseGuards(AuthGuard('facebook'))
-  async facebookLoginRedirect(@Req() req): Promise<any> {
-    const userDTO: CreateUserInput = req.user;
+  async facebookLoginRedirect(
+    @Req() req,
+  ): Promise<{ user: IUser; token: string }> {
+    const userDTO: UserDto = req.user;
     return await this.authService.registerUser(userDTO);
   }
 
@@ -92,8 +96,10 @@ export class AuthController {
    */
   @Get('linkedin/redirect')
   @UseGuards(AuthGuard('linkedin'))
-  async linkedinLoginRedirect(@Req() req): Promise<any> {
-    const userDTO: CreateUserInput = req.user;
+  async linkedinLoginRedirect(
+    @Req() req,
+  ): Promise<{ user: IUser; token: string }> {
+    const userDTO: UserDto = req.user;
     return await this.authService.registerUser(userDTO);
   }
 
@@ -105,7 +111,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() userDto: LoginDto,
-  ): Promise<{ user: User; token: string }> {
+  ): Promise<{ user: IUser; token: string }> {
     const user = await this.usersService.findByLogin(userDto);
 
     const payload = {

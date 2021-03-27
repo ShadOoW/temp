@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 import { UsersService } from '../users/users.service';
 import { IPayload } from '../users/interfaces/payload';
-import { CreateUserInput } from '../users/dto/create-user.input';
+import { UserDto } from '../users/dto/user.dto';
+import { IUser } from 'src/users/interfaces/user';
 
 @Injectable()
 export class AuthService {
@@ -24,20 +25,20 @@ export class AuthService {
    * @param {IPayload} payload
    * @returns {User} user
    */
-  async validateUser(payload: IPayload): Promise<any> {
+  async validateUser(payload: IPayload): Promise<IUser> {
     return await this.usersService.findByPayload(payload);
   }
 
   /**
    * Create user from Userservice
-   * @param {CreateUserInput} userDTO
+   * @param {UserDto} userDTO
    * @returns {(User,string)} user info with access token
    */
   async registerUser(
-    userDTO: CreateUserInput,
-  ): Promise<{ user: any; token: string }> {
-    const getUserDto = CreateUserInput.from(userDTO);
-    const user = await this.usersService.create(getUserDto);
+    userDTO: UserDto,
+  ): Promise<{ user: IUser; token: string }> {
+    const createUserDto = UserDto.toEntity(userDTO);
+    const user = await this.usersService.create(createUserDto);
     const payload = {
       username: user.username,
       email: user.email,

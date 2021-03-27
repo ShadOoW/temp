@@ -1,21 +1,20 @@
-import { CreateUserInput } from './create-user.input';
-import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsUUID, IsEmail, IsBoolean } from 'class-validator';
 import { User } from '../entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { Role } from '../../roles/entities/role.entity';
+import { IUser } from '../interfaces/user';
 
 @InputType()
-export class UpdateUserInput extends PartialType(CreateUserInput) {
+export class UserDto {
   @Field(() => String, { nullable: true })
   @IsUUID()
   id: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   firstName: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   lastName: string;
 
@@ -27,15 +26,15 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
   @IsEmail()
   email: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   phone: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   password: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   picture: string;
 
@@ -43,20 +42,20 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
   @IsString()
   provider: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   providerId: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   @IsBoolean()
   isAdmin: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
   role: Role;
 
-  public static from(dto: Partial<CreateUserInput>) {
-    const it = new CreateUserInput();
+  public static from(dto: Partial<UserDto>) {
+    const it = new UserDto();
     it.id = dto.id;
     it.firstName = dto.firstName;
     it.lastName = dto.lastName;
@@ -71,7 +70,7 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
     return it;
   }
 
-  public static fromEntity(entity: User) {
+  public static fromEntity(entity: User): IUser {
     return this.from({
       id: entity.id,
       firstName: entity.firstName,
@@ -80,9 +79,23 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
       email: entity.email,
       phone: entity.phone,
       picture: entity.picture,
-      provider: entity.provider,
-      providerId: entity.providerId,
       role: entity.role,
     });
+  }
+
+  public static toEntity(inputs: Partial<UserDto>) {
+    const it = new User();
+    it.id = inputs.id;
+    it.firstName = inputs.firstName;
+    it.lastName = inputs.lastName;
+    it.username = inputs.username;
+    it.email = inputs.email;
+    it.phone = inputs.phone;
+    it.picture = inputs.picture;
+    it.provider = inputs.provider;
+    it.providerId = inputs.providerId;
+    it.role = inputs.role;
+    it.password = inputs.password;
+    return it;
   }
 }

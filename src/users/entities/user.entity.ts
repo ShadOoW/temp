@@ -1,52 +1,59 @@
-import { Entity, Column, ManyToOne, JoinTable } from 'typeorm';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Entity, Column, ManyToOne, BeforeInsert } from 'typeorm';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { Role } from '../../roles/entities/role.entity';
+import * as bcrypt from 'bcrypt';
 
 @ObjectType()
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 300 })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   firstName: string;
 
   @Column({ type: 'varchar', length: 300 })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   lastName: string;
 
   @Column({ type: 'varchar', length: 300 })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   email: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   username: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   password: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
-  phone?: string;
+  @BeforeInsert()
+  async hashPassword() {
+    const hash = this.password ? await bcrypt.hash(this.password, 10) : '';
+    this.password = hash;
+  }
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
-  picture?: string;
+  @Field(() => String, { nullable: true })
+  phone: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Field(() => String, { nullable: true })
+  picture: string;
 
   @Column({ type: 'varchar', length: 300, default: 'local' })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   provider: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   providerId: string;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   isAdmin: boolean;
 
   @ManyToOne(() => Role, (role) => role.users)
-  @Field(() => Role)
+  @Field(() => Role, { nullable: true })
   role: Role;
 }
