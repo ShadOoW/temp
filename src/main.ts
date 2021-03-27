@@ -18,6 +18,7 @@ server.get('/', (req, res) => res.send('ok'));
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  app.setGlobalPrefix('api/v1');
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(
       app,
@@ -29,7 +30,6 @@ async function bootstrap() {
 
     SwaggerModule.setup('docs', app, document);
   }
-  app.setGlobalPrefix('api/v1');
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
