@@ -1,11 +1,10 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsUUID } from 'class-validator';
+import { IsString } from 'class-validator';
 import { Permission } from '../entities/permission.entity';
 
 @InputType()
 export class CreatePermissionInput implements Readonly<CreatePermissionInput> {
   @Field(() => String, { nullable: true })
-  @IsUUID()
   id: string;
 
   @Field(() => String)

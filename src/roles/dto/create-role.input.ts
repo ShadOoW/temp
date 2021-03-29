@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsUUID, IsArray } from 'class-validator';
+import { IsString, IsArray } from 'class-validator';
 import { Role } from '../entities/role.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
@@ -8,7 +8,6 @@ import { User } from 'src/users/entities/user.entity';
 @InputType()
 export class CreateRoleInput {
   @Field(() => String, { nullable: true })
-  @IsUUID()
   id: string;
 
   @Field(() => String)
