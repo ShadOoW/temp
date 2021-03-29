@@ -1,21 +1,28 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsUUID, IsEmail, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsBoolean,
+  IsNotEmpty,
+  IsUUID,
+} from 'class-validator';
 import { User } from '../entities/user.entity';
 import { Role } from '../../roles/entities/role.entity';
-import { IUser } from '../interfaces/user';
 
 @InputType()
-export class UserDto {
+export class CreateUserInput {
   @Field(() => String, { nullable: true })
-  @IsUUID()
   id: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
   firstName: string;
 
   @Field(() => String, { nullable: true })
   @IsString()
+  @IsOptional()
   lastName: string;
 
   @Field(() => String)
@@ -27,14 +34,17 @@ export class UserDto {
   email: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
   phone: string;
 
   @Field(() => String, { nullable: true })
   @IsString()
+  @IsNotEmpty()
   password: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
   picture: string;
 
@@ -43,6 +53,7 @@ export class UserDto {
   provider: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
   providerId: string;
 
@@ -51,39 +62,10 @@ export class UserDto {
   isAdmin: boolean;
 
   @Field(() => String, { nullable: true })
-  @IsString()
+  @IsUUID()
   role: Role;
 
-  public static from(dto: Partial<UserDto>) {
-    const it = new UserDto();
-    it.id = dto.id;
-    it.firstName = dto.firstName;
-    it.lastName = dto.lastName;
-    it.username = dto.username;
-    it.phone = dto.phone;
-    it.picture = dto.picture;
-    it.email = dto.email;
-    it.password = dto.password;
-    it.provider = dto.provider;
-    it.providerId = dto.providerId;
-    it.role = dto.role;
-    return it;
-  }
-
-  public static fromEntity(entity: User): IUser {
-    return this.from({
-      id: entity.id,
-      firstName: entity.firstName,
-      lastName: entity.lastName,
-      username: entity.username,
-      email: entity.email,
-      phone: entity.phone,
-      picture: entity.picture,
-      role: entity.role,
-    });
-  }
-
-  public static toEntity(inputs: Partial<UserDto>) {
+  public static toEntity(inputs: Partial<CreateUserInput>) {
     const it = new User();
     it.id = inputs.id;
     it.firstName = inputs.firstName;

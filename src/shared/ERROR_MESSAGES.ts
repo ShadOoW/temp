@@ -4,4 +4,5 @@ export const ERROR_MESSAGES = {
   EXISTED_USER: 'User already exists',
   PRODUCT_NOT_FOUND: 'Product not found',
   NOT_OWNING_PRODUCT: 'You do not own this product',
+  PASSWORD_REQUIRED: 'password is required',
 };

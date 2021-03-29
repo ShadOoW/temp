@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { UserDto } from './dto/user.dto';
+import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { IPayload } from './interfaces/payload';
 import { LoginDto } from '../auth/dto/login.dto';
 import { IUser } from './interfaces/user';
+import { CreateUserInput } from './dto/create-user.input';
 
 @Injectable()
 export class UsersService {
@@ -16,25 +17,45 @@ export class UsersService {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
+  private getUser(userEntity: IUser): IUser {
+    return {
+      id: userEntity.id,
+      firstName: userEntity.firstName,
+      lastName: userEntity.lastName,
+      username: userEntity.username,
+      email: userEntity.email,
+      phone: userEntity.phone,
+      picture: userEntity.picture,
+      role: {
+        id: userEntity.role?.id,
+        name: userEntity.role?.name,
+        permissions: [
+          ...userEntity.role?.permissions.map((permission) => ({
+            id: permission.id,
+            name: permission.name,
+          })),
+        ],
+      },
+    };
+  }
   /**
    * Create new user
-   * @param {UserDto} createUserInput
+   * @param {CreateUserInput} createUserInput
    * @returns {object} user infos
    */
-  async create(createUserInputs: UserDto): Promise<IUser> {
-    const { email, provider } = createUserInputs;
-    const createUserDto = UserDto.toEntity(createUserInputs);
-    const user = await this.repo.findOne({ email });
-    if (user) {
-      if (provider === 'local')
-        throw new HttpException(
-          ERROR_MESSAGES.EXISTED_USER,
-          HttpStatus.BAD_REQUEST,
-        );
-      else return UserDto.fromEntity(user);
-    }
-
-    return this.repo.save(createUserDto).then((e) => UserDto.fromEntity(e));
+  async create(createUserInputs: CreateUserInput): Promise<IUser> {
+    const { provider, password } = createUserInputs;
+    const createUserDto = CreateUserInput.toEntity(createUserInputs);
+    if (provider === 'local' && !password)
+      throw new HttpException(
+        ERROR_MESSAGES.PASSWORD_REQUIRED,
+        HttpStatus.BAD_REQUEST,
+      );
+    return this.repo
+      .save(createUserDto)
+      .then(async (createdUser) =>
+        this.getUser(await this.findOne(createdUser.id)),
+      );
   }
 
   /**
@@ -44,7 +65,7 @@ export class UsersService {
   async findAll(): Promise<IUser[]> {
     return await this.repo
       .find({ relations: ['role', 'role.permissions'] })
-      .then((users) => users.map((e) => UserDto.fromEntity(e)));
+      .then((users) => users.map((user) => this.getUser(user)));
   }
 
   /**
@@ -53,7 +74,9 @@ export class UsersService {
    * @returns  {object} user infos
    */
   async findOne(id: string): Promise<IUser> {
-    return await this.repo.findOne(id).then((user) => UserDto.fromEntity(user));
+    return await this.repo
+      .findOne(id, { relations: ['role', 'role.permissions'] })
+      .then((user) => this.getUser(user));
   }
 
   /**
@@ -62,7 +85,7 @@ export class UsersService {
    * @param {UpdateUserInput} updateUserInput
    * @returns {object} user infos or exeption
    */
-  async update(id: string, updateUserInput: UserDto): Promise<IUser> {
+  async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
     const user = await this.repo.findOne({ id });
     if (!user) {
       throw new HttpException(
@@ -70,8 +93,9 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const updateUserDto = UpdateUserInput.toEntity(updateUserInput);
 
-    return this.repo.save(updateUserInput).then((e) => UserDto.fromEntity(e));
+    return this.repo.save(updateUserDto).then((user) => this.getUser(user));
   }
 
   /**
@@ -97,9 +121,11 @@ export class UsersService {
    * @returns {object} user info or exeption
    */
   async findByLogin(loginDTO: LoginDto): Promise<IUser> {
-    const { email, password } = loginDTO;
-    const user = await this.repo.findOne({ email });
-
+    const { username, email, password } = loginDTO;
+    const user = await this.repo.findOne({
+      where: [{ email }, { username }],
+      relations: ['role', 'role.permissions'],
+    });
     if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.INVALID_CREDENTIALS,
@@ -108,7 +134,7 @@ export class UsersService {
     }
 
     if (await bcrypt.compare(password, user.password)) {
-      return UserDto.fromEntity(user);
+      return this.getUser(user);
     } else {
       throw new HttpException(
         ERROR_MESSAGES.INVALID_CREDENTIALS,

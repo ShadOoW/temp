@@ -2,15 +2,16 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { UserDto } from './dto/user.dto';
+import { UpdateUserInput } from './dto/update-user.input';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CreateUserInput } from './dto/create-user.input';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => User)
-  async createUser(@Args('createUserInput') createUserInput: UserDto) {
+  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return await this.usersService.create(createUserInput);
   }
 
@@ -26,7 +27,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UserDto) {
+  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(updateUserInput.id, updateUserInput);
   }
 

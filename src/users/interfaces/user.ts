@@ -1,5 +1,4 @@
-import { Permission } from '../../permissions/entities/permission.entity';
-import { Role } from '../../roles/entities/role.entity';
+import { IRole } from '../../roles/interfaces/role';
 
 export interface IUser {
   id: string;
@@ -10,6 +9,5 @@ export interface IUser {
   phone?: string;
   picture?: string;
   isAdmin?: boolean;
-  role?: Role;
-  permissions?: Permission[];
+  role?: IRole;
 }

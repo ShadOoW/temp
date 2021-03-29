@@ -9,11 +9,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { UserDto } from '../users/dto/user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { IUser } from '../users/interfaces/user';
+import { CreateUserInput } from '../users/dto/create-user.input';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +29,7 @@ export class AuthController {
    */
   @Post('register')
   async register(
-    @Body() userDTO: UserDto,
+    @Body() userDTO: CreateUserInput,
   ): Promise<{ user: IUser; token: string }> {
     return await this.authService.registerUser(userDTO);
   }
@@ -53,7 +53,7 @@ export class AuthController {
   async googleAuthRedirect(
     @Req() req,
   ): Promise<{ user: IUser; token: string }> {
-    const userDTO: UserDto = req.user;
+    const userDTO: CreateUserInput = req.user;
     return await this.authService.registerUser(userDTO);
   }
 
@@ -76,7 +76,7 @@ export class AuthController {
   async facebookLoginRedirect(
     @Req() req,
   ): Promise<{ user: IUser; token: string }> {
-    const userDTO: UserDto = req.user;
+    const userDTO: CreateUserInput = req.user;
     return await this.authService.registerUser(userDTO);
   }
 
@@ -99,7 +99,7 @@ export class AuthController {
   async linkedinLoginRedirect(
     @Req() req,
   ): Promise<{ user: IUser; token: string }> {
-    const userDTO: UserDto = req.user;
+    const userDTO: CreateUserInput = req.user;
     return await this.authService.registerUser(userDTO);
   }
 

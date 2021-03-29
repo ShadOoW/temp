@@ -11,6 +11,7 @@ import * as cors from 'cors';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 import { configService } from './config/config.service';
+import { ValidationPipe } from '@nestjs/common';
 
 const server = Express();
 server.use(cors());
@@ -30,6 +31,7 @@ async function bootstrap() {
 
     SwaggerModule.setup('docs', app, document);
   }
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, BeforeInsert } from 'typeorm';
+import { Entity, Column, ManyToOne, BeforeInsert, Unique } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { Role } from '../../roles/entities/role.entity';
@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @ObjectType()
 @Entity({ name: 'users' })
+@Unique(['email', 'username', 'phone'])
 export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 300 })
   @Field(() => String, { nullable: true })
