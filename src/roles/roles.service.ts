@@ -1,3 +1,5 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +14,11 @@ export class RolesService {
   ) {}
 
   async create(createRoleInput: CreateRoleInput) {
+    const { name } = createRoleInput;
+    const role = await this.repo.findOne({ name });
+    if (role) {
+      throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
+    }
     return await this.repo
       .save(createRoleInput)
       .then((e) => CreateRoleInput.fromEntity(e));
@@ -30,6 +37,13 @@ export class RolesService {
   }
 
   async update(id: string, updateRoleInput: UpdateRoleInput) {
+    const role = await this.repo.findOne({ id });
+    if (!role) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.repo.save({ ...updateRoleInput });
   }
 

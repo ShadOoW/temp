@@ -89,7 +89,7 @@ export class UsersService {
     const user = await this.repo.findOne({ id });
     if (!user) {
       throw new HttpException(
-        ERROR_MESSAGES.EXISTED_USER,
+        ERROR_MESSAGES.NOT_EXISTED,
         HttpStatus.BAD_REQUEST,
       );
     }

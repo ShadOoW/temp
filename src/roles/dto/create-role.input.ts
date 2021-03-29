@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsArray } from 'class-validator';
+import { IsString, IsArray, IsOptional } from 'class-validator';
 import { Role } from '../entities/role.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
@@ -24,6 +24,7 @@ export class CreateRoleInput {
 
   // @Field(() => [RolePermissionInput])
   @IsArray()
+  @IsOptional()
   users: User[];
 
   public static from(dto: Partial<CreateRoleInput>) {
@@ -32,7 +33,6 @@ export class CreateRoleInput {
     it.name = dto.name;
     it.description = dto.description;
     it.permissions = dto.permissions;
-    it.users = dto.users;
     return it;
   }
 
@@ -42,7 +42,6 @@ export class CreateRoleInput {
       name: entity.name,
       description: entity.description,
       permissions: entity.permissions,
-      users: entity.users,
     });
   }
 

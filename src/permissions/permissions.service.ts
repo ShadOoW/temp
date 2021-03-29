@@ -1,3 +1,5 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +14,11 @@ export class PermissionsService {
   ) {}
 
   async create(createPermissionInput: CreatePermissionInput) {
+    const { name } = createPermissionInput;
+    const permission = await this.repo.findOne({ name });
+    if (permission) {
+      throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
+    }
     return this.repo
       .save(createPermissionInput)
       .then((e) => CreatePermissionInput.fromEntity(e));
@@ -32,6 +39,13 @@ export class PermissionsService {
   }
 
   async update(id: string, updatePermissionInput: UpdatePermissionInput) {
+    const permission = await this.repo.findOne({ id });
+    if (!permission) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.repo.save({ ...updatePermissionInput });
   }
 

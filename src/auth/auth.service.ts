@@ -44,10 +44,7 @@ export class AuthService {
     const findUser = await this.usersService.findByPayload(createUserDto);
     if (findUser) {
       if (provider === 'local')
-        throw new HttpException(
-          ERROR_MESSAGES.EXISTED_USER,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
     const user = await this.usersService.create(createUserDto);
     const payload = {
