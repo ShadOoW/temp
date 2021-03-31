@@ -11,6 +11,7 @@ import { CaslModule } from './casl/casl.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
+import { RequestsModule } from './requests/requests.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
     PermissionsModule,
     RolesModule,
     UsersModule,
+    RequestsModule,
   ],
   providers: [
     {
