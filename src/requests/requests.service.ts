@@ -52,11 +52,9 @@ export class RequestsService {
   }
 
   async findOne(id: string) {
-    const user = await this.repo
+    return await this.repo
       .findOne(id, { relations: ['to', 'from'] })
       .then((request) => this.getRequest(request));
-    console.log(user);
-    return user;
   }
 
   async update(id: string, updateRequestInput: UpdateRequestInput) {
