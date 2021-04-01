@@ -8,6 +8,15 @@ input CreatePermissionInput {
   name: String!
 }
 
+input CreateRequestInput {
+  description: String!
+  excerpt: String!
+  from: String!
+  id: String
+  title: String!
+  to: String!
+}
+
 input CreateRoleInput {
   description: String!
   id: String
@@ -37,44 +46,57 @@ scalar DateTime
 
 type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
+  createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createUser(createUserInput: CreateUserInput!): User!
   removePermission(id: String!): Permission!
+  removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
   removeUser(id: String!): User!
   updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
+  updateRequest(updateRequestInput: UpdateRequestInput!): Request!
   updateRole(updateRoleInput: UpdateRoleInput!): Role!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Permission {
   createdAt: DateTime!
-  createdBy: String!
   description: String!
   id: String!
   name: String!
   updatedAt: DateTime!
-  updatedBy: String!
 }
 
 type Query {
   permission(id: String!): Permission!
   permissions: [Permission!]!
+  request(id: String!): Request!
+  requests(from: String, status: String, to: String): [Request!]!
   role(id: String!): Role!
   roles: [Role!]!
   user(id: String!): User!
   users: [User!]!
 }
 
+type Request {
+  createdAt: DateTime!
+  description: String
+  excerpt: String!
+  from: User!
+  id: String!
+  status: String
+  title: String!
+  to: User!
+  updatedAt: DateTime!
+}
+
 type Role {
   createdAt: DateTime!
-  createdBy: String!
   description: String!
   id: String!
   name: String!
   permissions: [Permission!]!
   updatedAt: DateTime!
-  updatedBy: String!
   users: [User!]!
 }
 
@@ -86,6 +108,15 @@ input UpdatePermissionInput {
   description: String!
   id: String
   name: String!
+}
+
+input UpdateRequestInput {
+  description: String
+  excerpt: String
+  from: String
+  id: String!
+  title: String
+  to: String
 }
 
 input UpdateRoleInput {
@@ -106,7 +137,6 @@ input UpdateUserInput {
 
 type User {
   createdAt: DateTime!
-  createdBy: String!
   email: String
   firstName: String
   id: String!
@@ -119,6 +149,5 @@ type User {
   providerId: String
   role: Role
   updatedAt: DateTime!
-  updatedBy: String!
   username: String
 }

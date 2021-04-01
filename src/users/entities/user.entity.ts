@@ -1,8 +1,16 @@
-import { Entity, Column, ManyToOne, BeforeInsert, Unique } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  BeforeInsert,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { Role } from '../../roles/entities/role.entity';
 import * as bcrypt from 'bcrypt';
+import { Request } from '../../requests/entities/request.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -57,4 +65,10 @@ export class User extends BaseEntity {
   @ManyToOne(() => Role, (role) => role.users)
   @Field(() => Role, { nullable: true })
   role: Role;
+
+  @OneToMany(() => Request, (request) => request.to)
+  requestsTo: Request[];
+
+  @OneToMany(() => Request, (request) => request.from)
+  requestsFrom: Request[];
 }

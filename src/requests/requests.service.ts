@@ -1,26 +1,78 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { Injectable } from '@nestjs/common';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
+import { Request } from '../requests/entities/request.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class RequestsService {
+  constructor(
+    @InjectRepository(Request) private readonly repo: Repository<Request>,
+  ) {}
+
+  getRequest(requestEntity: Request): any {
+    return {
+      id: requestEntity.id,
+      title: requestEntity.title,
+      description: requestEntity.description,
+      from: {
+        id: requestEntity.from.id,
+        firstName: requestEntity.from.firstName,
+        lastName: requestEntity.from.lastName,
+        email: requestEntity.from.email,
+        username: requestEntity.from.username,
+      },
+      to: {
+        id: requestEntity.to.id,
+        firstName: requestEntity.to.firstName,
+        lastName: requestEntity.to.lastName,
+        email: requestEntity.to.email,
+        username: requestEntity.to.username,
+      },
+      status: requestEntity.status,
+      createdAt: requestEntity.createdAt,
+    };
+  }
+
   create(createRequestInput: CreateRequestInput) {
-    return 'This action adds a new request';
+    return this.repo
+      .save(createRequestInput)
+      .then((request) => this.getRequest(request));
   }
 
-  findAll() {
-    return `This action returns all requests`;
+  async findAll(args = null) {
+    return await this.repo
+      .find({ where: args, relations: ['to', 'from'] })
+      .then((permissions) =>
+        permissions.map((request) => this.getRequest(request)),
+      );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} request`;
+  async findOne(id: string) {
+    const user = await this.repo
+      .findOne(id, { relations: ['to', 'from'] })
+      .then((request) => this.getRequest(request));
+    console.log(user);
+    return user;
   }
 
-  update(id: number, updateRequestInput: UpdateRequestInput) {
-    return `This action updates a #${id} request`;
+  async update(id: string, updateRequestInput: UpdateRequestInput) {
+    const request = await this.repo.findOne({ id });
+    if (!request) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return await this.repo.save({ ...updateRequestInput });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} request`;
+  async remove(id: string) {
+    const requestToDelete = await this.findOne(id);
+    await this.repo.delete(requestToDelete);
+    return requestToDelete;
   }
 }

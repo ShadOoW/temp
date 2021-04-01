@@ -30,7 +30,7 @@ export class UsersService {
         id: userEntity.role?.id,
         name: userEntity.role?.name,
         permissions: [
-          ...userEntity.role?.permissions.map((permission) => ({
+          ...(userEntity.role?.permissions || []).map((permission) => ({
             id: permission.id,
             name: permission.name,
           })),

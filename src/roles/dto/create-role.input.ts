@@ -51,7 +51,6 @@ export class CreateRoleInput {
     it.name = this.name;
     it.description = this.description;
     it.permissions = this.permissions;
-    it.createdBy = 'dododoo';
     return it;
   }
 }

@@ -37,7 +37,6 @@ export class CreatePermissionInput implements Readonly<CreatePermissionInput> {
     it.name = this.name;
     it.description = this.description;
     it.createdAt = new Date();
-    it.createdBy = 'dododoo';
     return it;
   }
 }
