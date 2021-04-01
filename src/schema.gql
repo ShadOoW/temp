@@ -8,6 +8,30 @@ input CreatePermissionInput {
   name: String!
 }
 
+input CreateProfileInput {
+  canOffer: String
+  city: String
+  coachingDomains: [String!]!
+  coachingType: String
+  company: String
+  country: String
+  currentPost: String
+  domainExpertise: Int
+  firstName: String
+  hoursPerMonth: Int
+  lastName: String
+  linkedin: String
+  phoneNumber: String
+  picture: String
+  professionalBg: String
+  sector: String
+  selfDescription: String
+  wantedDomain: String
+  website: String
+  whyNeedCoaching: String
+  yearsOfExperience: Int
+}
+
 input CreateRequestInput {
   description: String!
   excerpt: String!
@@ -26,13 +50,10 @@ input CreateRoleInput {
 
 input CreateUserInput {
   email: String!
-  firstName: String
   id: String
   isAdmin: Boolean
-  lastName: String
   password: String
-  phone: String
-  picture: String
+  profile: CreateProfileInput
   provider: String!
   providerId: String
   role: String
@@ -54,6 +75,7 @@ type Mutation {
   removeRole(id: String!): Role!
   removeUser(id: String!): User!
   updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(updateRequestInput: UpdateRequestInput!): Request!
   updateRole(updateRoleInput: UpdateRoleInput!): Role!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -67,9 +89,37 @@ type Permission {
   updatedAt: DateTime!
 }
 
+type Profile {
+  canOffer: String
+  city: String
+  coachingDomains: [String!]!
+  coachingType: String
+  company: String
+  country: String
+  createdAt: DateTime!
+  currentPost: String
+  domainExpertise: Int
+  firstName: String
+  hoursPerMonth: Int
+  id: String!
+  lastName: String
+  linkedin: String
+  phoneNumber: String
+  picture: String
+  professionalBg: String
+  sector: String
+  selfDescription: String
+  updatedAt: DateTime!
+  wantedDomain: String
+  website: String
+  whyNeedCoaching: String
+  yearsOfExperience: Int
+}
+
 type Query {
   permission(id: String!): Permission!
   permissions: [Permission!]!
+  profile(id: Int!): Profile!
   request(id: String!): Request!
   requests(from: String, status: String, to: String): [Request!]!
   role(id: String!): Role!
@@ -111,6 +161,31 @@ input UpdatePermissionInput {
   name: String!
 }
 
+input UpdateProfileInput {
+  canOffer: String
+  city: String
+  coachingDomains: [String!]!
+  coachingType: String
+  company: String
+  country: String
+  currentPost: String
+  domainExpertise: Int
+  firstName: String
+  hoursPerMonth: Int
+  id: String
+  lastName: String
+  linkedin: String
+  phoneNumber: String
+  picture: String
+  professionalBg: String
+  sector: String
+  selfDescription: String
+  wantedDomain: String
+  website: String
+  whyNeedCoaching: String
+  yearsOfExperience: Int
+}
+
 input UpdateRequestInput {
   description: String
   excerpt: String
@@ -128,24 +203,16 @@ input UpdateRoleInput {
 }
 
 input UpdateUserInput {
-  firstName: String
   id: String
-  lastName: String
-  phone: String
-  picture: String
   role: String
 }
 
 type User {
   createdAt: DateTime!
   email: String
-  firstName: String
   id: String!
   isAdmin: Boolean
-  lastName: String
   password: String
-  phone: String
-  picture: String
   provider: String
   providerId: String
   requestsFrom: [Request!]!

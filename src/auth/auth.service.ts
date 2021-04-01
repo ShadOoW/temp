@@ -41,13 +41,12 @@ export class AuthService {
     registerUserInputs: CreateUserInput,
   ): Promise<{ user: IUser; token: string }> {
     const { provider } = registerUserInputs;
-    const createUserDto = CreateUserInput.toEntity(registerUserInputs);
-    const findUser = await this.usersService.findByPayload(createUserDto);
+    const findUser = await this.usersService.findByPayload(registerUserInputs);
     if (findUser) {
       if (provider === 'local')
         throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    const user = await this.usersService.create(createUserDto);
+    const user = await this.usersService.create(registerUserInputs);
     const payload = {
       username: user.username,
       email: user.email,

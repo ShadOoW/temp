@@ -13,6 +13,8 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
 import { LinkedinStrategy } from './strategies/linkedin.strategy';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
+import { ProfilesService } from '../profiles/profiles.service';
+import { Profile } from '../profiles/entities/profile.entity';
 
 /**
  * Auth module import UsersModule to register user
@@ -21,6 +23,7 @@ import { User } from '../users/entities/user.entity';
  */
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Profile]),
     TypeOrmModule.forFeature([User]),
     UsersModule,
     PassportModule,
@@ -37,6 +40,7 @@ import { User } from '../users/entities/user.entity';
     GoogleStrategy,
     FacebookStrategy,
     LinkedinStrategy,
+    ProfilesService,
   ],
   exports: [AuthService, JwtModule],
   controllers: [AuthController],

@@ -9,21 +9,14 @@ import {
 } from 'class-validator';
 import { User } from '../entities/user.entity';
 import { Role } from '../../roles/entities/role.entity';
+import { Profile } from '../../profiles/entities/profile.entity';
+import { CreateProfileInput } from '../../profiles/dto/create-profile.input';
+import * as bcrypt from 'bcrypt';
 
 @InputType()
 export class CreateUserInput {
   @Field(() => String, { nullable: true })
   id: string;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  firstName: string;
-
-  @Field(() => String, { nullable: true })
-  @IsString()
-  @IsOptional()
-  lastName: string;
 
   @Field(() => String)
   @IsString()
@@ -34,19 +27,7 @@ export class CreateUserInput {
   email: string;
 
   @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  phone: string;
-
-  @Field(() => String, { nullable: true })
-  @IsString()
-  @IsNotEmpty()
   password: string;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  picture: string;
 
   @Field(() => String)
   @IsString()
@@ -65,19 +46,22 @@ export class CreateUserInput {
   @IsUUID()
   role: Role;
 
-  public static toEntity(inputs: Partial<CreateUserInput>) {
+  @Field(() => CreateProfileInput, { nullable: true })
+  profile: Profile;
+
+  public static async toEntity(inputs: Partial<CreateUserInput>) {
     const it = new User();
+    console.log('inputs', inputs.password);
+    const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
+
     it.id = inputs.id;
-    it.firstName = inputs.firstName;
-    it.lastName = inputs.lastName;
     it.username = inputs.username;
     it.email = inputs.email;
-    it.phone = inputs.phone;
-    it.picture = inputs.picture;
     it.provider = inputs.provider;
     it.providerId = inputs.providerId;
     it.role = inputs.role;
-    it.password = inputs.password;
+    it.profile = inputs.profile;
+    it.password = hash;
     return it;
   }
 }

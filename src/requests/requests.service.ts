@@ -20,15 +20,11 @@ export class RequestsService {
       description: requestEntity.description,
       from: {
         id: requestEntity.from.id,
-        firstName: requestEntity.from.firstName,
-        lastName: requestEntity.from.lastName,
         email: requestEntity.from.email,
         username: requestEntity.from.username,
       },
       to: {
         id: requestEntity.to.id,
-        firstName: requestEntity.to.firstName,
-        lastName: requestEntity.to.lastName,
         email: requestEntity.to.email,
         username: requestEntity.to.username,
       },

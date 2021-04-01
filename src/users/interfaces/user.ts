@@ -5,10 +5,6 @@ export interface IUser {
   id: string;
   username: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  picture?: string;
   isAdmin?: boolean;
   role?: IRole;
   requestsTo?: IRequest[];

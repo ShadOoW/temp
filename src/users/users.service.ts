@@ -11,11 +11,13 @@ import { LoginDto } from '../auth/dto/login.dto';
 import { IUser } from './interfaces/user';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUserDto } from './dto/get-user.dto';
+import { ProfilesService } from '../profiles/profiles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repo: Repository<User>,
+    private profileService: ProfilesService,
   ) {}
 
   /**
@@ -24,15 +26,16 @@ export class UsersService {
    * @returns {object} user infos
    */
   async create(createUserInputs: CreateUserInput): Promise<IUser> {
-    const { provider, password } = createUserInputs;
-    const createUserDto = CreateUserInput.toEntity(createUserInputs);
+    const { provider, password, profile } = createUserInputs;
+    const createUserDto = await CreateUserInput.toEntity(createUserInputs);
     if (provider === 'local' && !password)
       throw new HttpException(
         ERROR_MESSAGES.PASSWORD_REQUIRED,
         HttpStatus.BAD_REQUEST,
       );
+    const createdProfile = await this.profileService.create(profile);
     return this.repo
-      .save(createUserDto)
+      .save({ ...createUserDto, profile: createdProfile })
       .then(async (createdUser) =>
         GetUserDto.getUser(await this.findOne(createdUser.id)),
       );
@@ -56,7 +59,7 @@ export class UsersService {
   async findOne(id: string): Promise<any> {
     return await this.repo
       .findOne(id, {
-        relations: ['role', 'role.permissions'],
+        relations: ['role', 'role.permissions', 'profile'],
       })
       .then((user) => GetUserDto.getUser(user));
   }
@@ -72,7 +75,6 @@ export class UsersService {
         relations: ['requestsTo', 'requestsFrom'],
       })
       .then((user) => user);
-    console.log(GetUserDto.getUserRequests(user));
     return user;
   }
 
@@ -123,7 +125,7 @@ export class UsersService {
     const { username, email, password } = loginDTO;
     const user = await this.repo.findOne({
       where: [{ email }, { username }],
-      relations: ['role', 'role.permissions'],
+      relations: ['role', 'role.permissions', 'profile'],
     });
     if (!user) {
       throw new HttpException(

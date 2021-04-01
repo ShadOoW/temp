@@ -1,3 +1,5 @@
+import { User } from '../entities/user.entity';
+
 export class GetUserDto {
   public static getUserRequests(userEntity: any): any {
     return {
@@ -21,15 +23,11 @@ export class GetUserDto {
     };
   }
 
-  public static getUser(userEntity: any): any {
+  public static getUser(userEntity: User): any {
     return {
       id: userEntity.id,
-      firstName: userEntity.firstName,
-      lastName: userEntity.lastName,
       username: userEntity.username,
       email: userEntity.email,
-      phone: userEntity.phone,
-      picture: userEntity.picture,
       role: {
         id: userEntity.role?.id,
         name: userEntity.role?.name,
@@ -40,6 +38,7 @@ export class GetUserDto {
           })),
         ],
       },
+      profile: userEntity.profile,
     };
   }
 }
