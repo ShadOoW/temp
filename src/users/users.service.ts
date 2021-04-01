@@ -10,6 +10,7 @@ import { IPayload } from './interfaces/payload';
 import { LoginDto } from '../auth/dto/login.dto';
 import { IUser } from './interfaces/user';
 import { CreateUserInput } from './dto/create-user.input';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,27 +18,6 @@ export class UsersService {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
-  private getUser(userEntity: IUser): IUser {
-    return {
-      id: userEntity.id,
-      firstName: userEntity.firstName,
-      lastName: userEntity.lastName,
-      username: userEntity.username,
-      email: userEntity.email,
-      phone: userEntity.phone,
-      picture: userEntity.picture,
-      role: {
-        id: userEntity.role?.id,
-        name: userEntity.role?.name,
-        permissions: [
-          ...(userEntity.role?.permissions || []).map((permission) => ({
-            id: permission.id,
-            name: permission.name,
-          })),
-        ],
-      },
-    };
-  }
   /**
    * Create new user
    * @param {CreateUserInput} createUserInput
@@ -54,7 +34,7 @@ export class UsersService {
     return this.repo
       .save(createUserDto)
       .then(async (createdUser) =>
-        this.getUser(await this.findOne(createdUser.id)),
+        GetUserDto.getUser(await this.findOne(createdUser.id)),
       );
   }
 
@@ -65,7 +45,7 @@ export class UsersService {
   async findAll(): Promise<IUser[]> {
     return await this.repo
       .find({ relations: ['role', 'role.permissions'] })
-      .then((users) => users.map((user) => this.getUser(user)));
+      .then((users) => users.map((user) => GetUserDto.getUser(user)));
   }
 
   /**
@@ -73,10 +53,27 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async findOne(id: string): Promise<IUser> {
+  async findOne(id: string): Promise<any> {
     return await this.repo
-      .findOne(id, { relations: ['role', 'role.permissions'] })
-      .then((user) => this.getUser(user));
+      .findOne(id, {
+        relations: ['role', 'role.permissions'],
+      })
+      .then((user) => GetUserDto.getUser(user));
+  }
+
+  /**
+   * Finds user Requests
+   * @param {string} id of user
+   * @returns  {object} user infos
+   */
+  async findUserRequests(id: string): Promise<any> {
+    const user = await this.repo
+      .findOne(id, {
+        relations: ['requestsTo', 'requestsFrom'],
+      })
+      .then((user) => user);
+    console.log(GetUserDto.getUserRequests(user));
+    return user;
   }
 
   /**
@@ -95,7 +92,9 @@ export class UsersService {
     }
     const updateUserDto = UpdateUserInput.toEntity(updateUserInput);
 
-    return this.repo.save(updateUserDto).then((user) => this.getUser(user));
+    return this.repo
+      .save(updateUserDto)
+      .then((user) => GetUserDto.getUser(user));
   }
 
   /**
@@ -134,7 +133,7 @@ export class UsersService {
     }
 
     if (await bcrypt.compare(password, user.password)) {
-      return this.getUser(user);
+      return GetUserDto.getUser(user);
     } else {
       throw new HttpException(
         ERROR_MESSAGES.INVALID_CREDENTIALS,
@@ -148,7 +147,7 @@ export class UsersService {
    * @param {IPayload} payload
    * @returns {User} user data
    */
-  async findByPayload(payload: IPayload): Promise<IUser> {
+  async findByPayload(payload: IPayload): Promise<User> {
     const { email, username } = payload;
     return await this.repo.findOne({
       where: [{ email }, { username }],

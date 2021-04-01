@@ -1,3 +1,4 @@
+import { IRequest } from '../../requests/interfaces/request';
 import { IRole } from '../../roles/interfaces/role';
 
 export interface IUser {
@@ -10,4 +11,6 @@ export interface IUser {
   picture?: string;
   isAdmin?: boolean;
   role?: IRole;
+  requestsTo?: IRequest[];
+  requestsFrom?: IRequest[];
 }

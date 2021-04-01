@@ -6,6 +6,7 @@ import { IPayload } from '../users/interfaces/payload';
 import { IUser } from 'src/users/interfaces/user';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { CreateUserInput } from '../users/dto/create-user.input';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
    * @param {IPayload} payload
    * @returns {User} user
    */
-  async validateUser(payload: IPayload): Promise<IUser> {
+  async validateUser(payload: IPayload): Promise<any> {
     return await this.usersService.findByPayload(payload);
   }
 

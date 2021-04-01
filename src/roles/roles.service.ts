@@ -26,7 +26,7 @@ export class RolesService {
 
   async findAll() {
     return await this.repo
-      .find({ relations: ['permissions', 'users'] })
+      .find({ relations: ['permissions'] })
       .then((roles) => roles.map((e) => CreateRoleInput.fromEntity(e)));
   }
 

@@ -75,6 +75,7 @@ type Query {
   role(id: String!): Role!
   roles: [Role!]!
   user(id: String!): User!
+  userRequests(id: String!): User!
   users: [User!]!
 }
 
@@ -147,6 +148,8 @@ type User {
   picture: String
   provider: String
   providerId: String
+  requestsFrom: [Request!]!
+  requestsTo: [Request!]!
   role: Role
   updatedAt: DateTime!
   username: String

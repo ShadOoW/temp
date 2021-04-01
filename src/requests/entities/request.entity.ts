@@ -17,7 +17,7 @@ export class Request extends BaseEntity {
 
   @Column({ type: 'text' })
   @Field(() => String, { nullable: true })
-  description: string;
+  description?: string;
 
   @Column({
     type: 'enum',
@@ -26,7 +26,7 @@ export class Request extends BaseEntity {
     default: 'created',
   })
   @Field(() => String, { nullable: true })
-  status: RequestStatus;
+  status?: RequestStatus;
 
   @ManyToOne(() => User, (user) => user.requestsTo)
   @Field(() => User)

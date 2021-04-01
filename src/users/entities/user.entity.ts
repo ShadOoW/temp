@@ -67,8 +67,10 @@ export class User extends BaseEntity {
   role: Role;
 
   @OneToMany(() => Request, (request) => request.to)
+  @Field(() => [Request])
   requestsTo: Request[];
 
   @OneToMany(() => Request, (request) => request.from)
+  @Field(() => [Request])
   requestsFrom: Request[];
 }
