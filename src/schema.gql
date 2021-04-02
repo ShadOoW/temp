@@ -156,6 +156,14 @@ input RolePermissionInput {
   id: String!
 }
 
+type Subscription {
+  createdAt: DateTime!
+  id: String!
+  subscribedTo: User!
+  subscriber: User!
+  updatedAt: DateTime!
+}
+
 input UpdatePermissionInput {
   description: String!
   id: String
@@ -192,6 +200,7 @@ input UpdateRequestInput {
   excerpt: String
   from: String
   id: String!
+  status: String
   title: String
   to: String
 }
@@ -214,11 +223,14 @@ type User {
   id: String!
   isAdmin: Boolean
   password: String
+  profile: Profile!
   provider: String
   providerId: String
   requestsFrom: [Request!]!
   requestsTo: [Request!]!
   role: Role
+  subscribers: [Subscription!]!
+  subscriptions: [Subscription!]!
   updatedAt: DateTime!
   username: String
 }

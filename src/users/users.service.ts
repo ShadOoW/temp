@@ -72,7 +72,17 @@ export class UsersService {
   async findOne(id: string): Promise<any> {
     return await this.repo
       .findOne(id, {
-        relations: ['role', 'role.permissions', 'profile'],
+        relations: [
+          'role',
+          'role.permissions',
+          'profile',
+          'subscriptions',
+          'subscriptions.subscriber',
+          'subscriptions.subscribedTo',
+          'subscribers',
+          'subscribers.subscriber',
+          'subscribers.subscribedTo',
+        ],
       })
       .then((user) => GetUserDto.getUser(user));
   }

@@ -6,11 +6,14 @@ import { UpdateRequestInput } from './dto/update-request.input';
 import { Request } from '../requests/entities/request.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Subscription } from '../users/entities/subscription.entity';
 
 @Injectable()
 export class RequestsService {
   constructor(
     @InjectRepository(Request) private readonly repo: Repository<Request>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepo: Repository<Subscription>,
   ) {}
 
   getRequest(requestEntity: Request): any {
@@ -54,14 +57,25 @@ export class RequestsService {
   }
 
   async update(id: string, updateRequestInput: UpdateRequestInput) {
-    const request = await this.repo.findOne({ id });
+    const { status } = updateRequestInput;
+    const request = await this.repo.findOne(id, { relations: ['to', 'from'] });
     if (!request) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ ...updateRequestInput });
+    const updatedRequest = await this.repo.save({ ...updateRequestInput });
+
+    if (status == 'accepted') {
+      const subscription = new Subscription();
+      subscription.subscriber = request.from;
+      subscription.subscribedTo = request.to;
+
+      this.subscriptionRepo.save(subscription);
+    }
+
+    return updatedRequest;
   }
 
   async remove(id: string) {

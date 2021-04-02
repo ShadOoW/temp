@@ -12,6 +12,7 @@ import { BaseEntity } from '../../shared/base.entity';
 import { Role } from '../../roles/entities/role.entity';
 import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
+import { Subscription } from './subscription.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -47,6 +48,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => Profile)
   @JoinColumn()
+  @Field(() => Profile)
   profile: Profile;
 
   @OneToMany(() => Request, (request) => request.to)
@@ -56,4 +58,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Request, (request) => request.from)
   @Field(() => [Request])
   requestsFrom: Request[];
+
+  @OneToMany(() => Subscription, (subscription) => subscription.subscriber)
+  @Field(() => [Subscription])
+  subscriptions: Subscription[];
+
+  @OneToMany(() => Subscription, (subscription) => subscription.subscribedTo)
+  @Field(() => [Subscription])
+  subscribers: Subscription[];
 }

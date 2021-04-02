@@ -39,6 +39,8 @@ export class GetUserDto {
         ],
       },
       profile: userEntity.profile,
+      subscriptions: userEntity.subscriptions,
+      subscribers: userEntity.subscribers,
     };
   }
 }
