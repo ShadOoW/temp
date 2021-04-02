@@ -52,6 +52,19 @@ export class UsersService {
   }
 
   /**
+   * Finds all users by RoleID related with (user role & role permissions)
+   * @returns  {Array} of users info
+   */
+  async findByRole(roleId: string): Promise<IUser[]> {
+    return await this.repo
+      .find({
+        relations: ['role', 'role.permissions'],
+        where: { role: roleId },
+      })
+      .then((users) => users.map((user) => GetUserDto.getUser(user)));
+  }
+
+  /**
    * Finds one user
    * @param {string} id of user
    * @returns  {object} user infos

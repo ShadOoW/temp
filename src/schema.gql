@@ -127,6 +127,7 @@ type Query {
   user(id: String!): User!
   userRequests(id: String!): User!
   users: [User!]!
+  usersByRole(id: String!): [User!]!
 }
 
 type Request {

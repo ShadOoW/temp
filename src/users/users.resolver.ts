@@ -20,6 +20,11 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
+  @Query(() => [User], { name: 'usersByRole' })
+  findByRole(@Args('id', { type: () => String }) id: string) {
+    return this.usersService.findByRole(id);
+  }
+
   @Query(() => User, { name: 'userRequests' })
   findUserRequests(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findUserRequests(id);
