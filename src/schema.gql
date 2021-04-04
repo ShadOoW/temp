@@ -70,6 +70,11 @@ type GetPermissions {
   totalCount: Int!
 }
 
+type GetRequests {
+  requests: [Request!]!
+  totalCount: Int!
+}
+
 type GetRoles {
   roles: [Role!]!
   totalCount: Int!
@@ -131,7 +136,7 @@ type Query {
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: Int!): Profile!
   request(id: String!): Request!
-  requests(from: String, status: String, to: String): [Request!]!
+  requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
   user(id: String!): User!

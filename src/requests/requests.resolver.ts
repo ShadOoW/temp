@@ -4,6 +4,7 @@ import { Request } from './entities/request.entity';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { GetRequestsArgs } from './dto/get-requests.args';
+import { GetRequests } from './dto/get-roles.dto';
 
 @Resolver(() => Request)
 export class RequestsResolver {
@@ -16,7 +17,7 @@ export class RequestsResolver {
     return this.requestsService.create(createRequestInput);
   }
 
-  @Query(() => [Request], { name: 'requests' })
+  @Query(() => GetRequests, { name: 'requests' })
   findAll(@Args() args: GetRequestsArgs) {
     return this.requestsService.findAll(args);
   }

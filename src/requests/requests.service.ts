@@ -43,11 +43,19 @@ export class RequestsService {
   }
 
   async findAll(args = null) {
-    return await this.repo
-      .find({ where: args, relations: ['to', 'from'] })
-      .then((permissions) =>
-        permissions.map((request) => this.getRequest(request)),
-      );
+    const { take, skip } = args;
+    delete args.take;
+    delete args.skip;
+    const [requests, totalCount] = await this.repo.findAndCount({
+      where: args,
+      relations: ['to', 'from'],
+      order: {
+        createdAt: 'DESC',
+      },
+      skip,
+      take,
+    });
+    return { requests, totalCount };
   }
 
   async findOne(id: string) {
