@@ -14,14 +14,11 @@ import { configService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
 
 const server = Express();
-// server.use(
-//   cors({
-//     origin: ['http://localhost:3000', 'https://m2m-react.netlify.app'],
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     preflightContinue: false,
-//     optionsSuccessStatus: 204,
-//   }),
-// );
+server.use(
+  cors({
+    origin: false,
+  }),
+);
 server.get('/', (req, res) => res.send('ok'));
 
 async function bootstrap() {

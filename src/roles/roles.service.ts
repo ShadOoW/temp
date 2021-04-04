@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { Role } from './entities/role.entity';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Injectable()
 export class RolesService {
@@ -24,10 +25,17 @@ export class RolesService {
       .then((e) => CreateRoleInput.fromEntity(e));
   }
 
-  async findAll() {
-    return await this.repo
-      .find({ relations: ['permissions'] })
-      .then((roles) => roles.map((e) => CreateRoleInput.fromEntity(e)));
+  async findAll(pagination: PaginationArgs) {
+    const { skip, take } = pagination;
+    const [roles, totalCount] = await this.repo.findAndCount({
+      relations: ['permissions'],
+      order: {
+        createdAt: 'DESC',
+      },
+      skip,
+      take,
+    });
+    return { roles, totalCount };
   }
 
   async findOne(id: string) {

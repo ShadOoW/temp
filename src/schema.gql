@@ -70,6 +70,11 @@ type GetPermissions {
   totalCount: Int!
 }
 
+type GetRoles {
+  roles: [Role!]!
+  totalCount: Int!
+}
+
 type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
@@ -128,7 +133,7 @@ type Query {
   request(id: String!): Request!
   requests(from: String, status: String, to: String): [Request!]!
   role(id: String!): Role!
-  roles: [Role!]!
+  roles(skip: Int, take: Int): GetRoles!
   user(id: String!): User!
   userRequests(id: String!): User!
   users: [User!]!

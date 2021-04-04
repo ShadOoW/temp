@@ -1,8 +1,10 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RolesService } from './roles.service';
 import { Role } from './entities/role.entity';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
+import { PaginationArgs } from '../shared/pagination.args';
+import { GetRoles } from './dto/get-roles.dto';
 
 @Resolver(() => Role)
 export class RolesResolver {
@@ -13,9 +15,9 @@ export class RolesResolver {
     return this.rolesService.create(createRoleInput);
   }
 
-  @Query(() => [Role], { name: 'roles' })
-  findAll() {
-    return this.rolesService.findAll();
+  @Query(() => GetRoles, { name: 'roles' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.rolesService.findAll(paginationArgs);
   }
 
   @Query(() => Role, { name: 'role' })
