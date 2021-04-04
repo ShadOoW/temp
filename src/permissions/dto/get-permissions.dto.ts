@@ -4,7 +4,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 @ObjectType()
 export class GetPermissions {
   @Field(() => [Permission])
-  data: [Permission];
+  permissions: [Permission];
 
   @Field(() => Int)
   totalCount: number;

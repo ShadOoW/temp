@@ -34,7 +34,7 @@ export class PermissionsService {
       take,
       skip,
     });
-    return { data: permissions, totalCount };
+    return { permissions, totalCount };
   }
 
   async findOne(id: string) {
