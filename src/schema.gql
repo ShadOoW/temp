@@ -65,6 +65,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type GetPermissions {
+  data: [Permission!]!
+  totalCount: Int!
+}
+
 type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
@@ -118,7 +123,7 @@ type Profile {
 
 type Query {
   permission(id: String!): Permission!
-  permissions: [Permission!]!
+  permissions(skip: Int, take: Int): GetPermissions!
   profile(id: Int!): Profile!
   request(id: String!): Request!
   requests(from: String, status: String, to: String): [Request!]!

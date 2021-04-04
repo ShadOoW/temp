@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
 import { Permission } from './entities/permission.entity';
+import { PaginationArgs } from 'src/shared/pagination.args';
 
 @Injectable()
 export class PermissionsService {
@@ -24,12 +25,16 @@ export class PermissionsService {
       .then((e) => CreatePermissionInput.fromEntity(e));
   }
 
-  async findAll() {
-    return await this.repo
-      .find()
-      .then((permissions) =>
-        permissions.map((e) => CreatePermissionInput.fromEntity(e)),
-      );
+  async findAll(pagination: PaginationArgs) {
+    const { take, skip } = pagination;
+    const [permissions, totalCount] = await this.repo.findAndCount({
+      order: {
+        createdAt: 'DESC',
+      },
+      take,
+      skip,
+    });
+    return { data: permissions, totalCount };
   }
 
   async findOne(id: string) {

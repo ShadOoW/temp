@@ -3,6 +3,8 @@ import { PermissionsService } from './permissions.service';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
+import { PaginationArgs } from '../shared/pagination.args';
+import { GetPermissions } from './dto/get-permissions.dto';
 
 @Resolver(() => Permission)
 export class PermissionsResolver {
@@ -15,9 +17,9 @@ export class PermissionsResolver {
     return this.permissionsService.create(createPermissionInput);
   }
 
-  @Query(() => [Permission], { name: 'permissions' })
-  findAll() {
-    return this.permissionsService.findAll();
+  @Query(() => GetPermissions, { name: 'permissions' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.permissionsService.findAll(paginationArgs);
   }
 
   @Query(() => Permission, { name: 'permission' })
