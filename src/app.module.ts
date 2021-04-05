@@ -14,6 +14,7 @@ import { UsersModule } from './users/users.module';
 import { RequestsModule } from './requests/requests.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -36,6 +37,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
     RequestsModule,
     ProfilesModule,
     SubscriptionsModule,
+    SessionsModule,
   ],
   providers: [
     {

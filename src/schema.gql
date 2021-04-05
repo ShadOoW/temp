@@ -48,6 +48,11 @@ input CreateRoleInput {
   permissions: [RolePermissionInput!]!
 }
 
+input CreateSessionInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreateSubscriptionInput {
   subscribedTo: SubscriptionUserInput!
   subscriber: SubscriptionUserInput!
@@ -99,17 +104,20 @@ type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
+  createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): Subscription!
   createUser(createUserInput: CreateUserInput!): User!
   removePermission(id: String!): Permission!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
+  removeSession(id: Int!): Session!
   removeSubscription(id: Int!): Subscription!
   removeUser(id: String!): User!
   updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
   updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(updateRequestInput: UpdateRequestInput!): Request!
   updateRole(updateRoleInput: UpdateRoleInput!): Role!
+  updateSession(updateSessionInput: UpdateSessionInput!): Session!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -156,6 +164,8 @@ type Query {
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
+  session(id: Int!): Session!
+  sessions: [Session!]!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
   user(id: String!): User!
@@ -188,6 +198,11 @@ type Role {
 
 input RolePermissionInput {
   id: String!
+}
+
+type Session {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 type Subscription {
@@ -248,6 +263,12 @@ input UpdateRoleInput {
   id: String
   name: String!
   permissions: [RolePermissionInput!]!
+}
+
+input UpdateSessionInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdateUserInput {
