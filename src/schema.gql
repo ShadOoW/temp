@@ -49,8 +49,11 @@ input CreateRoleInput {
 }
 
 input CreateSessionInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  description: String!
+  mentee: String!
+  mentor: String!
+  title: String!
+  videoConference: Boolean!
 }
 
 input CreateSubscriptionInput {
@@ -90,6 +93,11 @@ type GetRoles {
   totalCount: Int!
 }
 
+type GetSessions {
+  sessions: [Session!]!
+  totalCount: Int!
+}
+
 type GetSubscribers {
   subscribers: [Subscription!]!
   totalCount: Int!
@@ -110,14 +118,13 @@ type Mutation {
   removePermission(id: String!): Permission!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
-  removeSession(id: Int!): Session!
+  removeSession(id: String!): Session!
   removeSubscription(id: Int!): Subscription!
   removeUser(id: String!): User!
   updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
   updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(updateRequestInput: UpdateRequestInput!): Request!
   updateRole(updateRoleInput: UpdateRoleInput!): Role!
-  updateSession(updateSessionInput: UpdateSessionInput!): Session!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -164,8 +171,8 @@ type Query {
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
-  session(id: Int!): Session!
-  sessions: [Session!]!
+  session(id: String!): Session!
+  sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
   user(id: String!): User!
@@ -201,8 +208,14 @@ input RolePermissionInput {
 }
 
 type Session {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  mentee: User!
+  mentor: User!
+  title: String!
+  updatedAt: DateTime!
+  videoConference: Boolean!
 }
 
 type Subscription {
@@ -265,12 +278,6 @@ input UpdateRoleInput {
   permissions: [RolePermissionInput!]!
 }
 
-input UpdateSessionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input UpdateUserInput {
   id: String
   role: String
@@ -281,6 +288,8 @@ type User {
   email: String
   id: String!
   isAdmin: Boolean
+  menteeSessions: [Session!]!
+  mentorSessions: [Session!]!
   password: String
   profile: Profile!
   provider: String

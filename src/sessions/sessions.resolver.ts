@@ -1,35 +1,33 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { Session } from './entities/session.entity';
 import { CreateSessionInput } from './dto/create-session.input';
-import { UpdateSessionInput } from './dto/update-session.input';
+import { GetSessionsArgs } from './dto/get-sessions.args';
+import { GetSessions } from './dto/get-sessions.dto';
 
 @Resolver(() => Session)
 export class SessionsResolver {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Mutation(() => Session)
-  createSession(@Args('createSessionInput') createSessionInput: CreateSessionInput) {
+  createSession(
+    @Args('createSessionInput') createSessionInput: CreateSessionInput,
+  ) {
     return this.sessionsService.create(createSessionInput);
   }
 
-  @Query(() => [Session], { name: 'sessions' })
-  findAll() {
-    return this.sessionsService.findAll();
+  @Query(() => GetSessions, { name: 'sessions' })
+  findAll(@Args() getSessionsArgs: GetSessionsArgs) {
+    return this.sessionsService.findAll(getSessionsArgs);
   }
 
   @Query(() => Session, { name: 'session' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.sessionsService.findOne(id);
   }
 
   @Mutation(() => Session)
-  updateSession(@Args('updateSessionInput') updateSessionInput: UpdateSessionInput) {
-    return this.sessionsService.update(updateSessionInput.id, updateSessionInput);
-  }
-
-  @Mutation(() => Session)
-  removeSession(@Args('id', { type: () => Int }) id: number) {
+  removeSession(@Args('id', { type: () => String }) id: string) {
     return this.sessionsService.remove(id);
   }
 }

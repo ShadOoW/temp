@@ -1,26 +1,44 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { CreateSessionInput } from './dto/create-session.input';
-import { UpdateSessionInput } from './dto/update-session.input';
+import { Session } from './entities/session.entity';
 
 @Injectable()
 export class SessionsService {
+  constructor(
+    @InjectRepository(Session) private readonly repo: Repository<Session>,
+  ) {}
+
   create(createSessionInput: CreateSessionInput) {
-    return 'This action adds a new session';
+    return this.repo.save(createSessionInput).then((session) => session);
   }
 
-  findAll() {
-    return `This action returns all sessions`;
+  async findAll(args = null) {
+    const { take, skip } = args;
+    delete args.take;
+    delete args.skip;
+    const [sessions, totalCount] = await this.repo.findAndCount({
+      where: args,
+      relations: ['mentee', 'mentor'],
+      order: {
+        createdAt: 'DESC',
+      },
+      skip,
+      take,
+    });
+    return { sessions, totalCount };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} session`;
+  async findOne(id: string) {
+    return await this.repo
+      .findOne(id, { relations: ['mentee', 'mentor'] })
+      .then((session) => session);
   }
 
-  update(id: number, updateSessionInput: UpdateSessionInput) {
-    return `This action updates a #${id} session`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} session`;
+  async remove(id: string) {
+    const sessionToDelete = await this.findOne(id);
+    await this.repo.delete(sessionToDelete);
+    return sessionToDelete;
   }
 }

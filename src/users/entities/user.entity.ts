@@ -13,6 +13,7 @@ import { Role } from '../../roles/entities/role.entity';
 import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 import { Subscription } from '../../subscriptions/entities/subscription.entity';
+import { Session } from '../../sessions/entities/session.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -66,4 +67,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Subscription, (subscription) => subscription.subscribedTo)
   @Field(() => [Subscription])
   subscribers: Subscription[];
+
+  @OneToMany(() => Session, (session) => session.mentee)
+  @Field(() => [Session])
+  menteeSessions: Session[];
+
+  @OneToMany(() => Session, (session) => session.mentor)
+  @Field(() => [Session])
+  mentorSessions: Session[];
 }
