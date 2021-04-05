@@ -3,7 +3,7 @@ import { IsString, IsArray, IsOptional } from 'class-validator';
 import { Role } from '../entities/role.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @InputType()
 export class CreateRoleInput {

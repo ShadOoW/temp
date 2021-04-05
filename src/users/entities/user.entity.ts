@@ -12,7 +12,7 @@ import { BaseEntity } from '../../shared/base.entity';
 import { Role } from '../../roles/entities/role.entity';
 import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
-import { Subscription } from './subscription.entity';
+import { Subscription } from '../../subscriptions/entities/subscription.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })

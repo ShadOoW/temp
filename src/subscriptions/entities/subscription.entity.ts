@@ -1,7 +1,7 @@
 import { Entity, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
-import { User } from './user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ObjectType()
 @Entity({ name: 'subscriptions' })

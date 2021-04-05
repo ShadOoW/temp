@@ -48,6 +48,11 @@ input CreateRoleInput {
   permissions: [RolePermissionInput!]!
 }
 
+input CreateSubscriptionInput {
+  subscribedTo: SubscriptionUserInput!
+  subscriber: SubscriptionUserInput!
+}
+
 input CreateUserInput {
   email: String!
   id: String
@@ -80,14 +85,26 @@ type GetRoles {
   totalCount: Int!
 }
 
+type GetSubscribers {
+  subscribers: [Subscription!]!
+  totalCount: Int!
+}
+
+type GetSubscriptions {
+  subscriptions: [Subscription!]!
+  totalCount: Int!
+}
+
 type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
+  createSubscription(createSubscriptionInput: CreateSubscriptionInput!): Subscription!
   createUser(createUserInput: CreateUserInput!): User!
   removePermission(id: String!): Permission!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
+  removeSubscription(id: Int!): Subscription!
   removeUser(id: String!): User!
   updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
   updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
@@ -139,6 +156,8 @@ type Query {
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
+  subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
+  subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
   user(id: String!): User!
   userRequests(id: String!): User!
   users: [User!]!
@@ -177,6 +196,10 @@ type Subscription {
   subscribedTo: User!
   subscriber: User!
   updatedAt: DateTime!
+}
+
+input SubscriptionUserInput {
+  id: String!
 }
 
 input UpdatePermissionInput {

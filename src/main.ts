@@ -4,25 +4,14 @@
  * All routes strat with prefix API/V1 means first version of the app
  */
 import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as Express from 'express';
-import * as cors from 'cors';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 import { configService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
 
-const server = Express();
-server.use(
-  cors({
-    origin: false,
-  }),
-);
-server.get('/', (req, res) => res.send('ok'));
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(

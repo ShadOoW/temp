@@ -6,14 +6,13 @@ import { UpdateRequestInput } from './dto/update-request.input';
 import { Request } from '../requests/entities/request.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Subscription } from '../users/entities/subscription.entity';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 
 @Injectable()
 export class RequestsService {
   constructor(
     @InjectRepository(Request) private readonly repo: Repository<Request>,
-    @InjectRepository(Subscription)
-    private readonly subscriptionRepo: Repository<Subscription>,
+    private subscriptionService: SubscriptionsService,
   ) {}
 
   getRequest(requestEntity: Request): any {
@@ -76,11 +75,10 @@ export class RequestsService {
     const updatedRequest = await this.repo.save({ ...updateRequestInput });
 
     if (status == 'accepted') {
-      const subscription = new Subscription();
-      subscription.subscriber = request.from;
-      subscription.subscribedTo = request.to;
-
-      this.subscriptionRepo.save(subscription);
+      this.subscriptionService.create({
+        subscriber: request.from,
+        subscribedTo: request.to,
+      });
     }
 
     return updatedRequest;
