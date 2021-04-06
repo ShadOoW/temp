@@ -1,19 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {
-  Body,
-  Controller,
-  Post,
-  Res,
-  Get,
-  Req,
-  UseGuards,
-  HttpStatus,
-} from '@nestjs/common';
+import { Body, Controller, Post, Res, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { IUser } from '../users/interfaces/user';
 import { CreateUserInput } from '../users/dto/create-user.input';
 

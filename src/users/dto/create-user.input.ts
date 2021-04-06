@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsEmail,
   IsBoolean,
-  IsNotEmpty,
   IsUUID,
 } from 'class-validator';
 import { User } from '../entities/user.entity';
@@ -51,7 +50,6 @@ export class CreateUserInput {
 
   public static async toEntity(inputs: Partial<CreateUserInput>) {
     const it = new User();
-    console.log('inputs', inputs.password);
     const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
 
     it.id = inputs.id;
