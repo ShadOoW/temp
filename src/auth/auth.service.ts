@@ -3,10 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 import { UsersService } from '../users/users.service';
 import { IPayload } from '../users/interfaces/payload';
-import { IUser } from 'src/users/interfaces/user';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { CreateUserInput } from '../users/dto/create-user.input';
-import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -37,21 +35,13 @@ export class AuthService {
    * @param {UserDto} userDTO
    * @returns {(User,string)} user info with access token
    */
-  async registerUser(
-    registerUserInputs: CreateUserInput,
-  ): Promise<{ user: IUser; token: string }> {
+  async registerUser(registerUserInputs: CreateUserInput) {
     const { provider } = registerUserInputs;
     const findUser = await this.usersService.findByPayload(registerUserInputs);
     if (findUser) {
       if (provider === 'local')
         throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    const user = await this.usersService.create(registerUserInputs);
-    const payload = {
-      username: user.username,
-      email: user.email,
-    };
-    const token = await this.signPayload(payload);
-    return { user, token };
+    return this.usersService.create(registerUserInputs);
   }
 }
