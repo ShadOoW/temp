@@ -14,5 +14,5 @@ async function run() {
 }
 
 run()
-  .then((_) => console.log('...wait for script to exit'))
+  .then(() => console.log('...wait for script to exit'))
   .catch((error) => console.error('seed error', error));
