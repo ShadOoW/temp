@@ -146,11 +146,13 @@ export async function permissionsSeed() {
       name: 'delete:session',
       description: 'permisssion to delete session',
     },
-  ].map((permission) =>
+  ].map((permission, index) =>
     permissionService
       .create(permission)
-      .then((r) => (console.log('done ->', r.name), r)),
+      .then((r) => (console.log(`permission ${index} done ->`, r.name), r))
+      .catch(() => console.log(`permission ${index} -> error`)),
   );
 
-  return await Promise.all(work);
+  await Promise.all(work);
+  return await connection.close();
 }

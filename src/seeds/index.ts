@@ -1,6 +1,7 @@
 import { usersSeed } from './users';
 import { permissionsSeed } from './permissions';
 import { rolesSeed } from './roles';
+import { requestsSeed } from './requests';
 
 async function run() {
   if (process.argv) {
@@ -10,6 +11,8 @@ async function run() {
       await rolesSeed();
     if (process.argv.includes('users') || process.argv.includes('all'))
       await usersSeed();
+    if (process.argv.includes('requests') || process.argv.includes('all'))
+      await requestsSeed();
   }
 }
 

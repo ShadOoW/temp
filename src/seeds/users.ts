@@ -62,25 +62,29 @@ export async function usersSeed() {
   );
   const roleService = new RolesService(connection.getRepository(Role));
   const { roles } = await roleService.findAll();
-  const { id: mentorId } = roles.find((r) => r.name === 'mentor');
-  const { id: menteeId } = roles.find((r) => r.name === 'mentee');
-  const defaults = [
-    genUser('mentee', 'mentee', menteeId),
-    genUser('mentor', 'mentor', mentorId),
-  ];
-  const mentors = _.range(1, 3).map(() => {
-    const username = faker.internet.userName();
-    return genUser(username, 'mentor', mentorId);
-  });
-  const mentees = _.range(1, 3).map(() => {
-    const username = faker.internet.userName();
-    return genUser(username, 'mentee', menteeId);
-  });
-  const work = [...defaults, ...mentors, ...mentees].map((user) =>
-    userService
-      .create(user)
-      .then((r) => (console.log('done ->', r.username), r)),
-  );
+  if (roles.length) {
+    const { id: mentorId } = roles.find((r) => r.name === 'mentor');
+    const { id: menteeId } = roles.find((r) => r.name === 'mentee');
+    const defaults = [
+      genUser('mentee', 'mentee', menteeId),
+      genUser('mentor', 'mentor', mentorId),
+    ];
+    const mentors = _.range(1, 10).map(() => {
+      const username = faker.internet.userName();
+      return genUser(username, 'mentor', mentorId);
+    });
+    const mentees = _.range(1, 10).map(() => {
+      const username = faker.internet.userName();
+      return genUser(username, 'mentee', menteeId);
+    });
+    const work = [...defaults, ...mentors, ...mentees].map((user, index) =>
+      userService
+        .create(user)
+        .then((r) => (console.log(`user ${index} done ->`, r.username), r))
+        .catch(() => console.log(`user ${index} -> error`)),
+    );
 
-  return await Promise.all(work);
+    await Promise.all(work);
+    return await connection.close();
+  }
 }
