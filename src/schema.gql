@@ -42,7 +42,6 @@ input CreateRequestInput {
 
 input CreateRoleInput {
   description: String!
-  id: String
   name: String!
   permissions: [RolePermissionInput!]!
 }

@@ -7,9 +7,6 @@ import { User } from '../../users/entities/user.entity';
 
 @InputType()
 export class CreateRoleInput {
-  @Field(() => String, { nullable: true })
-  id: string;
-
   @Field(() => String)
   @IsString()
   name: string;
@@ -25,11 +22,10 @@ export class CreateRoleInput {
   // @Field(() => [RolePermissionInput])
   @IsArray()
   @IsOptional()
-  users: User[];
+  users?: User[];
 
   public static from(dto: Partial<CreateRoleInput>) {
     const it = new CreateRoleInput();
-    it.id = dto.id;
     it.name = dto.name;
     it.description = dto.description;
     it.permissions = dto.permissions;
@@ -38,19 +34,9 @@ export class CreateRoleInput {
 
   public static fromEntity(entity: Role) {
     return this.from({
-      id: entity.id,
       name: entity.name,
       description: entity.description,
       permissions: entity.permissions,
     });
-  }
-
-  public toEntity() {
-    const it = new Role();
-    it.id = this.id;
-    it.name = this.name;
-    it.description = this.description;
-    it.permissions = this.permissions;
-    return it;
   }
 }

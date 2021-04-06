@@ -25,8 +25,8 @@ export class PermissionsService {
       .then((e) => CreatePermissionInput.fromEntity(e));
   }
 
-  async findAll(pagination: PaginationArgs) {
-    const { take, skip } = pagination;
+  async findAll(pagination: PaginationArgs = null) {
+    const { take, skip } = pagination || {};
     const [permissions, totalCount] = await this.repo.findAndCount({
       order: {
         createdAt: 'DESC',

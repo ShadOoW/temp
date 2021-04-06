@@ -25,8 +25,8 @@ export class RolesService {
       .then((e) => CreateRoleInput.fromEntity(e));
   }
 
-  async findAll(pagination: PaginationArgs) {
-    const { skip, take } = pagination;
+  async findAll(pagination: PaginationArgs = null) {
+    const { skip, take } = pagination || {};
     const [roles, totalCount] = await this.repo.findAndCount({
       relations: ['permissions'],
       order: {

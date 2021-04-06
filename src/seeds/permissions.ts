@@ -10,7 +10,7 @@ export async function permissionsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const userService = new PermissionsService(
+  const permissionService = new PermissionsService(
     connection.getRepository(Permission),
   );
 
@@ -147,7 +147,7 @@ export async function permissionsSeed() {
       description: 'permisssion to delete session',
     },
   ].map((permission) =>
-    userService
+    permissionService
       .create(permission)
       .then((r) => (console.log('done ->', r.name), r)),
   );

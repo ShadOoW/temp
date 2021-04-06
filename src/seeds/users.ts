@@ -6,15 +6,17 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { Profile } from '../profiles/entities/profile.entity';
 import { ProfilesService } from '../profiles/profiles.service';
+import { RolesService } from '../roles/roles.service';
+import { Role } from '../roles/entities/role.entity';
 
-function genUser(username, type) {
+function genUser(username, type, role) {
   const user = {
     username,
     email: `${username}@email.com`,
     password: `${username}123`,
     provider: 'local',
     isAdmin: false,
-    role: 'cb9e058e-b2c6-4ef8-a404-ed564929671a',
+    role,
     profile: {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -58,14 +60,21 @@ export async function usersSeed() {
     connection.getRepository(User),
     new ProfilesService(connection.getRepository(Profile)),
   );
-  const defaults = [genUser('mentee', 'mentee'), genUser('mentor', 'mentor')];
+  const roleService = new RolesService(connection.getRepository(Role));
+  const { roles } = await roleService.findAll();
+  const { id: mentorId } = roles.find((r) => r.name === 'mentor');
+  const { id: menteeId } = roles.find((r) => r.name === 'mentee');
+  const defaults = [
+    genUser('mentee', 'mentee', menteeId),
+    genUser('mentor', 'mentor', mentorId),
+  ];
   const mentors = _.range(1, 3).map(() => {
     const username = faker.internet.userName();
-    return genUser(username, 'mentor');
+    return genUser(username, 'mentor', mentorId);
   });
   const mentees = _.range(1, 3).map(() => {
     const username = faker.internet.userName();
-    return genUser(username, 'mentee');
+    return genUser(username, 'mentee', menteeId);
   });
   const work = [...defaults, ...mentors, ...mentees].map((user) =>
     userService
