@@ -6,11 +6,10 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
-// import { jwtConstants } from '../shared/constants';
 import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { FacebookStrategy } from './strategies/facebook.strategy';
-import { LinkedinStrategy } from './strategies/linkedin.strategy';
+// import { GoogleStrategy } from './strategies/google.strategy';
+// import { FacebookStrategy } from './strategies/facebook.strategy';
+// import { LinkedinStrategy } from './strategies/linkedin.strategy';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { ProfilesService } from '../profiles/profiles.service';
@@ -37,9 +36,6 @@ import { Profile } from '../profiles/entities/profile.entity';
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    GoogleStrategy,
-    FacebookStrategy,
-    LinkedinStrategy,
     ProfilesService,
   ],
   exports: [AuthService, JwtModule],

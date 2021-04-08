@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Body, Controller, Post, Res, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Res,
+  Request,
+  HttpStatus,
+  UseGuards,
+  HttpCode,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { IUser } from '../users/interfaces/user';
+// import { IUser } from '../users/interfaces/user';
 import { CreateUserInput } from '../users/dto/create-user.input';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { Public } from '../shared/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -31,19 +42,13 @@ export class AuthController {
    * @param {LoginDto} userDto
    * @returns {User} user info with access token
    */
+  @Public()
   @Post('login')
-  async login(
-    @Body() userDto: LoginDto,
-  ): Promise<{ user: IUser; token: string }> {
-    const user = await this.usersService.findByLogin(userDto);
-
-    const payload = {
-      username: user.username,
-      email: user.email,
-    };
-
-    const token = await this.authService.signPayload(payload);
-    return { user, token };
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
   /**

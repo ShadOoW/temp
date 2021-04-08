@@ -1,6 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsOptional } from 'class-validator';
-import { Request } from '../entities/request.entity';
 import { CreateRequestUserInput } from './request.inputs';
 
 @InputType()

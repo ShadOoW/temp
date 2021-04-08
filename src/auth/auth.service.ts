@@ -1,24 +1,28 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { sign } from 'jsonwebtoken';
 import { UsersService } from '../users/users.service';
-import { IPayload } from '../users/interfaces/payload';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { CreateUserInput } from '../users/dto/create-user.input';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   /**
    * Generate token with sign of JWT
    * @param {IPayload} payload
    * @returns {string} token
    */
-  async signPayload(payload: IPayload): Promise<any> {
-    return sign(payload, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+  async login(user: any) {
+    const payload = { email: user.email, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   /**
@@ -26,8 +30,8 @@ export class AuthService {
    * @param {IPayload} payload
    * @returns {User} user
    */
-  async validateUser(payload: IPayload): Promise<any> {
-    return await this.usersService.findByPayload(payload);
+  async validateUser(payload: LoginDto): Promise<any> {
+    return await this.usersService.findByLogin(payload);
   }
 
   /**
@@ -37,7 +41,7 @@ export class AuthService {
    */
   async registerUser(registerUserInputs: CreateUserInput) {
     const { provider } = registerUserInputs;
-    const findUser = await this.usersService.findByPayload(registerUserInputs);
+    const findUser = await this.usersService.findByLogin(registerUserInputs);
     if (findUser) {
       if (provider === 'local')
         throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);

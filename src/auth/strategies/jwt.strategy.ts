@@ -24,7 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     done: VerifiedCallback,
   ): Promise<void | VerifiedCallback> {
     const user = await this.authService.validateUser(payload);
-
     if (!user) {
       return done(
         new HttpException(ERROR_MESSAGES.UNAUTHORIZE, HttpStatus.UNAUTHORIZED),

@@ -3,7 +3,6 @@ import { ItemService } from './item.service';
 import { Item } from '../item/entities/item.entity';
 import { User } from '../users/decorators/user.decorator';
 import { User as IUser } from '../users/entities/user.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CaslAbilityFactory, AppAbility } from '../casl/casl-ability.factory';
 import { ItemDto } from '../item/dto/item.dto';
 import { PoliciesGuard } from '../casl/guards/check-policies.guard';
@@ -18,15 +17,13 @@ export class ItemController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, Item))
+  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, Item))
   public async getAll(): Promise<ItemDto[]> {
     return await this.serv.getAll();
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   public async post(
     @User() user: IUser,
     @Body() dto: ItemDto,

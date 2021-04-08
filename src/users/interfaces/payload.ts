@@ -1,6 +1,7 @@
 export interface IPayload {
   email: string;
-  username: string;
+  password: string;
+  username?: string;
   iat?: number;
   expiresIn?: string;
 }

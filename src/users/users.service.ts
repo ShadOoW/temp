@@ -6,7 +6,6 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
-import { IPayload } from './interfaces/payload';
 import { LoginDto } from '../auth/dto/login.dto';
 import { IUser } from './interfaces/user';
 import { CreateUserInput } from './dto/create-user.input';
@@ -69,22 +68,14 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async findOne(id: string): Promise<any> {
+  async findOne(id: string = null): Promise<any> {
     return await this.repo
       .findOne(id, {
-        relations: [
-          'role',
-          'role.permissions',
-          'profile',
-          'subscriptions',
-          'subscriptions.subscriber',
-          'subscriptions.subscribedTo',
-          'subscribers',
-          'subscribers.subscriber',
-          'subscribers.subscribedTo',
-        ],
+        relations: ['role', 'role.permissions', 'profile'],
       })
-      .then((user) => GetUserDto.getUser(user));
+      .then((user) => {
+        return GetUserDto.getUser(user);
+      });
   }
 
   /**
@@ -93,12 +84,11 @@ export class UsersService {
    * @returns  {object} user infos
    */
   async findUserRequests(id: string): Promise<any> {
-    const user = await this.repo
+    return await this.repo
       .findOne(id, {
         relations: ['requestsTo', 'requestsFrom'],
       })
       .then((user) => user);
-    return user;
   }
 
   /**
@@ -165,17 +155,5 @@ export class UsersService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-  }
-
-  /**
-   * Finds by payload
-   * @param {IPayload} payload
-   * @returns {User} user data
-   */
-  async findByPayload(payload: IPayload): Promise<User> {
-    const { email, username } = payload;
-    return await this.repo.findOne({
-      where: [{ email }, { username }],
-    });
   }
 }

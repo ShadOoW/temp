@@ -20,8 +20,8 @@ export class CaslAbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Actions, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
-
-    if (user.isAdmin) {
+    console.log('CaslAbilityFactory ==>', user);
+    if (user) {
       can(Actions.Manage, 'all'); // read-write access to everything
     } else {
       can(Actions.Read, 'all'); // read-only access to everything
