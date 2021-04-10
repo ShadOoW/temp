@@ -5,9 +5,13 @@ import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateUserInput } from './dto/create-user.input';
+import { PoliciesGuard } from '../casl/guards/check-policies.guard';
+import { CaslAbilityFactory, AppAbility } from '../casl/casl-ability.factory';
+import { CheckPolicies } from '../casl/decorators/check-policies.decorator';
+import { Actions } from '../shared/actions';
 
 @Resolver(() => User)
-// @UseGuards(JwtAuthGuard)
+@UseGuards(PoliciesGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
@@ -16,11 +20,13 @@ export class UsersResolver {
     return await this.usersService.create(createUserInput);
   }
 
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
   @Query(() => [User], { name: 'users' })
   findAll() {
     return this.usersService.findAll();
   }
 
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
   @Query(() => [User], { name: 'usersByRole' })
   findByRole(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findByRole(id);

@@ -58,11 +58,11 @@ export class Profile extends BaseEntity {
   coachingDomains?: string[];
 
   @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Column({ type: 'text', nullable: true })
   canOffer?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Column({ type: 'text', nullable: true })
   professionalBg?: string;
 
   @Field(() => Int, { nullable: true })
@@ -82,10 +82,10 @@ export class Profile extends BaseEntity {
   wantedDomain?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Column({ type: 'text', nullable: true })
   whyNeedCoaching?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Column({ type: 'text', nullable: true })
   selfDescription?: string;
 }

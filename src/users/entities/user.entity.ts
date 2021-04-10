@@ -14,10 +14,11 @@ import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 import { Subscription } from '../../subscriptions/entities/subscription.entity';
 import { Session } from '../../sessions/entities/session.entity';
+import { UserStatus } from '../interfaces/user';
 
 @ObjectType()
 @Entity({ name: 'users' })
-@Unique(['email', 'username'])
+@Unique(['email'])
 export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 300 })
   @Field(() => String, { nullable: true })
@@ -25,11 +26,24 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   @Field(() => String, { nullable: true })
-  username: string;
+  username?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   @Field(() => String, { nullable: true })
   password: string;
+
+  @Column({ type: 'boolean', default: false })
+  @Field(() => Boolean, { nullable: true })
+  active: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: ['open', 'close', 'away', 'busy'],
+    enumName: 'userStatusEnum',
+    default: 'close',
+  })
+  @Field(() => String, { nullable: true })
+  status?: UserStatus;
 
   @Column({ type: 'varchar', length: 300, default: 'local' })
   @Field(() => String, { nullable: true })
@@ -40,7 +54,7 @@ export class User extends BaseEntity {
   providerId: string;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean, { nullable: true })
+  @Field(() => Boolean)
   isAdmin: boolean;
 
   @ManyToOne(() => Role, (role) => role.users)

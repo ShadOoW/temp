@@ -39,8 +39,23 @@ export class GetUserDto {
         ],
       },
       profile: userEntity.profile,
-      subscriptions: userEntity.subscriptions,
-      subscribers: userEntity.subscribers,
+    };
+  }
+
+  public static getUserRolePermissions(userEntity: User): any {
+    return {
+      id: userEntity.id,
+      isAdmin: userEntity.isAdmin,
+      role: {
+        id: userEntity.role?.id,
+        name: userEntity.role?.name,
+        permissions: [
+          ...(userEntity.role?.permissions || []).map((permission) => ({
+            id: permission.id,
+            name: permission.name,
+          })),
+        ],
+      },
     };
   }
 }

@@ -68,6 +68,21 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
+  async getUserRole(id: string = null): Promise<any> {
+    return await this.repo
+      .findOne(id, {
+        relations: ['role', 'role.permissions'],
+      })
+      .then((user) => {
+        return GetUserDto.getUserRolePermissions(user);
+      });
+  }
+
+  /**
+   * Finds one user
+   * @param {string} id of user
+   * @returns  {object} user infos
+   */
   async findOne(id: string = null): Promise<any> {
     return await this.repo
       .findOne(id, {

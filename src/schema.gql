@@ -60,7 +60,6 @@ input CreateSubscriptionInput {
 
 input CreateUserInput {
   email: String!
-  id: String
   isAdmin: Boolean
   password: String
   profile: CreateProfileInput
@@ -276,15 +275,19 @@ input UpdateRoleInput {
 }
 
 input UpdateUserInput {
+  active: Boolean
+  email: String
   id: String
   role: String
+  username: String
 }
 
 type User {
+  active: Boolean
   createdAt: DateTime!
   email: String
   id: String!
-  isAdmin: Boolean
+  isAdmin: Boolean!
   menteeSessions: [Session!]!
   mentorSessions: [Session!]!
   password: String
@@ -294,6 +297,7 @@ type User {
   requestsFrom: [Request!]!
   requestsTo: [Request!]!
   role: Role
+  status: String
   subscribers: [Subscription!]!
   subscriptions: [Subscription!]!
   updatedAt: DateTime!

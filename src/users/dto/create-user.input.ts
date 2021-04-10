@@ -14,9 +14,6 @@ import * as bcrypt from 'bcrypt';
 
 @InputType()
 export class CreateUserInput {
-  @Field(() => String, { nullable: true })
-  id: string;
-
   @Field(() => String)
   @IsString()
   username: string;
@@ -35,7 +32,7 @@ export class CreateUserInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
-  providerId: string;
+  providerId?: string;
 
   @Field(() => Boolean, { nullable: true })
   @IsBoolean()
@@ -43,18 +40,17 @@ export class CreateUserInput {
 
   @Field(() => String, { nullable: true })
   @IsUUID()
-  role: Role;
+  role: any;
 
   @Field(() => CreateProfileInput, { nullable: true })
-  profile: Profile;
+  profile: any;
 
   public static async toEntity(inputs: Partial<CreateUserInput>) {
     const it = new User();
     const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
-
-    it.id = inputs.id;
     it.username = inputs.username;
     it.email = inputs.email;
+    it.isAdmin = inputs.isAdmin;
     it.provider = inputs.provider;
     it.providerId = inputs.providerId;
     it.role = inputs.role;

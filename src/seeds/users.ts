@@ -9,45 +9,61 @@ import { ProfilesService } from '../profiles/profiles.service';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/entities/role.entity';
 
-function genUser(username, type, role) {
+function genUser(username, type, role = null) {
   const user = {
     username,
     email: `${username}@email.com`,
     password: `${username}123`,
     provider: 'local',
-    isAdmin: false,
+    isAdmin: role ? false : true,
+    active: false,
+    status: 'close',
     role,
     profile: {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       phoneNumber: faker.phone.phoneNumber(),
       city: faker.address.city(),
-      company: faker.company.companyName(),
-      website: faker.internet.url(),
-      linkedin: `www.linkedin.com/${username}`,
-      country: 'Maroc',
-      domainExpertise: 'Domain X',
-      yearsOfExperience: Math.floor(Math.random() * 11),
     },
   };
-  if (type === 'mentor') {
-    return {
-      ...user,
-      coachingType: 'Type A',
-      coachingDomains: ['Domain A', 'Domain C'],
-      canOffer: faker.lorem.paragraph(),
-      professionalBg: faker.lorem.paragraph(),
-      hoursPerMonth: Math.floor(Math.random() * 20),
-    };
-  }
-  return {
-    ...user,
-    currentPost: faker.name.jobDescriptor,
-    sector: faker.name.jobArea,
-    wantedDomain: 'Domaine B',
-    whyNeedCoaching: faker.lorem.paragraph(),
-    selfDescription: faker.lorem.paragraph(),
+  const m2mProfile = {
+    company: faker.company.companyName(),
+    website: faker.internet.url(),
+    linkedin: `www.linkedin.com/${username}`,
+    country: 'Maroc',
+    domainExpertise: 'Domain X',
+    yearsOfExperience: Math.floor(Math.random() * 11),
   };
+  switch (type) {
+    case 'mentor':
+      return {
+        ...user,
+        profile: {
+          ...user.profile,
+          ...m2mProfile,
+          coachingType: 'Type A',
+          coachingDomains: ['Domain A', 'Domain C'],
+          canOffer: faker.lorem.paragraph(),
+          professionalBg: faker.lorem.paragraph(),
+          hoursPerMonth: Math.floor(Math.random() * 20),
+        },
+      };
+    case 'mentee':
+      return {
+        ...user,
+        profile: {
+          ...user.profile,
+          ...m2mProfile,
+          currentPost: faker.name.jobDescriptor(),
+          sector: faker.name.jobArea(),
+          wantedDomain: 'Domaine B',
+          whyNeedCoaching: faker.lorem.paragraph(),
+          selfDescription: faker.lorem.paragraph(),
+        },
+      };
+    default:
+      return user;
+  }
 }
 export async function usersSeed() {
   const opt = {
@@ -66,14 +82,15 @@ export async function usersSeed() {
     const { id: mentorId } = roles.find((r) => r.name === 'mentor');
     const { id: menteeId } = roles.find((r) => r.name === 'mentee');
     const defaults = [
+      genUser('admin', 'admin'),
       genUser('mentee', 'mentee', menteeId),
       genUser('mentor', 'mentor', mentorId),
     ];
-    const mentors = _.range(1, 10).map(() => {
+    const mentors = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
       return genUser(username, 'mentor', mentorId);
     });
-    const mentees = _.range(1, 10).map(() => {
+    const mentees = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
       return genUser(username, 'mentee', menteeId);
     });
@@ -81,7 +98,7 @@ export async function usersSeed() {
       userService
         .create(user)
         .then((r) => (console.log(`user ${index} done ->`, r.username), r))
-        .catch(() => console.log(`user ${index} -> error`)),
+        .catch((e) => console.log(`user ${index} error ->`, e)),
     );
 
     await Promise.all(work);

@@ -6,12 +6,14 @@ import { User } from './entities/user.entity';
 import { ProfilesModule } from '../profiles/profiles.module';
 import { ProfilesService } from '../profiles/profiles.service';
 import { Profile } from '../profiles/entities/profile.entity';
+import { CaslModule } from '../casl/casl.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Profile]),
     ProfilesModule,
+    CaslModule,
   ],
   providers: [UsersResolver, UsersService, ProfilesService],
   exports: [UsersService],

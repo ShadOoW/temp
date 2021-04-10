@@ -6,6 +6,7 @@ import { UpdateRequestInput } from './dto/update-request.input';
 import { GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequests } from './dto/get-roles.dto';
 
+//TODO ADD REQUESTS CASL
 @Resolver(() => Request)
 export class RequestsResolver {
   constructor(private readonly requestsService: RequestsService) {}

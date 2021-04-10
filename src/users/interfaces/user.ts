@@ -10,3 +10,10 @@ export interface IUser {
   requestsTo?: IRequest[];
   requestsFrom?: IRequest[];
 }
+
+export enum UserStatus {
+  open = 'open',
+  away = 'away',
+  close = 'close',
+  busy = 'busy',
+}

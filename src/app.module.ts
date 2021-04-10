@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { configService } from './config/config.service';
-import { ItemModule } from './item/item.module';
 import { AuthModule } from './auth/auth.module';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { CaslModule } from './casl/casl.module';
@@ -30,7 +29,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
-    ItemModule,
     CaslModule,
     PermissionsModule,
     RolesModule,
