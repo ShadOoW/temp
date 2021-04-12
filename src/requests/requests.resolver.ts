@@ -6,7 +6,7 @@ import { Request } from './entities/request.entity';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { GetRequestsArgs } from './dto/get-requests.args';
-import { GetRequests } from './dto/get-roles.dto';
+import { GetRequest, GetRequests } from './dto/get-requests.dto';
 
 @Resolver(() => Request)
 @UseGuards(PoliciesGuard)
@@ -25,7 +25,7 @@ export class RequestsResolver {
     return this.requestsService.findAll(args);
   }
 
-  @Query(() => Request, { name: 'request' })
+  @Query(() => GetRequest, { name: 'request' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.requestsService.findOne(id);
   }

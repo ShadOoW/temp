@@ -1,6 +1,65 @@
 import { User } from '../entities/user.entity';
+import { ObjectType, Field } from '@nestjs/graphql';
+import { Role } from '../../roles/entities/role.entity';
+import { Request } from '../../requests/entities/request.entity';
+import { Profile } from '../../profiles/entities/profile.entity';
+import { Subscription } from '../../subscriptions/entities/subscription.entity';
+import { Session } from '../../sessions/entities/session.entity';
+import { UserStatus } from '../interfaces/user';
 
+@ObjectType()
 export class GetUserDto {
+  @Field(() => String, { nullable: true })
+  id?: string;
+
+  @Field(() => String, { nullable: true })
+  email?: string;
+
+  @Field(() => String, { nullable: true })
+  username?: string;
+
+  @Field(() => String, { nullable: true })
+  password?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  active?: boolean;
+
+  @Field(() => String, { nullable: true })
+  status?: UserStatus;
+
+  @Field(() => String, { nullable: true })
+  provider?: string;
+
+  @Field(() => String, { nullable: true })
+  providerId?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  isAdmin?: boolean;
+
+  @Field(() => Role, { nullable: true })
+  role?: Role;
+
+  @Field(() => Profile, { nullable: true })
+  profile?: Profile;
+
+  @Field(() => [Request], { nullable: true })
+  requestsTo?: Request[];
+
+  @Field(() => [Request], { nullable: true })
+  requestsFrom?: Request[];
+
+  @Field(() => [Subscription], { nullable: true })
+  subscriptions?: Subscription[];
+
+  @Field(() => [Subscription], { nullable: true })
+  subscribers?: Subscription[];
+
+  @Field(() => [Session], { nullable: true })
+  menteeSessions?: Session[];
+
+  @Field(() => [Session], { nullable: true })
+  mentorSessions?: Session[];
+
   public static getUserRequests(userEntity: any): any {
     return {
       id: userEntity.id,

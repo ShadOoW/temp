@@ -41,11 +41,11 @@ input CreateProfileInput {
 }
 
 input CreateRequestInput {
-  description: String!
-  excerpt: String!
+  expectations: String
   from: String!
-  title: String!
+  message: String
   to: String
+  whyNeedCoaching: String!
 }
 
 input CreateRoleInput {
@@ -101,8 +101,20 @@ type GetPermissions {
   totalCount: Int!
 }
 
+type GetRequest {
+  createdAt: DateTime!
+  expectations: String
+  from: GetUserDto!
+  id: String!
+  message: String
+  status: String
+  to: GetUserDto
+  updatedAt: DateTime!
+  whyNeedCoaching: String!
+}
+
 type GetRequests {
-  requests: [Request!]!
+  requests: [GetRequest!]!
   totalCount: Int!
 }
 
@@ -124,6 +136,26 @@ type GetSubscribers {
 type GetSubscriptions {
   subscriptions: [Subscription!]!
   totalCount: Int!
+}
+
+type GetUserDto {
+  active: Boolean
+  email: String
+  id: String
+  isAdmin: Boolean
+  menteeSessions: [Session!]
+  mentorSessions: [Session!]
+  password: String
+  profile: Profile
+  provider: String
+  providerId: String
+  requestsFrom: [Request!]
+  requestsTo: [Request!]
+  role: Role
+  status: String
+  subscribers: [Subscription!]
+  subscriptions: [Subscription!]
+  username: String
 }
 
 type Mutation {
@@ -190,7 +222,7 @@ type Query {
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
-  request(id: String!): Request!
+  request(id: String!): GetRequest!
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
@@ -220,7 +252,7 @@ type Role {
   createdAt: DateTime!
   description: String!
   id: String!
-  name: String!
+  name: String
   permissions: [Permission!]!
   updatedAt: DateTime!
   users: [User!]!
@@ -288,12 +320,12 @@ input UpdateProfileInput {
 }
 
 input UpdateRequestInput {
-  description: String
-  excerpt: String
+  expectations: String
   from: String
+  message: String
   status: String
-  title: String
   to: String
+  whyNeedCoaching: String
 }
 
 input UpdateRoleInput {

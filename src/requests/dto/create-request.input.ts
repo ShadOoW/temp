@@ -6,16 +6,17 @@ import { CreateRequestUserInput } from './request.inputs';
 export class CreateRequestInput {
   @Field(() => String)
   @IsString()
-  title: string;
+  whyNeedCoaching: string;
 
-  @Field(() => String)
-  @IsString()
-  excerpt?: string;
-
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
-  description?: string;
+  expectations?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  message?: string;
 
   @Field(() => String)
   from: CreateRequestUserInput;

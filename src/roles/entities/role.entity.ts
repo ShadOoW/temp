@@ -8,7 +8,7 @@ import { User } from '../../users/entities/user.entity';
 @Entity({ name: 'roles' })
 export class Role extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   name: string;
 
   @Column({ type: 'text', nullable: true })

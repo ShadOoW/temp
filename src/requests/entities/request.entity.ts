@@ -11,7 +11,7 @@ export class Request extends BaseEntity {
   @Field(() => String)
   title: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @Field(() => String)
   excerpt: string;
 

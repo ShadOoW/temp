@@ -18,8 +18,9 @@ export class RequestsService {
   getRequest(requestEntity: Request): any {
     return {
       id: requestEntity.id,
-      title: requestEntity.title,
-      description: requestEntity.description,
+      whyNeedCoaching: requestEntity.title,
+      expectations: requestEntity.description,
+      message: requestEntity.excerpt,
       from: {
         id: requestEntity.from.id,
         email: requestEntity.from.email,
@@ -57,7 +58,12 @@ export class RequestsService {
           );
       }
       return this.repo
-        .save(createRequestInput)
+        .save({
+          ...createRequestInput,
+          title: createRequestInput.whyNeedCoaching,
+          excerpt: createRequestInput.message,
+          description: createRequestInput.expectations,
+        })
         .then((request) => this.getRequest(request));
     } catch (error) {
       throw new HttpException(
@@ -88,7 +94,10 @@ export class RequestsService {
       skip,
       take,
     });
-    return { requests, totalCount };
+    return {
+      requests: requests.map((req) => this.getRequest(req)),
+      totalCount,
+    };
   }
 
   async findOne(id: string) {
@@ -122,7 +131,13 @@ export class RequestsService {
         HttpStatus.NOT_MODIFIED,
       );
     }
-    const updatedRequest = await this.repo.save({ id, ...updateRequestInput });
+    const updatedRequest = await this.repo.save({
+      id,
+      ...updateRequestInput,
+      title: updateRequestInput.whyNeedCoaching,
+      excerpt: updateRequestInput.message,
+      description: updateRequestInput.expectations,
+    });
 
     if (status == 'accepted') {
       this.subscriptionService.create({

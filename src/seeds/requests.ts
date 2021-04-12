@@ -21,8 +21,8 @@ async function genRequest(
   callback,
 ) {
   let request: any = {
-    title: faker.lorem.sentence(),
-    excerpt: faker.lorem.paragraph(),
+    whyNeedCoaching: faker.lorem.sentence(),
+    message: faker.lorem.paragraph(),
     from,
     to,
   };
@@ -102,8 +102,12 @@ export async function requestsSeed() {
       async (request, index) =>
         requestService
           .create(await request)
-          .then((r) => (console.log(`request ${index} done ->`, r.title), r))
-          .catch(() => console.log(`request ${index} -> error`)),
+          .then(
+            (r) => (
+              console.log(`request ${index} done ->`, r.whyNeedCoaching), r
+            ),
+          )
+          .catch((e) => console.log(`request ${index} error -> `, e)),
     );
 
     await Promise.all(work);
