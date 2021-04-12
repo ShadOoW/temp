@@ -14,7 +14,7 @@ import { Domain } from 'src/domains/entities/domain.entity';
 function genUser(username, type, role = null, domains = []) {
   const user = {
     username,
-    email: `${username}@email.com`,
+    email: `${username !== 'admin' ? username : 'adminos'}@email.com`,
     password: `${username}123`,
     provider: 'local',
     isAdmin: role ? false : true,

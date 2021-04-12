@@ -30,6 +30,7 @@ export class AuthController {
    * @param {UserDto} userDTO
    * @returns {Object} user info with access token
    */
+  @Public()
   @Post('register')
   async register(@Body() userDTO: CreateUserInput, @Res() res: Response) {
     return this.authService

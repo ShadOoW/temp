@@ -187,4 +187,16 @@ export class UsersService {
       );
     }
   }
+
+  /**
+   * Finds user by email or username
+   * @param {LoginDto} userDTO
+   * @returns {object} user info or exeption
+   */
+  async findByUserName(loginDTO: LoginDto): Promise<any> {
+    const { email } = loginDTO;
+    return await this.repo.findOne({
+      where: [{ email }],
+    });
+  }
 }

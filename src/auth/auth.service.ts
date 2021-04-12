@@ -19,9 +19,13 @@ export class AuthService {
    * @returns {string} token
    */
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+    };
     return {
-      access_token: this.jwtService.sign(payload),
+      user,
+      token: this.jwtService.sign(payload),
     };
   }
 
@@ -41,7 +45,7 @@ export class AuthService {
    */
   async registerUser(registerUserInputs: CreateUserInput) {
     const { provider } = registerUserInputs;
-    const findUser = await this.usersService.findByLogin(registerUserInputs);
+    const findUser = await this.usersService.findByUserName(registerUserInputs);
     if (findUser) {
       if (provider === 'local')
         throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
