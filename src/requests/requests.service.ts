@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { Request } from '../requests/entities/request.entity';
-import { Repository } from 'typeorm';
+import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 
@@ -46,7 +46,7 @@ export class RequestsService {
       });
       const privateRequest = to
         ? await this.repo.findOne({
-            where: { from, to, status: 'created' },
+            where: { from, to: Not(IsNull()), status: 'created' },
           })
         : null;
 

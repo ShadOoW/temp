@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 // import { IUser } from '../users/interfaces/user';
 import { CreateUserInput } from '../users/dto/create-user.input';
@@ -40,7 +39,6 @@ export class AuthController {
 
   /**
    * Login with local provider
-   * @param {LoginDto} userDto
    * @returns {User} user info with access token
    */
   @Public()
