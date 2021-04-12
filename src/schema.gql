@@ -2,20 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateDomainInput {
+  description: String!
+  name: String!
+}
+
 input CreatePermissionInput {
   description: String!
   name: String!
 }
 
+input CreateProfileDomainInput {
+  id: String!
+}
+
 input CreateProfileInput {
   canOffer: String
   city: String
-  coachingDomains: [String!]!
+  coachingDomains: [CreateProfileDomainInput!]!
   coachingType: String
   company: String
   country: String
   currentPost: String
-  domainExpertise: Int
+  domainExpertise: CreateProfileDomainInput
   firstName: String
   hoursPerMonth: Int
   lastName: String
@@ -25,7 +34,7 @@ input CreateProfileInput {
   professionalBg: String
   sector: String
   selfDescription: String
-  wantedDomain: String
+  wantedDomain: CreateProfileDomainInput
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
@@ -74,6 +83,19 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Domain {
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type GetDomains {
+  domains: [Domain!]!
+  totalCount: Int!
+}
+
 type GetPermissions {
   permissions: [Permission!]!
   totalCount: Int!
@@ -105,18 +127,21 @@ type GetSubscriptions {
 }
 
 type Mutation {
+  createDomain(createDomainInput: CreateDomainInput!): Domain!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): Subscription!
   createUser(createUserInput: CreateUserInput!): User!
+  removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): Subscription!
   removeUser(id: String!): User!
+  updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
@@ -135,13 +160,13 @@ type Permission {
 type Profile {
   canOffer: String
   city: String
-  coachingDomains: [String!]!
+  coachingDomains: [Domain!]!
   coachingType: String
   company: String
   country: String
   createdAt: DateTime!
   currentPost: String
-  domainExpertise: Int
+  domainExpertise: Domain
   firstName: String
   hoursPerMonth: Int
   id: String!
@@ -153,13 +178,15 @@ type Profile {
   sector: String
   selfDescription: String
   updatedAt: DateTime!
-  wantedDomain: String
+  wantedDomain: Domain
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
 }
 
 type Query {
+  domain(id: String!): Domain!
+  domains(skip: Int, take: Int): GetDomains!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
@@ -226,6 +253,11 @@ input SubscriptionUserInput {
   id: String!
 }
 
+input UpdateDomainInput {
+  description: String!
+  name: String!
+}
+
 input UpdatePermissionInput {
   description: String!
   name: String!
@@ -234,12 +266,12 @@ input UpdatePermissionInput {
 input UpdateProfileInput {
   canOffer: String
   city: String
-  coachingDomains: [String!]
+  coachingDomains: [CreateProfileDomainInput!]!
   coachingType: String
   company: String
   country: String
   currentPost: String
-  domainExpertise: Int
+  domainExpertise: CreateProfileDomainInput
   firstName: String
   hoursPerMonth: Int
   lastName: String
@@ -249,7 +281,7 @@ input UpdateProfileInput {
   professionalBg: String
   sector: String
   selfDescription: String
-  wantedDomain: String
+  wantedDomain: CreateProfileDomainInput
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int

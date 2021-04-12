@@ -17,7 +17,9 @@ export class ProfilesService {
   }
 
   async findOne(id: string) {
-    return await this.repo.findOne(id).then((profile) => profile);
+    return await this.repo
+      .findOne(id, { relations: ['domains'] })
+      .then((profile) => profile);
   }
 
   async update(id: string, updateProfileInput: UpdateProfileInput) {

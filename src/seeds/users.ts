@@ -8,8 +8,10 @@ import { Profile } from '../profiles/entities/profile.entity';
 import { ProfilesService } from '../profiles/profiles.service';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/entities/role.entity';
+import { DomainsService } from 'src/domains/domains.service';
+import { Domain } from 'src/domains/entities/domain.entity';
 
-function genUser(username, type, role = null) {
+function genUser(username, type, role = null, domains = []) {
   const user = {
     username,
     email: `${username}@email.com`,
@@ -31,7 +33,7 @@ function genUser(username, type, role = null) {
     website: faker.internet.url(),
     linkedin: `www.linkedin.com/${username}`,
     country: 'Maroc',
-    domainExpertise: 'Domain X',
+    domainExpertise: domains[0],
     yearsOfExperience: Math.floor(Math.random() * 11),
   };
   switch (type) {
@@ -42,7 +44,7 @@ function genUser(username, type, role = null) {
           ...user.profile,
           ...m2mProfile,
           coachingType: 'Type A',
-          coachingDomains: ['Domain A', 'Domain C'],
+          coachingDomains: domains,
           canOffer: faker.lorem.paragraph(),
           professionalBg: faker.lorem.paragraph(),
           hoursPerMonth: Math.floor(Math.random() * 20),
@@ -56,7 +58,7 @@ function genUser(username, type, role = null) {
           ...m2mProfile,
           currentPost: faker.name.jobDescriptor(),
           sector: faker.name.jobArea(),
-          wantedDomain: 'Domaine B',
+          wantedDomain: domains[0],
           whyNeedCoaching: faker.lorem.paragraph(),
           selfDescription: faker.lorem.paragraph(),
         },
@@ -77,22 +79,50 @@ export async function usersSeed() {
     new ProfilesService(connection.getRepository(Profile)),
   );
   const roleService = new RolesService(connection.getRepository(Role));
+  const domainService = new DomainsService(connection.getRepository(Domain));
+
   const { roles } = await roleService.findAll();
-  if (roles.length) {
+  const { domains } = await domainService.findAll();
+
+  if (roles.length && domains.length) {
+    const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
     const { id: mentorId } = roles.find((r) => r.name === 'mentor');
     const { id: menteeId } = roles.find((r) => r.name === 'mentee');
     const defaults = [
       genUser('admin', 'admin'),
-      genUser('mentee', 'mentee', menteeId),
-      genUser('mentor', 'mentor', mentorId),
+      genUser(
+        'mentee',
+        'mentee',
+        menteeId,
+        domains.slice(domainIndex, domainIndex + 1),
+      ),
+      genUser(
+        'mentor',
+        'mentor',
+        mentorId,
+        domains.slice(domainIndex, domainIndex + 2),
+      ),
     ];
     const mentors = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
-      return genUser(username, 'mentor', mentorId);
+      const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
+
+      return genUser(
+        username,
+        'mentor',
+        mentorId,
+        domains.slice(domainIndex, domainIndex + 2),
+      );
     });
     const mentees = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
-      return genUser(username, 'mentee', menteeId);
+      const domainIndex = Math.floor(Math.random() * (domains.length - 1) + 1);
+      return genUser(
+        username,
+        'mentee',
+        menteeId,
+        domains.slice(domainIndex, domainIndex + 1),
+      );
     });
     const work = [...defaults, ...mentors, ...mentees].map((user, index) =>
       userService

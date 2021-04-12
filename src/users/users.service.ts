@@ -46,7 +46,16 @@ export class UsersService {
    */
   async findAll(): Promise<IUser[]> {
     return await this.repo
-      .find({ relations: ['role', 'role.permissions', 'profile'] })
+      .find({
+        relations: [
+          'role',
+          'role.permissions',
+          'profile',
+          'profile.domainExpertise',
+          'profile.coachingDomains',
+          'profile.wantedDomain',
+        ],
+      })
       .then((users) => users.map((user) => GetUserDto.getUser(user)));
   }
 
@@ -86,7 +95,14 @@ export class UsersService {
   async findOne(id: string = null): Promise<any> {
     return await this.repo
       .findOne(id, {
-        relations: ['role', 'role.permissions', 'profile'],
+        relations: [
+          'role',
+          'role.permissions',
+          'profile',
+          'profile.domainExpertise',
+          'profile.coachingDomains',
+          'profile.wantedDomain',
+        ],
       })
       .then((user) => {
         return GetUserDto.getUser(user);

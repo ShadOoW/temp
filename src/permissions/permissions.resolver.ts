@@ -22,6 +22,7 @@ export class PermissionsResolver {
   ) {
     return this.permissionsService.create(createPermissionInput);
   }
+
   @Query(() => GetPermissions, { name: 'permissions' })
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, Permission))
   findAll(@Args() paginationArgs: PaginationArgs) {

@@ -24,11 +24,13 @@ export class RequestsService {
         id: requestEntity.from.id,
         email: requestEntity.from.email,
         username: requestEntity.from.username,
+        profile: requestEntity.from.profile,
       },
       to: {
         id: requestEntity.to?.id,
         email: requestEntity.to?.email,
         username: requestEntity.to?.username,
+        profile: requestEntity.to?.profile,
       },
       status: requestEntity.status,
       createdAt: requestEntity.createdAt,
@@ -38,7 +40,6 @@ export class RequestsService {
   async create(createRequestInput: CreateRequestInput) {
     const { from, to } = createRequestInput;
     try {
-      console.log(from, to);
       const publicRequest = await this.repo.findOne({
         where: { from, status: 'created' },
       });
@@ -72,7 +73,15 @@ export class RequestsService {
     delete args.skip;
     const [requests, totalCount] = await this.repo.findAndCount({
       where: args,
-      relations: ['to', 'from'],
+      relations: [
+        'to',
+        'from',
+        'to.profile',
+        'to.profile.domainExpertise',
+        'to.profile.coachingDomains',
+        'from.profile',
+        'from.profile.wantedDomain',
+      ],
       order: {
         createdAt: 'DESC',
       },
@@ -84,7 +93,17 @@ export class RequestsService {
 
   async findOne(id: string) {
     return await this.repo
-      .findOne(id, { relations: ['to', 'from'] })
+      .findOne(id, {
+        relations: [
+          'to',
+          'from',
+          'to.profile',
+          'to.profile.domainExpertise',
+          'to.profile.coachingDomains',
+          'from.profile',
+          'from.profile.wantedDomain',
+        ],
+      })
       .then((request) => this.getRequest(request));
   }
 

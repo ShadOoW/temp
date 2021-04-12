@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
+import { Domain } from '../../domains/entities/domain.entity';
 
 @ObjectType()
 @Entity({ name: 'profiles' })
@@ -45,17 +46,18 @@ export class Profile extends BaseEntity {
   @Column({ type: 'int', nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  domainExpertise?: string;
+  @ManyToOne(() => Domain)
+  @Field(() => Domain, { nullable: true })
+  domainExpertise?: Domain;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 300, nullable: true })
   coachingType?: string;
 
-  @Field(() => [String])
-  @Column({ type: 'varchar', array: true, nullable: true })
-  coachingDomains?: string[];
+  @Field(() => [Domain])
+  @ManyToMany(() => Domain, { nullable: true })
+  @JoinTable()
+  coachingDomains?: Domain[];
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })
@@ -77,9 +79,9 @@ export class Profile extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   sector?: string;
 
-  @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  wantedDomain?: string;
+  @ManyToOne(() => Domain)
+  @Field(() => Domain, { nullable: true })
+  wantedDomain?: Domain;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'text', nullable: true })

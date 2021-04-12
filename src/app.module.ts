@@ -14,6 +14,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { DomainsModule } from './domains/domains.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -36,6 +37,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     ProfilesModule,
     SubscriptionsModule,
     SessionsModule,
+    DomainsModule,
   ],
   providers: [
     {
