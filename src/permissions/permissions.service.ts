@@ -51,7 +51,7 @@ export class PermissionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ ...updatePermissionInput });
+    return await this.repo.save({ id, ...updatePermissionInput });
   }
 
   async remove(id: string) {

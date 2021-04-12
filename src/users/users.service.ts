@@ -46,7 +46,7 @@ export class UsersService {
    */
   async findAll(): Promise<IUser[]> {
     return await this.repo
-      .find({ relations: ['role', 'role.permissions'] })
+      .find({ relations: ['role', 'role.permissions', 'profile'] })
       .then((users) => users.map((user) => GetUserDto.getUser(user)));
   }
 
@@ -68,13 +68,13 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async getUserRole(id: string = null): Promise<any> {
+  async getUserPermissions(id: string = null): Promise<any> {
     return await this.repo
       .findOne(id, {
-        relations: ['role', 'role.permissions'],
+        relations: ['role', 'role.permissions', 'profile'],
       })
       .then((user) => {
-        return GetUserDto.getUserRolePermissions(user);
+        return GetUserDto.getUserAuthInfo(user);
       });
   }
 
@@ -120,10 +120,10 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const updateUserDto = UpdateUserInput.toEntity(updateUserInput);
+    // const updateUserDto = UpdateUserInput.toEntity(updateUserInput);
 
     return this.repo
-      .save(updateUserDto)
+      .save({ id, ...updateUserInput })
       .then((user) => GetUserDto.getUser(user));
   }
 

@@ -42,20 +42,16 @@ export class GetUserDto {
     };
   }
 
-  public static getUserRolePermissions(userEntity: User): any {
+  public static getUserAuthInfo(userEntity: User): any {
     return {
       id: userEntity.id,
       isAdmin: userEntity.isAdmin,
-      role: {
-        id: userEntity.role?.id,
-        name: userEntity.role?.name,
-        permissions: [
-          ...(userEntity.role?.permissions || []).map((permission) => ({
-            id: permission.id,
-            name: permission.name,
-          })),
-        ],
-      },
+      profile: userEntity.profile.id,
+      permissions: [
+        ...(userEntity.role?.permissions || []).map((permission) => ({
+          name: permission.name,
+        })),
+      ],
     };
   }
 }

@@ -33,11 +33,10 @@ export class JwtAuthGuard implements CanActivate {
       if (bearer !== 'Bearer' || !token) {
         return false;
       }
-
       try {
         const { sub: userId } = await this.jwtService.verifyAsync(token);
         if (userId) {
-          const user = await this.usersService.getUserRole(userId);
+          const user = await this.usersService.getUserPermissions(userId);
           request.user = user;
           return true;
         }

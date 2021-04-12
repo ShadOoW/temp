@@ -6,9 +6,6 @@ import { Role } from '../../roles/entities/role.entity';
 @InputType()
 export class UpdateUserInput {
   @Field(() => String, { nullable: true })
-  id: string;
-
-  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   username?: string;
@@ -30,7 +27,6 @@ export class UpdateUserInput {
 
   public static toEntity(inputs: Partial<UpdateUserInput>) {
     const it = new User();
-    it.id = inputs.id;
     it.role = inputs.role;
     return it;
   }

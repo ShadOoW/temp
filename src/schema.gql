@@ -36,7 +36,7 @@ input CreateRequestInput {
   excerpt: String!
   from: String!
   title: String!
-  to: String!
+  to: String
 }
 
 input CreateRoleInput {
@@ -117,11 +117,11 @@ type Mutation {
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): Subscription!
   removeUser(id: String!): User!
-  updatePermission(updatePermissionInput: UpdatePermissionInput!): Permission!
-  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
-  updateRequest(updateRequestInput: UpdateRequestInput!): Request!
-  updateRole(updateRoleInput: UpdateRoleInput!): Role!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
+  updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
+  updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
+  updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
 }
 
 type Permission {
@@ -162,7 +162,7 @@ type Profile {
 type Query {
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
-  profile(id: Int!): Profile!
+  profile(id: String!): Profile!
   request(id: String!): Request!
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
@@ -185,7 +185,7 @@ type Request {
   id: String!
   status: String
   title: String!
-  to: User!
+  to: User
   updatedAt: DateTime!
 }
 
@@ -228,14 +228,13 @@ input SubscriptionUserInput {
 
 input UpdatePermissionInput {
   description: String!
-  id: String
   name: String!
 }
 
 input UpdateProfileInput {
   canOffer: String
   city: String
-  coachingDomains: [String!]!
+  coachingDomains: [String!]
   coachingType: String
   company: String
   country: String
@@ -243,7 +242,6 @@ input UpdateProfileInput {
   domainExpertise: Int
   firstName: String
   hoursPerMonth: Int
-  id: String
   lastName: String
   linkedin: String
   phoneNumber: String
@@ -261,7 +259,6 @@ input UpdateRequestInput {
   description: String
   excerpt: String
   from: String
-  id: String!
   status: String
   title: String
   to: String
@@ -269,7 +266,6 @@ input UpdateRequestInput {
 
 input UpdateRoleInput {
   description: String!
-  id: String
   name: String!
   permissions: [RolePermissionInput!]!
 }
@@ -277,7 +273,6 @@ input UpdateRoleInput {
 input UpdateUserInput {
   active: Boolean
   email: String
-  id: String
   role: String
   username: String
 }

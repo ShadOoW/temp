@@ -21,7 +21,7 @@ export class Request extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ['created', 'updated', 'deleted', 'accepted', 'refused'],
+    enum: ['created', 'updated', 'accepted', 'refused'],
     enumName: 'statusEnum',
     default: 'created',
   })
@@ -29,8 +29,8 @@ export class Request extends BaseEntity {
   status?: RequestStatus;
 
   @ManyToOne(() => User, (user) => user.requestsTo)
-  @Field(() => User)
-  to: User;
+  @Field(() => User, { nullable: true })
+  to?: User;
 
   @ManyToOne(() => User, (user) => user.requestsFrom)
   @Field(() => User)

@@ -28,6 +28,6 @@ export class ProfilesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ ...updateProfileInput });
+    return await this.repo.save({ id, ...updateProfileInput });
   }
 }

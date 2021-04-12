@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { configService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
-import { RolesGuard } from './auth/guards/roles.guard';
 import { CaslModule } from './casl/casl.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
@@ -39,10 +38,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     SessionsModule,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

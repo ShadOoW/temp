@@ -22,13 +22,12 @@ export class PoliciesGuard implements CanActivate {
         CHECK_POLICIES_KEY,
         ctx.getHandler(),
       ) || [];
-
+    const args = context.getType() === 'http' ? { id: null } : ctx.getArgs();
     const { user } =
       context.getType() === 'http'
         ? context.switchToHttp().getRequest()
         : ctx.getContext().req;
-    const ability = this.caslAbilityFactory.createForUser(user);
-
+    const ability = this.caslAbilityFactory.createForUser(user, args);
     return policyHandlers.every((handler) =>
       this.execPolicyHandler(handler, ability),
     );

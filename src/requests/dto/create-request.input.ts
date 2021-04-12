@@ -20,6 +20,6 @@ export class CreateRequestInput {
   @Field(() => String)
   from: CreateRequestUserInput;
 
-  @Field(() => String)
-  to: CreateRequestUserInput;
+  @Field(() => String, { nullable: true })
+  to?: CreateRequestUserInput;
 }

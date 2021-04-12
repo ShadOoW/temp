@@ -1,3 +1,5 @@
+import { UseGuards } from '@nestjs/common';
+import { PoliciesGuard } from '../casl/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RequestsService } from './requests.service';
 import { Request } from './entities/request.entity';
@@ -6,8 +8,8 @@ import { UpdateRequestInput } from './dto/update-request.input';
 import { GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequests } from './dto/get-roles.dto';
 
-//TODO ADD REQUESTS CASL
 @Resolver(() => Request)
+@UseGuards(PoliciesGuard)
 export class RequestsResolver {
   constructor(private readonly requestsService: RequestsService) {}
 
@@ -30,12 +32,10 @@ export class RequestsResolver {
 
   @Mutation(() => Request)
   updateRequest(
+    @Args('id', { type: () => String }) id: string,
     @Args('updateRequestInput') updateRequestInput: UpdateRequestInput,
   ) {
-    return this.requestsService.update(
-      updateRequestInput.id,
-      updateRequestInput,
-    );
+    return this.requestsService.update(id, updateRequestInput);
   }
 
   @Mutation(() => Request)

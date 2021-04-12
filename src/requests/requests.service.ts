@@ -26,19 +26,44 @@ export class RequestsService {
         username: requestEntity.from.username,
       },
       to: {
-        id: requestEntity.to.id,
-        email: requestEntity.to.email,
-        username: requestEntity.to.username,
+        id: requestEntity.to?.id,
+        email: requestEntity.to?.email,
+        username: requestEntity.to?.username,
       },
       status: requestEntity.status,
       createdAt: requestEntity.createdAt,
     };
   }
 
-  create(createRequestInput: CreateRequestInput) {
-    return this.repo
-      .save(createRequestInput)
-      .then((request) => this.getRequest(request));
+  async create(createRequestInput: CreateRequestInput) {
+    const { from, to } = createRequestInput;
+    try {
+      console.log(from, to);
+      const publicRequest = await this.repo.findOne({
+        where: { from, status: 'created' },
+      });
+      const privateRequest = to
+        ? await this.repo.findOne({
+            where: { from, to, status: 'created' },
+          })
+        : null;
+
+      if (publicRequest) {
+        if (privateRequest || !to)
+          throw new HttpException(
+            ERROR_MESSAGES.CANNOT_CREATE,
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+      return this.repo
+        .save(createRequestInput)
+        .then((request) => this.getRequest(request));
+    } catch (error) {
+      throw new HttpException(
+        ERROR_MESSAGES.CANNOT_CREATE,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async findAll(args = null) {
@@ -72,7 +97,13 @@ export class RequestsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const updatedRequest = await this.repo.save({ ...updateRequestInput });
+    if (request.status === 'accepted' || request.status === 'refused') {
+      throw new HttpException(
+        ERROR_MESSAGES.CANNOT_UPDATE,
+        HttpStatus.NOT_MODIFIED,
+      );
+    }
+    const updatedRequest = await this.repo.save({ id, ...updateRequestInput });
 
     if (status == 'accepted') {
       this.subscriptionService.create({

@@ -52,7 +52,7 @@ export class RolesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ ...updateRoleInput });
+    return await this.repo.save({ id, ...updateRoleInput });
   }
 
   async remove(id: string) {

@@ -6,9 +6,6 @@ import { RequestStatus } from '../interfaces/requestStatus';
 
 @InputType()
 export class UpdateRequestInput extends PartialType(CreateRequestInput) {
-  @Field(() => String)
-  id: string;
-
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
@@ -31,7 +28,6 @@ export class UpdateRequestInput extends PartialType(CreateRequestInput) {
 
   public static toEntity(inputs: Partial<UpdateRequestInput>) {
     const it = new Request();
-    it.id = inputs.id;
     it.title = inputs.title;
     it.excerpt = inputs.excerpt;
     it.description = inputs.description;
