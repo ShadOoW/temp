@@ -337,7 +337,9 @@ input UpdateRoleInput {
 input UpdateUserInput {
   active: Boolean
   email: String
+  isAdmin: Boolean
   role: String
+  status: String
   username: String
 }
 

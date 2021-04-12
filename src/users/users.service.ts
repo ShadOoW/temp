@@ -129,6 +129,7 @@ export class UsersService {
    * @returns {object} user infos or exeption
    */
   async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
+    const { active } = updateUserInput;
     const user = await this.repo.findOne({ id });
     if (!user) {
       throw new HttpException(
@@ -136,8 +137,10 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    // const updateUserDto = UpdateUserInput.toEntity(updateUserInput);
-
+    // TODO send email
+    if (active) {
+      console.log('send email');
+    }
     return this.repo
       .save({ id, ...updateUserInput })
       .then((user) => GetUserDto.getUser(user));
@@ -168,7 +171,10 @@ export class UsersService {
   async findByLogin(loginDTO: LoginDto): Promise<IUser> {
     const { username, email, password } = loginDTO;
     const user = await this.repo.findOne({
-      where: [{ email }, { username }],
+      where: [
+        { email, active: true },
+        { username, active: true },
+      ],
       relations: ['role', 'role.permissions', 'profile'],
     });
     if (!user) {

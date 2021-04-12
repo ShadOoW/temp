@@ -7,8 +7,6 @@ import {
   IsUUID,
 } from 'class-validator';
 import { User } from '../entities/user.entity';
-import { Role } from '../../roles/entities/role.entity';
-import { Profile } from '../../profiles/entities/profile.entity';
 import { CreateProfileInput } from '../../profiles/dto/create-profile.input';
 import * as bcrypt from 'bcrypt';
 

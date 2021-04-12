@@ -87,6 +87,8 @@ export class GetUserDto {
       id: userEntity.id,
       username: userEntity.username,
       email: userEntity.email,
+      active: userEntity.active,
+      isAdmin: userEntity.isAdmin,
       role: {
         id: userEntity.role?.id,
         name: userEntity.role?.name,
