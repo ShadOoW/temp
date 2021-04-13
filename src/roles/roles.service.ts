@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoleInput } from './dto/create-role.input';
@@ -23,6 +23,12 @@ export class RolesService {
     return await this.repo
       .save(createRoleInput)
       .then((e) => CreateRoleInput.fromEntity(e));
+  }
+
+  async findByNames(names) {
+    return await this.repo.find({
+      where: { name: In(names) },
+    });
   }
 
   async findAll(pagination: PaginationArgs = null) {

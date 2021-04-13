@@ -46,9 +46,8 @@ export class Profile extends BaseEntity {
   @Column({ type: 'int', nullable: true })
   yearsOfExperience?: number;
 
-  @ManyToOne(() => Domain)
-  @Field(() => Domain, { nullable: true })
-  domainExpertise?: Domain;
+  @Field(() => String, { nullable: true })
+  domainExpertise?: string;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 300, nullable: true })

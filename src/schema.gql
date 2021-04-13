@@ -24,7 +24,7 @@ input CreateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: CreateProfileDomainInput
+  domainExpertise: String
   firstName: String
   hoursPerMonth: Int
   lastName: String
@@ -198,7 +198,7 @@ type Profile {
   country: String
   createdAt: DateTime!
   currentPost: String
-  domainExpertise: Domain
+  domainExpertise: String
   firstName: String
   hoursPerMonth: Int
   id: String!
@@ -219,6 +219,7 @@ type Profile {
 type Query {
   domain(id: String!): Domain!
   domains(skip: Int, take: Int): GetDomains!
+  emailExists(email: String!): Boolean!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
@@ -226,6 +227,7 @@ type Query {
   requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
+  rolesByNames(rolesNames: [String!]!): [Role!]!
   session(id: String!): Session!
   sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
@@ -303,7 +305,7 @@ input UpdateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: CreateProfileDomainInput
+  domainExpertise: String
   firstName: String
   hoursPerMonth: Int
   lastName: String

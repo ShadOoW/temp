@@ -27,35 +27,38 @@ export class CaslAbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Actions, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
-    const { permissions, profile } = user;
-    if (user.isAdmin) can(Actions.Manage, 'all');
+    if (user) {
+      const { permissions, profile } = user;
+      if (user.isAdmin) can(Actions.Manage, 'all');
 
-    // authorize RUD by check userId
-    if (args.id === user.id) can([Actions.Read, Actions.Update], User);
+      // authorize RUD by check userId
+      if (args.id === user.id) can([Actions.Read, Actions.Update], User);
 
-    // authorize role management
-    if (permissions.some((p) => p.name === 'manage:role'))
-      can(Actions.Manage, Role);
+      // authorize role management
+      if (permissions.some((p) => p.name === 'manage:role'))
+        can(Actions.Manage, Role);
 
-    // authorize permission management
-    if (permissions.some((p) => p.name === 'manage:permission'))
-      can(Actions.Manage, Permission);
+      // authorize permission management
+      if (permissions.some((p) => p.name === 'manage:permission'))
+        can(Actions.Manage, Permission);
 
-    // authorize profile management
-    if (permissions.some((p) => p.name === 'manage:profile')) {
-      can([Actions.Create, Actions.Read], Profile);
-      if (profile === args.id) can(Actions.Update, Profile);
-    } else if (permissions.some((p) => p.name === 'update:profile')) {
-      if (profile === args.id) can(Actions.Update, Profile);
+      // authorize profile management
+      if (permissions.some((p) => p.name === 'manage:profile')) {
+        can([Actions.Create, Actions.Read], Profile);
+        if (profile === args.id) can(Actions.Update, Profile);
+      } else if (permissions.some((p) => p.name === 'update:profile')) {
+        if (profile === args.id) can(Actions.Update, Profile);
+      }
+
+      // authorize request management
+      if (permissions.some((p) => p.name === 'manage:request')) {
+        can(Actions.Manage, Request);
+      }
+
+      // permissions not authorized
+      cannot(Actions.Delete, [User, Profile]);
     }
-
-    // authorize request management
-    if (permissions.some((p) => p.name === 'manage:request')) {
-      can(Actions.Manage, Request);
-    }
-
-    // permissions not authorized
-    cannot(Actions.Delete, [User, Profile]);
+    cannot(Actions.Manage, 'all');
     return build({
       detectSubjectType: (item) =>
         item.constructor as ExtractSubjectType<Subjects>,

@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
+import REDIS_CONFIG from './shared/redis';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,6 +17,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { DomainsModule } from './domains/domains.module';
+import { EmailsModule } from './emails/emails.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -28,6 +31,9 @@ import { DomainsModule } from './domains/domains.module';
       sortSchema: true,
     }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+    BullModule.forRoot({
+      redis: REDIS_CONFIG,
+    }),
     AuthModule,
     CaslModule,
     PermissionsModule,
@@ -38,6 +44,7 @@ import { DomainsModule } from './domains/domains.module';
     SubscriptionsModule,
     SessionsModule,
     DomainsModule,
+    EmailsModule,
   ],
   providers: [
     {

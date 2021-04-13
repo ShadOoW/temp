@@ -11,12 +11,14 @@ import { IUser } from './interfaces/user';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUserDto } from './dto/get-user.dto';
 import { ProfilesService } from '../profiles/profiles.service';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repo: Repository<User>,
     private profileService: ProfilesService,
+    private emailService: EmailsService = null,
   ) {}
 
   /**
@@ -51,7 +53,6 @@ export class UsersService {
           'role',
           'role.permissions',
           'profile',
-          'profile.domainExpertise',
           'profile.coachingDomains',
           'profile.wantedDomain',
         ],
@@ -99,7 +100,6 @@ export class UsersService {
           'role',
           'role.permissions',
           'profile',
-          'profile.domainExpertise',
           'profile.coachingDomains',
           'profile.wantedDomain',
         ],
@@ -137,9 +137,11 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    // TODO send email
     if (active) {
       console.log('send email');
+      this.emailService.sendHelloMail('ennaimyassine@gmail.com', {
+        userName: 'ennaim',
+      });
     }
     return this.repo
       .save({ id, ...updateUserInput })
@@ -173,6 +175,7 @@ export class UsersService {
     const user = await this.repo.findOne({
       where: [
         { email, active: true },
+        { email, isAdmin: true },
         { username, active: true },
       ],
       relations: ['role', 'role.permissions', 'profile'],

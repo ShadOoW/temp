@@ -7,15 +7,15 @@ import { ProfilesModule } from '../profiles/profiles.module';
 import { ProfilesService } from '../profiles/profiles.service';
 import { Profile } from '../profiles/entities/profile.entity';
 import { CaslModule } from '../casl/casl.module';
+import { EmailsService } from '../emails/emails.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Profile]),
+    TypeOrmModule.forFeature([User, Profile]),
     ProfilesModule,
     CaslModule,
   ],
-  providers: [UsersResolver, UsersService, ProfilesService],
+  providers: [UsersResolver, UsersService, ProfilesService, EmailsService],
   exports: [UsersService],
 })
 export class UsersModule {}

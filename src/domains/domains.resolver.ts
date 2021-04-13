@@ -5,6 +5,7 @@ import { CreateDomainInput } from './dto/create-domain.input';
 import { UpdateDomainInput } from './dto/update-domain.input';
 import { PaginationArgs } from '../shared/pagination.args';
 import { GetDomains } from './dto/get-domains.dto';
+import { Public } from '../shared/public.decorator';
 
 @Resolver(() => Domain)
 export class DomainsResolver {
@@ -18,6 +19,7 @@ export class DomainsResolver {
     return this.domainsService.create(createDomainInput);
   }
 
+  @Public()
   @Query(() => GetDomains, { name: 'domains' })
   findAll(@Args() paginationArgs: PaginationArgs) {
     return this.domainsService.findAll(paginationArgs);

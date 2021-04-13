@@ -14,6 +14,7 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { ProfilesService } from '../profiles/profiles.service';
 import { Profile } from '../profiles/entities/profile.entity';
+import { EmailsService } from '../emails/emails.service';
 
 /**
  * Auth module import UsersModule to register user
@@ -22,8 +23,7 @@ import { Profile } from '../profiles/entities/profile.entity';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Profile]),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Profile, User]),
     UsersModule,
     PassportModule,
     JwtModule.register({
@@ -37,6 +37,7 @@ import { Profile } from '../profiles/entities/profile.entity';
     LocalStrategy,
     JwtStrategy,
     ProfilesService,
+    EmailsService,
   ],
   exports: [AuthService, JwtModule],
   controllers: [AuthController],

@@ -1,6 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { CreateProfileDomainInput } from './profile.inputs';
-import { Domain } from '../../domains/entities/domain.entity';
 
 @InputType()
 export class CreateProfileInput {
@@ -34,8 +33,8 @@ export class CreateProfileInput {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => CreateProfileDomainInput, { nullable: true })
-  domainExpertise?: CreateProfileDomainInput;
+  @Field(() => String, { nullable: true })
+  domainExpertise?: string;
 
   @Field(() => String, { nullable: true })
   coachingType?: string;

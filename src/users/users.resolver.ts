@@ -8,11 +8,18 @@ import { PoliciesGuard } from '../casl/guards/check-policies.guard';
 import { AppAbility } from '../casl/casl-ability.factory';
 import { CheckPolicies } from '../casl/decorators/check-policies.decorator';
 import { Actions } from '../shared/actions';
+import { Public } from '../shared/public.decorator';
 
 @Resolver(() => User)
 @UseGuards(PoliciesGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
+
+  @Public()
+  @Query(() => Boolean, { name: 'emailExists' })
+  async emailExists(@Args('email', { type: () => String }) email: string) {
+    return !!(await this.usersService.findByUserName({ email }));
+  }
 
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {

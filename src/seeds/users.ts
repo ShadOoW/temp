@@ -18,7 +18,10 @@ function genUser(username, type, role = null, domains = []) {
     password: `${username}123`,
     provider: 'local',
     isAdmin: role ? false : true,
-    active: false,
+    active:
+      username === 'admin' || username === 'mentee' || username === 'mentor'
+        ? true
+        : false,
     status: 'close',
     role,
     profile: {
@@ -33,7 +36,7 @@ function genUser(username, type, role = null, domains = []) {
     website: faker.internet.url(),
     linkedin: `www.linkedin.com/${username}`,
     country: 'Maroc',
-    domainExpertise: domains[0],
+    domainExpertise: 'Domain A',
     yearsOfExperience: Math.floor(Math.random() * 11),
   };
   switch (type) {

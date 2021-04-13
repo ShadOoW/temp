@@ -5,6 +5,7 @@ import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { PaginationArgs } from '../shared/pagination.args';
 import { GetRoles } from './dto/get-roles.dto';
+import { Public } from '../shared/public.decorator';
 
 @Resolver(() => Role)
 export class RolesResolver {
@@ -13,6 +14,14 @@ export class RolesResolver {
   @Mutation(() => Role)
   createRole(@Args('createRoleInput') createRoleInput: CreateRoleInput) {
     return this.rolesService.create(createRoleInput);
+  }
+
+  @Public()
+  @Query(() => [Role], { name: 'rolesByNames' })
+  findByNames(
+    @Args('rolesNames', { type: () => [String] }) rolesNames: string[],
+  ) {
+    return this.rolesService.findByNames(rolesNames);
   }
 
   @Query(() => GetRoles, { name: 'roles' })

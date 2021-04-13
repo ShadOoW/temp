@@ -1,6 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsOptional, IsEmail, IsBoolean } from 'class-validator';
-import { User } from '../entities/user.entity';
 import { Role } from '../../roles/entities/role.entity';
 import { UserStatus } from '../interfaces/user';
 
