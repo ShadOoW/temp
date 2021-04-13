@@ -5,10 +5,12 @@ export interface IUser {
   id: string;
   username: string;
   email: string;
+  active?: boolean;
   isAdmin?: boolean;
   role?: IRole;
   requestsTo?: IRequest[];
   requestsFrom?: IRequest[];
+  profile?: any;
 }
 
 export enum UserStatus {

@@ -12,6 +12,12 @@ import { CreateUserInput } from './dto/create-user.input';
 import { GetUserDto } from './dto/get-user.dto';
 import { ProfilesService } from '../profiles/profiles.service';
 import { EmailsService } from '../emails/emails.service';
+import {
+  ACTIVE_USER_SUBJECT,
+  ACTIVE_USER_TEMPLATE,
+  // CREATE_USER_SUBJECT,
+  // CREATE_USER_TEMPLATE,
+} from '../shared/emails';
 
 @Injectable()
 export class UsersService {
@@ -37,9 +43,18 @@ export class UsersService {
     const createdProfile = await this.profileService.create(profile);
     return this.repo
       .save({ ...createUserDto, profile: createdProfile })
-      .then(async (createdUser) =>
-        GetUserDto.getUser(await this.findOne(createdUser.id)),
-      );
+      .then(async (createdUser) => {
+        // this.emailService.sendMail(
+        //   CREATE_USER_TEMPLATE,
+        //   createdUser.email,
+        //   CREATE_USER_SUBJECT,
+        //   {
+        //     firstName: createdUser.profile?.firstName,
+        //     lastName: createdUser.profile?.lastName,
+        //   },
+        // );
+        return GetUserDto.getUser(await this.findOne(createdUser.id));
+      });
   }
 
   /**
@@ -130,18 +145,28 @@ export class UsersService {
    */
   async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
     const { active } = updateUserInput;
-    const user = await this.repo.findOne({ id });
+    const user = await this.repo.findOne(
+      { id },
+      {
+        relations: ['profile'],
+      },
+    );
     if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (active) {
-      console.log('send email');
-      this.emailService.sendHelloMail('ennaimyassine@gmail.com', {
-        userName: 'ennaim',
-      });
+    if (active && !user.active) {
+      this.emailService.sendMail(
+        ACTIVE_USER_TEMPLATE,
+        user.email,
+        ACTIVE_USER_SUBJECT,
+        {
+          firstName: user.profile?.firstName,
+          lastName: user.profile?.lastName,
+        },
+      );
     }
     return this.repo
       .save({ id, ...updateUserInput })

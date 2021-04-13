@@ -5,7 +5,14 @@
 ## Installation
 
 ```bash
-$ npm install
+# Install yarn
+$ sudo npm install yarn -g
+
+# Node max space
+$ export NODE_OPTIONS=--max-old-space-size=8192
+
+# Install packages
+$ yarn
 ```
 
 ## Running the app

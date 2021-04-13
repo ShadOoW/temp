@@ -1,3 +1,6 @@
-export interface HelloParams {
-  userName: string;
+export interface EmailParams {
+  firstName: string;
+  lastName?: string;
+  createdAt?: string;
+  active?: boolean;
 }
