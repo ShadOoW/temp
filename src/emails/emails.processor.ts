@@ -3,6 +3,7 @@ import { Job } from 'bull';
 import { createTransport } from 'nodemailer';
 import { renderFile } from 'ejs';
 import { join } from 'path';
+import * as aws from 'aws-sdk';
 
 import * as SMTP_CONFIG from '../shared/smtp';
 
@@ -12,13 +13,11 @@ import { SendMailOptions } from './interfaces/SendMailOptions';
 @Processor('email')
 export class EmailProcessor {
   transporter = createTransport({
-    host: SMTP_CONFIG.host,
-    port: SMTP_CONFIG.port,
-    secure: false,
-    auth: {
-      user: SMTP_CONFIG.user,
-      pass: SMTP_CONFIG.pass,
-    },
+    SES: new aws.SES({
+      accessKeyId: process.env.AWS_SES_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SES_SECRET_ACCESS_KEY,
+      region: 'us-east-1',
+    }),
   });
 
   emailTemplatesDir = join(process.cwd(), 'src', 'emails', './templates');

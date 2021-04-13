@@ -57,8 +57,10 @@ export class CaslAbilityFactory {
 
       // permissions not authorized
       cannot(Actions.Delete, [User, Profile]);
+    } else {
+      cannot(Actions.Manage, 'all');
     }
-    cannot(Actions.Manage, 'all');
+
     return build({
       detectSubjectType: (item) =>
         item.constructor as ExtractSubjectType<Subjects>,
