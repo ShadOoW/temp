@@ -1,16 +1,26 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Socket } from 'socket.io';
+import { User } from 'src/users/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    @InjectRepository(UsersRepository)
+    public readonly usersRepository: UsersRepository,
   ) {}
 
   /**
@@ -51,5 +61,30 @@ export class AuthService {
         throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
     return this.usersService.create(registerUserInputs);
+  }
+
+  /*
+   * login user on socket, set user on client request
+   * */
+  async loginSocket(client: Socket): Promise<User> {
+    const { iat, exp, id: userId } = client.request.decoded_token;
+
+    const timeDiff = exp - iat;
+    if (timeDiff <= 0) {
+      throw new UnauthorizedException();
+      // return false;
+    }
+    const user = await this.usersRepository.findOne(userId, {
+      relations: ['rooms'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+      // return false;
+    }
+
+    // set user on client request for another handlers to get authenticated user.
+    client.request.user = user;
+    return user;
   }
 }

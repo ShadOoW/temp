@@ -18,7 +18,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { DomainsModule } from './domains/domains.module';
 import { EmailsModule } from './emails/emails.module';
-import { ChatsModule } from './chats/chats.module';
+import { ChatModule } from './chat/chat.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -46,7 +46,7 @@ import { ChatsModule } from './chats/chats.module';
     SessionsModule,
     DomainsModule,
     EmailsModule,
-    ChatsModule,
+    ChatModule,
   ],
   providers: [
     {

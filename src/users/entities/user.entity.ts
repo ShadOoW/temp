@@ -6,6 +6,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  ManyToMany,
 } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
@@ -15,6 +16,7 @@ import { Profile } from '../../profiles/entities/profile.entity';
 import { Subscription } from '../../subscriptions/entities/subscription.entity';
 import { Session } from '../../sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
+import { RoomEntity } from '../../chat/entities/room.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -89,4 +91,8 @@ export class User extends BaseEntity {
   @OneToMany(() => Session, (session) => session.mentor)
   @Field(() => [Session])
   mentorSessions: Session[];
+
+  //rooms that the user is joined
+  @ManyToMany(() => RoomEntity, (room) => room.members)
+  rooms: RoomEntity[];
 }
