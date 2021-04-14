@@ -148,8 +148,11 @@ export class RequestsService {
   }
 
   async remove(id: string) {
-    const requestToDelete = await this.findOne(id);
-    await this.repo.delete(requestToDelete);
-    return requestToDelete;
+    const requestToDelete = await this.repo.findOne(id);
+    if (requestToDelete) {
+      await this.repo.delete(id);
+      return requestToDelete;
+    }
+    //TODO show error message
   }
 }
