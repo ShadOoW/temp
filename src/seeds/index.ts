@@ -3,6 +3,7 @@ import { permissionsSeed } from './permissions';
 import { rolesSeed } from './roles';
 import { requestsSeed } from './requests';
 import { domainsSeed } from './domains';
+import { chatSeed } from './chat';
 
 async function run() {
   if (process.argv) {
@@ -16,6 +17,8 @@ async function run() {
       await usersSeed();
     if (process.argv.includes('requests') || process.argv.includes('all'))
       await requestsSeed();
+    if (process.argv.includes('chat') || process.argv.includes('all'))
+      await chatSeed();
   }
 }
 

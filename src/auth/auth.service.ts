@@ -20,7 +20,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     @InjectRepository(UsersRepository)
-    public readonly usersRepository: UsersRepository,
+    private usersRepository: UsersRepository,
   ) {}
 
   /**
@@ -74,9 +74,7 @@ export class AuthService {
       throw new UnauthorizedException();
       // return false;
     }
-    const user = await this.usersRepository.findOne(userId, {
-      relations: ['rooms'],
-    });
+    const user = await this.usersService.findUserRooms(userId);
 
     if (!user) {
       throw new UnauthorizedException();

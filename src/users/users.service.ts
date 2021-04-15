@@ -138,6 +138,18 @@ export class UsersService {
   }
 
   /**
+   * Finds user Requests
+   * @param {string} id of user
+   * @returns  {object} user infos
+   */
+  async findUserRooms(id: string): Promise<any> {
+    return await this.repo
+      .findOne(id, {
+        relations: ['rooms'],
+      })
+      .then((user) => user);
+  }
+  /**
    * Updates user
    * @param {string} id of user
    * @param {UpdateUserInput} updateUserInput

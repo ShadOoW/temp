@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
+import { UtilsService } from './providers/utils.service';
 
 @ObjectType()
 export abstract class BaseEntity {

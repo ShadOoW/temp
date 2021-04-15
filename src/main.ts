@@ -10,6 +10,18 @@ import { AppModule } from './app.module';
 import { configService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import * as redisIoAdapter from 'socket.io-redis';
+
+const redisAdapter = redisIoAdapter({ host: 'localhost', port: 6379 });
+
+export class RedisIoAdapter extends IoAdapter {
+  createIOServer(port: number, options?: any): any {
+    const server = super.createIOServer(port, options);
+    server.adapter(redisAdapter);
+    return server;
+  }
+}
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -19,6 +31,8 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
+
   app.setGlobalPrefix('api/v1');
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(

@@ -7,6 +7,10 @@ import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
 import { User } from '../users/entities/user.entity';
 import { RoomEntity } from './entities/room.entity';
+import { RoomDto } from './dto/Room.dto';
+import { CreateRoomDto } from './dto/createRoom.dto';
+import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
+import { CreateMessageDto } from './dto/createMessage.dto';
 
 @Injectable()
 export class ChatService {
@@ -20,12 +24,11 @@ export class ChatService {
   ) {}
 
   // deprecated
-  // async createMessage(msg: CreateMessageDto, sender): Promise<MessageEntity> {
-  //     let created_msg = this.messageRepository.create(msg);
-  //     created_msg.sender = sender;
-  //     return this.messageRepository.save(created_msg);
-  //
-  // }
+  async createMessage(msg: CreateMessageDto, sender): Promise<MessageEntity> {
+    const created_msg = this.messageRepository.create(msg);
+    created_msg.sender = sender;
+    return this.messageRepository.save(created_msg);
+  }
 
   /*
    * check room if not exists create it, and save the message in room.
@@ -69,63 +72,23 @@ export class ChatService {
     });
   }
 
-  // async createRoom(data: CreateRoomDto, sender): Promise<RoomDto> {
-  //     const createdRoom = await this.roomRepository.createPublicRoom(data, sender);
-  //     return createdRoom.toDto()
-  // }
+  async createRoom(data: CreateRoomDto, sender): Promise<any> {
+    const createdRoom = await this.roomRepository.createPublicRoom(
+      data,
+      sender,
+    );
+    return createdRoom;
+  }
 
-  // async createPrivateRoom(data: CreatePrivateRoomDto): Promise<RoomDto> {
-  //     const createdRoom = await this.roomRepository.createPrivateRoom(data.sender, data.receiver);
-  //     return createdRoom.toDto()
-  // }
+  async createPrivateRoom(data: CreatePrivateRoomDto): Promise<any> {
+    const createdRoom = await this.roomRepository.createPrivateRoom(
+      data.sender,
+      data.receiver,
+    );
+    return createdRoom;
+  }
 
-  // async joinRoom(room: RoomEntity, user: User): Promise<boolean> {
-  //     return await this.roomRepository.join(room, user);
-  // }
-
-  // /**
-  //  * Find single user
-  //  */
-  // findOne(findData: FindConditions<User>): Promise<User> {
-  //     return this.userRepository.findOne(findData);
-  // }
-  // async findByUsernameOrEmail(
-  //     options: Partial<{ username: string; email: string }>,
-  // ): Promise<User | undefined> {
-  //     const queryBuilder = this.userRepository.createQueryBuilder('user');
-  //
-  //     if (options.email) {
-  //         queryBuilder.orWhere('user.email = :email', {
-  //             email: options.email,
-  //         });
-  //     }
-  //     if (options.username) {
-  //         queryBuilder.orWhere('user.username = :username', {
-  //             username: options.username,
-  //         });
-  //     }
-  //
-  //     return queryBuilder.getOne();
-  // }
-  //
-  // async createUser(
-  //     userRegisterDto: UserRegisterDto,
-  // ): Promise<User> {
-  //     const user = this.userRepository.create({ ...userRegisterDto });
-  //     return this.userRepository.save(user);
-  // }
-  //
-  // async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
-  //     const queryBuilder = this.userRepository.createQueryBuilder('user');
-  //     const [users, usersCount] = await queryBuilder
-  //         .skip(pageOptionsDto.skip)
-  //         .take(pageOptionsDto.take)
-  //         .getManyAndCount();
-  //
-  //     const pageMetaDto = new PageMetaDto({
-  //         pageOptionsDto,
-  //         itemCount: usersCount,
-  //     });
-  //     return new UsersPageDto(users.toDtos(), pageMetaDto);
-  // }
+  async joinRoom(room: RoomEntity, user: User): Promise<boolean> {
+    return await this.roomRepository.join(room, user);
+  }
 }

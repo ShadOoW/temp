@@ -1,5 +1,5 @@
-import { Repository } from 'typeorm';
-import { EntityRepository } from 'typeorm/decorator/EntityRepository';
+import { EntityRepository, Repository } from 'typeorm';
+
 import { RoomEntity } from './entities/room.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateRoomDto } from './dto/createRoom.dto';

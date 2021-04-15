@@ -68,7 +68,7 @@ export class ChatGateway
     (<any>this.server).set(
       'authorization',
       socketioJwt.authorize({
-        secret: this.configService.get('JWT_SECRET_KEY'),
+        secret: process.env.JWT_SECRET_KEY,
         handshake: true,
       }),
     );
@@ -77,25 +77,32 @@ export class ChatGateway
   private logger: Logger = new Logger('AppGateway');
 
   // @UseGuards(WsAuthGuard)
-  // @SubscribeMessage('msgToServer')
-  // async handleMessage(client: Socket, payload: CreateMessageDto) {
-  //     // const {user, ...result} = payload;
-  //     // console.log(client.request.user);
-  //     const createdMessage = await this._chatService.createMessage(payload, client.request.user);
-  //     // this.logger.log(payload, 'msgToServer');
-  //     const ans = {"name": client.request.user.email, "text": payload.text};
-  //     // console.log(this.server.clients().sockets);
-  //     // const tt = await this.redisService.getClient().get(`users:${client.request.user.id}`);
-  //     // const tt = await this.redisService.getClient().get(`users:${payload.receiver}`);
-  //     // console.log(tt);
-  //     // if (tt) {
-  //         // this.server.emit('msgToClient', ans);
-  //         // this.server.to(createdMessage.room.name).emit('msgToClient', ans);
-  //     // }
-  // }
+  @SubscribeMessage('msgToServer')
+  async handleMessage(client: Socket, payload: CreateMessageDto) {
+    console.log('STEP1 => msgToServer', 'payload', payload);
+    const createdMessage = await this._chatService.createMessage(
+      payload,
+      client.request.user,
+    );
+    this.logger.log(payload, 'msgToServer');
+    const ans = { name: client.request.user.email, text: payload.text };
+    console.log(this.server.clients().sockets);
+    const tt = await this.redisService
+      .getClient()
+      .get(`users:${client.request.user.id}`);
+    // const tt = await this.redisService
+    //   .getClient()
+    //   .get(`users:${payload.receiver}`);
+    console.log(tt);
+    if (tt) {
+      this.server.emit('msgToClient', ans);
+      this.server.to(createdMessage.room.name).emit('msgToClient', ans);
+    }
+  }
 
   @SubscribeMessage('createNewPublicRoom')
   async handleCreatePublicRoom(client: Socket, payload: CreateRoomDto) {
+    console.log('createNewPublicRoom');
     const exists: RoomEntity = await this.roomRepository.findOne({
       where: { name: payload.name },
     });
@@ -145,12 +152,15 @@ export class ChatGateway
 
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket, payload) {
+    console.log('STEP2 => getRooms', 'payload', payload);
+
     const pvrooms: RoomEntity[] = await this.roomRepository.find({
       where: { isPrivate: true },
       relations: ['members'],
     });
     const pubrooms: RoomEntity[] = await this.roomRepository.find({
       where: { isPrivate: false },
+      relations: ['members', 'messages'],
     });
     pvrooms.forEach((value) => {
       if (value.isPrivate) {
@@ -163,6 +173,8 @@ export class ChatGateway
 
   @SubscribeMessage('msgToRoomServer')
   async handleRoomMessage(client: Socket, payload: CreateMessageDto) {
+    console.log('STEP3 => msgToRoomServer', 'payload', payload);
+
     const room = await this.roomRepository.findOne({
       where: { name: payload.room_name, isPrivate: false },
       relations: ['members'],
@@ -188,6 +200,8 @@ export class ChatGateway
 
   @SubscribeMessage('msgPrivateToServer')
   async handlePrivateMessage(client: Socket, payload: CreatePrivateMessageDto) {
+    console.log('STEP4 => handlePrivateMessage', 'payload', payload);
+
     const receiver = await this.usersService.findOne(payload.receiver);
     //
     if (!receiver) {
@@ -234,7 +248,6 @@ export class ChatGateway
 
   async handleConnection(client: Socket, ...args: any[]) {
     const user = await this.authService.loginSocket(client);
-
     // set on redis=> key: user.id,  value: socketId
     await UtilsService.setUserIdAndSocketIdOnRedis(
       this.redisService,
@@ -247,37 +260,18 @@ export class ChatGateway
     this.logger.log(`Client connected: ${client.id}`);
   }
 
-  // @SubscribeMessage('createRoom')
-  // async createRoom(client: Socket, payload: CreateRoomDto) {
-  //     const room = await this._chatService.createRoom(payload, client.request.user);
-  // }
+  @SubscribeMessage('createRoom')
+  async createRoom(client: Socket, payload: CreateRoomDto) {
+    const room = await this._chatService.createRoom(
+      payload,
+      client.request.user,
+    );
+  }
 
-  // @SubscribeMessage('joinRoom')
-  // async joinRoom(client: Socket, payload: CreateRoomDto) {
-  //     await this._chatService.joinRoom(payload, client.request.user);
-  // }
-
-  // -------------------------------------------- before ------------------------------------------------
-  // @SubscribeMessage('message')
-  // handleMessage(client: any, payload: any): string {
-  //     console.log(client);
-  //     console.log(payload);
-  //     return 'Hello world!';
-  // }
-  //
-  // // better for testing
-  // @SubscribeMessage('events')
-  // handleEvent(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
-  //     client.emit('res', data);
-  //     // return data;
-  // }
-  //
-  // @SubscribeMessage('events')
-  // handlePM(@MessageBody() data: unknown): WsResponse<unknown> {
-  //     // client.emit('res', data);
-  //     const event = 'PM';
-  //     return {event, data}
-  //
-  //     // return data;
-  // }
+  @SubscribeMessage('joinRoom')
+  async joinRoom(client: Socket, payload: CreateRoomDto) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await this._chatService.joinRoom(payload, client.request.user);
+  }
 }

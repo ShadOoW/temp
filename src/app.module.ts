@@ -1,3 +1,4 @@
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import REDIS_CONFIG from './shared/redis';
@@ -19,6 +20,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { DomainsModule } from './domains/domains.module';
 import { EmailsModule } from './emails/emails.module';
 import { ChatModule } from './chat/chat.module';
+import { RedisModule } from 'nestjs-redis';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -35,11 +37,15 @@ import { ChatModule } from './chat/chat.module';
     BullModule.forRoot({
       redis: REDIS_CONFIG,
     }),
+    RedisModule.register({ url: 'redis://127.0.0.1:6379/0' }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),
     AuthModule,
+    UsersModule,
     CaslModule,
     PermissionsModule,
     RolesModule,
-    UsersModule,
     RequestsModule,
     ProfilesModule,
     SubscriptionsModule,

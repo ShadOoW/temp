@@ -16,16 +16,16 @@ export class RoomEntity extends BaseEntity {
 
   @ManyToMany(() => User, (user) => user.rooms, { cascade: true })
   @JoinTable()
-  members: User[];
+  members?: User[];
 
   @OneToMany(() => MessageEntity, (message) => message.room)
-  messages: MessageEntity[];
+  messages?: MessageEntity[];
 
   // @ManyToOne(type => User, message => message.received_messages)
   // group: User;
 
   @Column({ default: true })
-  isPrivate: boolean;
+  isPrivate?: boolean;
 
   dtoClass = RoomDto;
 }
