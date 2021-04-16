@@ -10,7 +10,10 @@ $ sudo npm install yarn -g
 
 # Node max space
 $ export NODE_OPTIONS=--max-old-space-size=8192
-
+$ sudo amazon-linux-extras install redis4.0
+$ service redis status
+$ sudo service redis start
+$ redis-cli ping
 # Install packages
 $ yarn
 ```

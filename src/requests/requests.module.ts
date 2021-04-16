@@ -6,6 +6,7 @@ import { Request } from './entities/request.entity';
 import { Subscription } from '../subscriptions/entities/subscription.entity';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { CaslModule } from '../casl/casl.module';
+import { RequestCreatedListener } from './listeners/request-created.listener';
 
 @Module({
   imports: [
@@ -13,6 +14,11 @@ import { CaslModule } from '../casl/casl.module';
     TypeOrmModule.forFeature([Subscription]),
     CaslModule,
   ],
-  providers: [RequestsResolver, RequestsService, SubscriptionsService],
+  providers: [
+    RequestsResolver,
+    RequestsService,
+    SubscriptionsService,
+    RequestCreatedListener,
+  ],
 })
 export class RequestsModule {}

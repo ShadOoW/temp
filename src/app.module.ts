@@ -21,6 +21,8 @@ import { DomainsModule } from './domains/domains.module';
 import { EmailsModule } from './emails/emails.module';
 import { ChatModule } from './chat/chat.module';
 import { RedisModule } from 'nestjs-redis';
+import { EventsModule } from './events/events.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -41,6 +43,7 @@ import { RedisModule } from 'nestjs-redis';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     CaslModule,
@@ -53,6 +56,7 @@ import { RedisModule } from 'nestjs-redis';
     DomainsModule,
     EmailsModule,
     ChatModule,
+    EventsModule,
   ],
   providers: [
     {

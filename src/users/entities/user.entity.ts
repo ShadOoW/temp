@@ -17,6 +17,7 @@ import { Subscription } from '../../subscriptions/entities/subscription.entity';
 import { Session } from '../../sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '../../chat/entities/room.entity';
+import { Event } from '../../events/entities/event.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -67,6 +68,14 @@ export class User extends BaseEntity {
   @JoinColumn()
   @Field(() => Profile)
   profile: Profile;
+
+  @OneToMany(() => Event, (event) => event.to)
+  @Field(() => [Event], { nullable: true })
+  eventsTo?: Event[];
+
+  @OneToMany(() => Event, (event) => event.from)
+  @Field(() => [Event], { nullable: true })
+  eventsFrom?: Event[];
 
   @OneToMany(() => Request, (request) => request.to)
   @Field(() => [Request])

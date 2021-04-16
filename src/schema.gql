@@ -7,6 +7,11 @@ input CreateDomainInput {
   name: String!
 }
 
+input CreateEventInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreatePermissionInput {
   description: String!
   name: String!
@@ -91,6 +96,18 @@ type Domain {
   updatedAt: DateTime!
 }
 
+type Event {
+  command: String!
+  createdAt: DateTime!
+  from: User!
+  id: String!
+  module: String!
+  payload: String!
+  sourceId: String!
+  to: User
+  updatedAt: DateTime!
+}
+
 type GetDomains {
   domains: [Domain!]!
   totalCount: Int!
@@ -160,6 +177,7 @@ type GetUserDto {
 
 type Mutation {
   createDomain(createDomainInput: CreateDomainInput!): Domain!
+  createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
@@ -220,6 +238,7 @@ type Query {
   domain(id: String!): Domain!
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
+  events: [Event!]!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
@@ -244,6 +263,7 @@ type Request {
   excerpt: String!
   from: User!
   id: String!
+  proposition: Boolean
   status: String
   title: String!
   to: User
@@ -349,6 +369,8 @@ type User {
   active: Boolean
   createdAt: DateTime!
   email: String
+  eventsFrom: [Event!]
+  eventsTo: [Event!]
   id: String!
   isAdmin: Boolean!
   menteeSessions: [Session!]!

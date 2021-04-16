@@ -7,12 +7,15 @@ import { Request } from '../requests/entities/request.entity';
 import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { RequestCreatedEvent } from './interfaces/request';
 
 @Injectable()
 export class RequestsService {
   constructor(
     @InjectRepository(Request) private readonly repo: Repository<Request>,
     private subscriptionService: SubscriptionsService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   getRequest(requestEntity: Request): any {
@@ -21,6 +24,7 @@ export class RequestsService {
       whyNeedCoaching: requestEntity.title,
       expectations: requestEntity.description,
       message: requestEntity.excerpt,
+      proposition: requestEntity.proposition,
       from: {
         id: requestEntity.from.id,
         email: requestEntity.from.email,
@@ -57,6 +61,7 @@ export class RequestsService {
             HttpStatus.BAD_REQUEST,
           );
       }
+
       return this.repo
         .save({
           ...createRequestInput,
@@ -64,7 +69,14 @@ export class RequestsService {
           excerpt: createRequestInput.message,
           description: createRequestInput.expectations,
         })
-        .then((request) => this.getRequest(request));
+        .then((request) => {
+          // create Event
+          const requestCreatedEvent = new RequestCreatedEvent();
+          requestCreatedEvent.name = createRequestInput.whyNeedCoaching;
+          requestCreatedEvent.description = createRequestInput.message;
+          this.eventEmitter.emit('order.created', requestCreatedEvent);
+          return this.getRequest(request);
+        });
     } catch (error) {
       throw new HttpException(
         ERROR_MESSAGES.CANNOT_CREATE,

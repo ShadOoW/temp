@@ -32,7 +32,7 @@ export class CaslAbilityFactory {
       if (user.isAdmin) can(Actions.Manage, 'all');
 
       // authorize RUD by check userId
-      if (args.id === user.id) can([Actions.Read, Actions.Update], User);
+      if (args.id === user.id) can([Actions.Update], User);
 
       // authorize role management
       if (permissions.some((p) => p.name === 'manage:role'))
@@ -57,6 +57,7 @@ export class CaslAbilityFactory {
 
       // permissions not authorized
       cannot(Actions.Delete, [User, Profile]);
+      can([Actions.Read], User);
     } else {
       cannot(Actions.Manage, 'all');
     }

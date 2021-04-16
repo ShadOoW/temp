@@ -19,6 +19,10 @@ export class Request extends BaseEntity {
   @Field(() => String, { nullable: true })
   description?: string;
 
+  @Column({ type: 'boolean', nullable: true, default: false })
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
+
   @Column({
     type: 'enum',
     enum: ['created', 'updated', 'accepted', 'refused'],
