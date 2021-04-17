@@ -8,7 +8,7 @@ import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { RequestCreatedEvent } from './interfaces/request';
+// import { RequestCreatedEvent } from './interfaces/request';
 
 @Injectable()
 export class RequestsService {
@@ -25,13 +25,13 @@ export class RequestsService {
       expectations: requestEntity.description,
       message: requestEntity.excerpt,
       proposition: requestEntity.proposition,
-      from: {
-        id: requestEntity.from.id,
-        email: requestEntity.from.email,
-        username: requestEntity.from.username,
-        profile: requestEntity.from.profile,
+      mentee: {
+        id: requestEntity.from?.id,
+        email: requestEntity.from?.email,
+        username: requestEntity.from?.username,
+        profile: requestEntity.from?.profile,
       },
-      to: {
+      mentor: {
         id: requestEntity.to?.id,
         email: requestEntity.to?.email,
         username: requestEntity.to?.username,
@@ -43,38 +43,48 @@ export class RequestsService {
   }
 
   async create(createRequestInput: CreateRequestInput) {
-    const { from, to } = createRequestInput;
+    const { mentee, mentor, proposition } = createRequestInput;
     try {
       const publicRequest = await this.repo.findOne({
-        where: { from, status: 'created' },
+        where: { from: mentee, status: 'created' },
       });
-      const privateRequest = to
+      const privateRequest = mentor
         ? await this.repo.findOne({
-            where: { from, to: Not(IsNull()), status: 'created' },
+            where: { from: mentee, to: Not(IsNull()), status: 'created' },
           })
         : null;
-
-      if (publicRequest) {
-        if (privateRequest || !to)
-          throw new HttpException(
-            ERROR_MESSAGES.CANNOT_CREATE,
-            HttpStatus.BAD_REQUEST,
-          );
+      const m2mRequest = mentor
+        ? await this.repo.findOne({
+            where: { from: mentee, to: mentor, status: 'created' },
+          })
+        : null;
+      if (
+        !mentor ||
+        (!proposition && (publicRequest || privateRequest)) ||
+        (proposition && m2mRequest)
+      ) {
+        throw new HttpException(
+          ERROR_MESSAGES.CANNOT_CREATE,
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       return this.repo
         .save({
           ...createRequestInput,
+          from: createRequestInput.mentee,
+          to: createRequestInput.mentor,
           title: createRequestInput.whyNeedCoaching,
           excerpt: createRequestInput.message,
           description: createRequestInput.expectations,
         })
         .then((request) => {
           // create Event
-          const requestCreatedEvent = new RequestCreatedEvent();
-          requestCreatedEvent.name = createRequestInput.whyNeedCoaching;
-          requestCreatedEvent.description = createRequestInput.message;
-          this.eventEmitter.emit('order.created', requestCreatedEvent);
+          // const requestCreatedEvent = new RequestCreatedEvent();
+          // requestCreatedEvent.name = createRequestInput.whyNeedCoaching;
+          // requestCreatedEvent.description = createRequestInput.message;
+          // this.eventEmitter.emit('order.created', requestCreatedEvent);
+          console.log(request);
           return this.getRequest(request);
         });
     } catch (error) {
@@ -84,13 +94,18 @@ export class RequestsService {
       );
     }
   }
-
+  getOptions(args) {
+    Object.keys(args).map((key) => {
+      if (args[key] === undefined) delete args[key];
+    });
+    return args;
+  }
   async findAll(args = null) {
     const { take, skip } = args;
     delete args.take;
     delete args.skip;
     const [requests, totalCount] = await this.repo.findAndCount({
-      where: args,
+      where: this.getOptions(args),
       relations: [
         'to',
         'from',
@@ -144,6 +159,8 @@ export class RequestsService {
     const updatedRequest = await this.repo.save({
       id,
       ...updateRequestInput,
+      from: updateRequestInput.mentee,
+      to: updateRequestInput.mentor,
       title: updateRequestInput.whyNeedCoaching,
       excerpt: updateRequestInput.message,
       description: updateRequestInput.expectations,
@@ -165,6 +182,5 @@ export class RequestsService {
       await this.repo.delete(id);
       return requestToDelete;
     }
-    //TODO show error message
   }
 }

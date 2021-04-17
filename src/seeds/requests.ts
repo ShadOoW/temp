@@ -25,6 +25,7 @@ async function genRequest(
     message: faker.lorem.paragraph(),
     from,
     to,
+    proposition: false,
   };
   if (accepted) {
     request = { ...request, status: 'accepted' };
@@ -50,6 +51,7 @@ export async function requestsSeed() {
   const requestService = new RequestsService(
     connection.getRepository(Request),
     subcriptionService,
+    null,
   );
   const userService = new UsersService(
     connection.getRepository(User),

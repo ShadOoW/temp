@@ -82,7 +82,7 @@ export class UsersService {
   async findByRole(roleId: string): Promise<IUser[]> {
     return await this.repo
       .find({
-        relations: ['role', 'role.permissions'],
+        relations: ['role', 'role.permissions', 'profile'],
         where: { role: roleId },
       })
       .then((users) => users.map((user) => GetUserDto.getUser(user)));

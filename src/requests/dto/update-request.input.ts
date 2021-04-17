@@ -24,4 +24,7 @@ export class UpdateRequestInput extends PartialType(CreateRequestInput) {
   @IsOptional()
   @IsString()
   status?: RequestStatus;
+
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
 }

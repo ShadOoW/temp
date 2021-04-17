@@ -100,6 +100,7 @@ export class GetUserDto {
         ],
       },
       profile: userEntity.profile,
+      createdAt: userEntity.createdAt,
     };
   }
 

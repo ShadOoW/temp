@@ -19,8 +19,11 @@ export class CreateRequestInput {
   message?: string;
 
   @Field(() => String)
-  from: CreateRequestUserInput;
+  mentee: CreateRequestUserInput;
 
   @Field(() => String, { nullable: true })
-  to?: CreateRequestUserInput;
+  mentor?: CreateRequestUserInput;
+
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
 }

@@ -40,9 +40,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       redis: REDIS_CONFIG,
     }),
     RedisModule.register({ url: 'redis://127.0.0.1:6379/0' }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'static'),
+    // }),
     EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,

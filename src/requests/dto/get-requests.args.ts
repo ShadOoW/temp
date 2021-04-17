@@ -7,8 +7,11 @@ export class GetRequestsArgs extends PaginationArgs {
   status?: string;
 
   @Field({ nullable: true })
-  from?: string;
+  mentee?: string;
 
   @Field({ nullable: true })
-  to?: string;
+  mentor?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
 }

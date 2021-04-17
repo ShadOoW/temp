@@ -22,7 +22,10 @@ export class RequestsResolver {
 
   @Query(() => GetRequests, { name: 'requests' })
   findAll(@Args() args: GetRequestsArgs) {
-    return this.requestsService.findAll(args);
+    const { mentee: from, mentor: to } = args;
+    delete args.mentee;
+    delete args.mentor;
+    return this.requestsService.findAll({ ...args, from, to });
   }
 
   @Query(() => GetRequest, { name: 'request' })

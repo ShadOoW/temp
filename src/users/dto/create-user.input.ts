@@ -36,6 +36,11 @@ export class CreateUserInput {
   @IsBoolean()
   isAdmin: boolean;
 
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+
   @Field(() => String, { nullable: true })
   @IsUUID()
   role: any;
@@ -48,6 +53,7 @@ export class CreateUserInput {
     const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
     it.username = inputs.username;
     it.email = inputs.email;
+    it.active = inputs.active;
     it.isAdmin = inputs.isAdmin;
     it.provider = inputs.provider;
     it.providerId = inputs.providerId;

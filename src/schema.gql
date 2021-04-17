@@ -47,9 +47,10 @@ input CreateProfileInput {
 
 input CreateRequestInput {
   expectations: String
-  from: String!
+  mentee: String!
+  mentor: String
   message: String
-  to: String
+  proposition: Boolean
   whyNeedCoaching: String!
 }
 
@@ -73,6 +74,7 @@ input CreateSubscriptionInput {
 }
 
 input CreateUserInput {
+  active: Boolean
   email: String!
   isAdmin: Boolean
   password: String
@@ -121,11 +123,12 @@ type GetPermissions {
 type GetRequest {
   createdAt: DateTime!
   expectations: String
-  from: GetUserDto!
   id: String!
+  mentee: GetUserDto!
+  mentor: GetUserDto
   message: String
+  proposition: Boolean
   status: String
-  to: GetUserDto
   updatedAt: DateTime!
   whyNeedCoaching: String!
 }
@@ -243,7 +246,7 @@ type Query {
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
   request(id: String!): GetRequest!
-  requests(from: String, skip: Int, status: String, take: Int, to: String): GetRequests!
+  requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
   rolesByNames(rolesNames: [String!]!): [Role!]!
@@ -343,10 +346,11 @@ input UpdateProfileInput {
 
 input UpdateRequestInput {
   expectations: String
-  from: String
+  mentee: String
+  mentor: String
   message: String
+  proposition: Boolean
   status: String
-  to: String
   whyNeedCoaching: String
 }
 

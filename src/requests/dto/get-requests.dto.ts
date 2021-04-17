@@ -1,6 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { GetUserDto } from '../../users/dto/get-user.dto';
-import { User } from '../../users/entities/user.entity';
 import { RequestStatus } from '../interfaces/requestStatus';
 
 @ObjectType()
@@ -30,14 +29,17 @@ export class GetRequest {
   status?: RequestStatus;
 
   @Field(() => GetUserDto, { nullable: true })
-  to?: GetUserDto;
+  mentor?: GetUserDto;
 
   @Field(() => GetUserDto)
-  from: GetUserDto;
+  mentee: GetUserDto;
 
   @Field(() => Date)
   createdAt?: Date;
 
   @Field(() => Date)
   updatedAt?: Date;
+
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
 }

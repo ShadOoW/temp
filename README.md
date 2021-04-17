@@ -10,10 +10,22 @@ $ sudo npm install yarn -g
 
 # Node max space
 $ export NODE_OPTIONS=--max-old-space-size=8192
+
+# Install Redis
 $ sudo amazon-linux-extras install redis4.0
+
+# Check redis status
 $ service redis status
+
+# Start redis status
 $ sudo service redis start
+
+# Check if redis response "PONG"
 $ redis-cli ping
+
+# PM2 start server
+$ pm2 start npm --name "m2m" -- run start:dev
+
 # Install packages
 $ yarn
 ```
