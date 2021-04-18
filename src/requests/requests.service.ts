@@ -8,6 +8,7 @@ import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UtilsService } from '../shared/providers/utils.service';
 
 @Injectable()
 export class RequestsService {
@@ -89,19 +90,12 @@ export class RequestsService {
     }
   }
 
-  getOptions(args) {
-    Object.keys(args).map((key) => {
-      if (args[key] === undefined) delete args[key];
-    });
-    return args;
-  }
-
   async findAll(args = null) {
     const { take, skip } = args;
     delete args.take;
     delete args.skip;
     const [requests, totalCount] = await this.repo.findAndCount({
-      where: this.getOptions(args),
+      where: UtilsService.getOptions(args),
       relations: [
         'to',
         'from',

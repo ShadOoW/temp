@@ -3,7 +3,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { User } from '../../users/entities/user.entity';
 
-@ObjectType()
+@ObjectType('UserSubscription')
 @Entity({ name: 'subscriptions' })
 export class Subscription extends BaseEntity {
   @ManyToOne(() => User, (user) => user.subscriptions)

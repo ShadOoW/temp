@@ -79,4 +79,11 @@ export class UtilsService {
       .getClient()
       .set(`users:${userId}`, socketId, 'NX', 'EX', 30);
   }
+
+  static getOptions(args) {
+    Object.keys(args).map((key) => {
+      if (args[key] === undefined) delete args[key];
+    });
+    return args;
+  }
 }

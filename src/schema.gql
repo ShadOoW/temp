@@ -109,6 +109,7 @@ type Event {
   id: String!
   module: String!
   payload: String!
+  read: Boolean!
   sourceId: String!
   to: User
   updatedAt: DateTime!
@@ -171,12 +172,12 @@ type GetSessions {
 }
 
 type GetSubscribers {
-  subscribers: [Subscription!]!
+  subscribers: [UserSubscription!]!
   totalCount: Int!
 }
 
 type GetSubscriptions {
-  subscriptions: [Subscription!]!
+  subscriptions: [UserSubscription!]!
   totalCount: Int!
 }
 
@@ -195,8 +196,8 @@ type GetUserDto {
   requestsTo: [Request!]
   role: Role
   status: String
-  subscribers: [Subscription!]
-  subscriptions: [Subscription!]
+  subscribers: [UserSubscription!]
+  subscriptions: [UserSubscription!]
   username: String
 }
 
@@ -207,16 +208,17 @@ type Mutation {
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!
-  createSubscription(createSubscriptionInput: CreateSubscriptionInput!): Subscription!
+  createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): User!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
   removeSession(id: String!): Session!
-  removeSubscription(id: Int!): Subscription!
+  removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
+  updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
@@ -264,6 +266,7 @@ type Query {
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
+  notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!
@@ -321,11 +324,8 @@ type Session {
 }
 
 type Subscription {
-  createdAt: DateTime!
-  id: String!
-  subscribedTo: User!
-  subscriber: User!
-  updatedAt: DateTime!
+  activity: Event!
+  notification: Event!
 }
 
 input SubscriptionUserInput {
@@ -335,6 +335,10 @@ input SubscriptionUserInput {
 input UpdateDomainInput {
   description: String!
   name: String!
+}
+
+input UpdateEventInput {
+  read: String!
 }
 
 input UpdatePermissionInput {
@@ -409,8 +413,16 @@ type User {
   requestsTo: [Request!]!
   role: Role
   status: String
-  subscribers: [Subscription!]!
-  subscriptions: [Subscription!]!
+  subscribers: [UserSubscription!]!
+  subscriptions: [UserSubscription!]!
   updatedAt: DateTime!
   username: String
+}
+
+type UserSubscription {
+  createdAt: DateTime!
+  id: String!
+  subscribedTo: User!
+  subscriber: User!
+  updatedAt: DateTime!
 }

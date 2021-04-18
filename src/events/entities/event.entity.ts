@@ -29,4 +29,8 @@ export class Event extends BaseEntity {
   @Column({ type: 'json', nullable: true })
   @Field(() => String)
   payload?: string;
+
+  @Column({ type: 'boolean', default: false })
+  @Field(() => Boolean)
+  read?: boolean;
 }

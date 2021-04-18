@@ -1,5 +1,5 @@
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import REDIS_CONFIG from './shared/redis';
 import { APP_GUARD } from '@nestjs/core';
@@ -23,17 +23,22 @@ import { ChatModule } from './chat/chat.module';
 import { RedisModule } from 'nestjs-redis';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PubSub } from 'graphql-subscriptions';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
  * Setup the Database base configutation with TypeOrmModule
  * Import internel Modules, and Global Guards
  */
+@Global()
 @Module({
   imports: [
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      installSubscriptionHandlers: true,
+      context: ({ req, connection }) =>
+        connection ? { req: connection.context } : { req },
     }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     BullModule.forRoot({
@@ -63,6 +68,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub(),
+    },
   ],
+  exports: ['PUB_SUB'],
 })
 export class AppModule {}

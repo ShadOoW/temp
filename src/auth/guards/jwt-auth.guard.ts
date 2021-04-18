@@ -26,7 +26,10 @@ export class JwtAuthGuard implements CanActivate {
         ? ctx.switchToHttp().getRequest()
         : context.getContext().req;
 
-    const bearerToken = request.headers.authorization as string;
+    const bearerToken = (request.headers
+      ? request.headers.authorization
+      : request.Authorization) as string;
+
     const tokenWasSent = !!bearerToken;
     if (tokenWasSent) {
       const [bearer, token] = bearerToken.split(' ');

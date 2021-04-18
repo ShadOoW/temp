@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { PoliciesGuard } from '../casl/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RequestsService } from './requests.service';
@@ -7,17 +7,25 @@ import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequest, GetRequests } from './dto/get-requests.dto';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver(() => Request)
 @UseGuards(PoliciesGuard)
 export class RequestsResolver {
-  constructor(private readonly requestsService: RequestsService) {}
+  constructor(
+    private readonly requestsService: RequestsService,
+    @Inject('PUB_SUB') private pubSub: PubSub,
+  ) {}
 
   @Mutation(() => Request)
   createRequest(
     @Args('createRequestInput') createRequestInput: CreateRequestInput,
   ) {
-    return this.requestsService.create(createRequestInput);
+    return this.requestsService.create(createRequestInput).then((event) => {
+      this.pubSub.publish('notification', { notification: event });
+      this.pubSub.publish('activity', { activity: event });
+      return event;
+    });
   }
 
   @Query(() => GetRequests, { name: 'requests' })
