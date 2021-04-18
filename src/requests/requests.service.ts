@@ -8,7 +8,6 @@ import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-// import { RequestCreatedEvent } from './interfaces/request';
 
 @Injectable()
 export class RequestsService {
@@ -79,12 +78,7 @@ export class RequestsService {
           description: createRequestInput.expectations,
         })
         .then((request) => {
-          // create Event
-          // const requestCreatedEvent = new RequestCreatedEvent();
-          // requestCreatedEvent.name = createRequestInput.whyNeedCoaching;
-          // requestCreatedEvent.description = createRequestInput.message;
-          // this.eventEmitter.emit('order.created', requestCreatedEvent);
-          console.log(request);
+          this.eventEmitter.emit('request.created', request);
           return this.getRequest(request);
         });
     } catch (error) {
@@ -94,12 +88,14 @@ export class RequestsService {
       );
     }
   }
+
   getOptions(args) {
     Object.keys(args).map((key) => {
       if (args[key] === undefined) delete args[key];
     });
     return args;
   }
+
   async findAll(args = null) {
     const { take, skip } = args;
     delete args.take;

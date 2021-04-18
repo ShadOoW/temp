@@ -8,8 +8,12 @@ input CreateDomainInput {
 }
 
 input CreateEventInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  command: String!
+  from: EventUserInput = null
+  module: String!
+  payload: String = null
+  sourceId: String!
+  to: EventUserInput = null
 }
 
 input CreatePermissionInput {
@@ -110,8 +114,26 @@ type Event {
   updatedAt: DateTime!
 }
 
+input EventUserInput {
+  id: String!
+}
+
 type GetDomains {
   domains: [Domain!]!
+  totalCount: Int!
+}
+
+type GetEventDto {
+  command: String!
+  from: GetUserDto!
+  module: String!
+  payload: String!
+  sourceId: String!
+  to: GetUserDto
+}
+
+type GetEvents {
+  events: [GetEventDto!]!
   totalCount: Int!
 }
 
@@ -241,7 +263,7 @@ type Query {
   domain(id: String!): Domain!
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
-  events: [Event!]!
+  events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
   profile(id: String!): Profile!

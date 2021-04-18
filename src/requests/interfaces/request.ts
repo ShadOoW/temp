@@ -4,8 +4,3 @@ export interface IRequest {
   excerpt: string;
   status: string;
 }
-
-export class RequestCreatedEvent {
-  name: string;
-  description: string;
-}
