@@ -37,7 +37,7 @@ export class RequestsResolver {
     return this.requestsService.findAll({ ...args, from, to });
   }
 
-  @Query(() => GetRequest, { name: 'menteePublicRequest' })
+  @Query(() => GetRequest, { name: 'menteePublicRequest', nullable: true })
   async findUserPublic(
     @Args('mentee', { type: () => String }) from: string,
     @Args() args: PaginationArgs,
@@ -47,7 +47,6 @@ export class RequestsResolver {
       from,
       to: null,
     });
-    console.log(menteePublicRequest.requests[0]);
     return menteePublicRequest.requests[0] || {};
   }
 

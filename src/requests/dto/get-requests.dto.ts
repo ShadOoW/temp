@@ -13,8 +13,8 @@ export class GetRequests {
 
 @ObjectType()
 export class GetRequest {
-  @Field(() => String)
-  id: string;
+  @Field(() => String, { nullable: true })
+  id?: string;
 
   @Field(() => String, { nullable: true })
   whyNeedCoaching?: string;

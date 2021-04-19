@@ -171,7 +171,7 @@ type GetPermissions {
 type GetRequest {
   createdAt: DateTime!
   expectations: String
-  id: String!
+  id: String
   mentee: GetUserDto!
   mentor: GetUserDto
   message: String
@@ -312,7 +312,7 @@ type Query {
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
-  menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest!
+  menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
