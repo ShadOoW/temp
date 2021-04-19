@@ -27,8 +27,6 @@ export class RequestsResolver {
     @Args('createRequestInput') createRequestInput: CreateRequestInput,
   ) {
     return this.requestsService.create(createRequestInput).then((event) => {
-      this.pubSub.publish('notification', { notification: event });
-      this.pubSub.publish('activity', { activity: event });
       return event;
     });
   }
@@ -41,8 +39,6 @@ export class RequestsResolver {
     return this.requestsService
       .create(createPrivateRequestInput)
       .then((event) => {
-        this.pubSub.publish('notification', { notification: event });
-        this.pubSub.publish('activity', { activity: event });
         return event;
       });
   }
@@ -55,8 +51,8 @@ export class RequestsResolver {
     return this.requestsService
       .create(createPublicRequestInput)
       .then((event) => {
-        this.pubSub.publish('notification', { notification: event });
-        this.pubSub.publish('activity', { activity: event });
+        // this.pubSub.publish('notification', { notification: event });
+        // this.pubSub.publish('activity', { activity: event });
         return event;
       });
   }
