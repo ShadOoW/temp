@@ -3,7 +3,11 @@ import { PoliciesGuard } from '../casl/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RequestsService } from './requests.service';
 import { Request } from './entities/request.entity';
-import { CreateRequestInput } from './dto/create-request.input';
+import {
+  CreatePrivateRequestInput,
+  CreatePublicRequestInput,
+  CreateRequestInput,
+} from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { GetPropositionsArgs, GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequest, GetRequests } from './dto/get-requests.dto';
@@ -27,6 +31,34 @@ export class RequestsResolver {
       this.pubSub.publish('activity', { activity: event });
       return event;
     });
+  }
+
+  @Mutation(() => Request)
+  createPrivateRequest(
+    @Args('createPrivateRequestInput')
+    createPrivateRequestInput: CreatePrivateRequestInput,
+  ) {
+    return this.requestsService
+      .create(createPrivateRequestInput)
+      .then((event) => {
+        this.pubSub.publish('notification', { notification: event });
+        this.pubSub.publish('activity', { activity: event });
+        return event;
+      });
+  }
+
+  @Mutation(() => Request)
+  createPublicRequest(
+    @Args('createPublicRequestInput')
+    createPublicRequestInput: CreatePublicRequestInput,
+  ) {
+    return this.requestsService
+      .create(createPublicRequestInput)
+      .then((event) => {
+        this.pubSub.publish('notification', { notification: event });
+        this.pubSub.publish('activity', { activity: event });
+        return event;
+      });
   }
 
   @Query(() => GetRequests, { name: 'requests' })

@@ -46,6 +46,12 @@ input CreatePointInput {
   exampleField: Int!
 }
 
+input CreatePrivateRequestInput {
+  mentee: String!
+  mentor: String!
+  message: String!
+}
+
 input CreateProfileDomainInput {
   id: String!
 }
@@ -72,6 +78,12 @@ input CreateProfileInput {
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
+}
+
+input CreatePublicRequestInput {
+  expectations: String!
+  mentee: String!
+  whyNeedCoaching: String!
 }
 
 input CreateRequestInput {
@@ -233,6 +245,8 @@ type Mutation {
   createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createPoint(createPointInput: CreatePointInput!): Point!
+  createPrivateRequest(createPrivateRequestInput: CreatePrivateRequestInput!): Request!
+  createPublicRequest(createPublicRequestInput: CreatePublicRequestInput!): Request!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!

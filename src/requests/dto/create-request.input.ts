@@ -31,3 +31,30 @@ export class CreateRequestInput {
   @IsBoolean()
   proposition?: boolean;
 }
+
+@InputType()
+export class CreatePublicRequestInput {
+  @Field(() => String)
+  @IsString()
+  whyNeedCoaching: string;
+
+  @Field(() => String)
+  @IsString()
+  expectations: string;
+
+  @Field(() => String)
+  mentee: CreateRequestUserInput;
+}
+
+@InputType()
+export class CreatePrivateRequestInput {
+  @Field(() => String)
+  @IsString()
+  message: string;
+
+  @Field(() => String)
+  mentee: CreateRequestUserInput;
+
+  @Field(() => String)
+  mentor: CreateRequestUserInput;
+}
