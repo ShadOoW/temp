@@ -59,7 +59,6 @@ export class RequestsService {
           })
         : null;
       if (
-        !mentor ||
         (!proposition && (publicRequest || privateRequest)) ||
         (proposition && m2mRequest)
       ) {

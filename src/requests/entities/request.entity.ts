@@ -7,7 +7,7 @@ import { RequestStatus } from '../interfaces/requestStatus';
 @ObjectType()
 @Entity({ name: 'requests' })
 export class Request extends BaseEntity {
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   @Field(() => String)
   title: string;
 

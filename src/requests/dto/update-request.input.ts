@@ -1,6 +1,6 @@
 import { InputType, Field, PartialType } from '@nestjs/graphql';
 import { CreateRequestInput } from './create-request.input';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 import { RequestStatus } from '../interfaces/requestStatus';
 
 @InputType()
@@ -8,7 +8,7 @@ export class UpdateRequestInput extends PartialType(CreateRequestInput) {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
-  whyNeedCoaching: string;
+  whyNeedCoaching?: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -26,5 +26,7 @@ export class UpdateRequestInput extends PartialType(CreateRequestInput) {
   status?: RequestStatus;
 
   @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
   proposition?: boolean;
 }

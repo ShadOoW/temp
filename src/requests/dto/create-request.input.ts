@@ -1,12 +1,13 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 import { CreateRequestUserInput } from './request.inputs';
 
 @InputType()
 export class CreateRequestInput {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
-  whyNeedCoaching: string;
+  whyNeedCoaching?: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -22,8 +23,11 @@ export class CreateRequestInput {
   mentee: CreateRequestUserInput;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   mentor?: CreateRequestUserInput;
 
   @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
   proposition?: boolean;
 }

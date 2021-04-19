@@ -16,11 +16,11 @@ export class GetRequest {
   @Field(() => String)
   id: string;
 
-  @Field(() => String)
-  whyNeedCoaching: string;
+  @Field(() => String, { nullable: true })
+  whyNeedCoaching?: string;
 
   @Field(() => String, { nullable: true })
-  message: string;
+  message?: string;
 
   @Field(() => String, { nullable: true })
   expectations?: string;
