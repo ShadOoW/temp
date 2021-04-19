@@ -2,6 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Badge {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Balance {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateBadgeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateBalanceInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreateDomainInput {
   description: String!
   name: String!
@@ -19,6 +39,11 @@ input CreateEventInput {
 input CreatePermissionInput {
   description: String!
   name: String!
+}
+
+input CreatePointInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 input CreateProfileDomainInput {
@@ -202,24 +227,33 @@ type GetUserDto {
 }
 
 type Mutation {
+  createBadge(createBadgeInput: CreateBadgeInput!): Badge!
+  createBalance(createBalanceInput: CreateBalanceInput!): Balance!
   createDomain(createDomainInput: CreateDomainInput!): Domain!
   createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
+  createPoint(createPointInput: CreatePointInput!): Point!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): User!
+  removeBadge(id: Int!): Badge!
+  removeBalance(id: Int!): Balance!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
+  removePoint(id: Int!): Point!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
+  updateBadge(updateBadgeInput: UpdateBadgeInput!): Badge!
+  updateBalance(updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
+  updatePoint(updatePointInput: UpdatePointInput!): Point!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
   updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
@@ -232,6 +266,14 @@ type Permission {
   id: String!
   name: String!
   updatedAt: DateTime!
+}
+
+type Point {
+  """the action of point value"""
+  action: String!
+
+  """action point value"""
+  number: Int!
 }
 
 type Profile {
@@ -262,15 +304,22 @@ type Profile {
 }
 
 type Query {
+  badge(id: Int!): Badge!
+  badges: [Badge!]!
+  balance(id: Int!): Balance!
+  balances: [Balance!]!
   domain(id: String!): Domain!
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
+  menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest!
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
+  point(id: Int!): Point!
+  points: [Point!]!
   profile(id: String!): Profile!
-  request(id: String!): GetRequest!
+  publicRequests(skip: Int, take: Int): GetRequests!
   requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!
@@ -332,6 +381,18 @@ input SubscriptionUserInput {
   id: String!
 }
 
+input UpdateBadgeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateBalanceInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
 input UpdateDomainInput {
   description: String!
   name: String!
@@ -344,6 +405,12 @@ input UpdateEventInput {
 input UpdatePermissionInput {
   description: String!
   name: String!
+}
+
+input UpdatePointInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdateProfileInput {

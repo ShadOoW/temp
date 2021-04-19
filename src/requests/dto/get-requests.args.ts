@@ -15,3 +15,9 @@ export class GetRequestsArgs extends PaginationArgs {
   @Field(() => Boolean, { nullable: true })
   proposition?: boolean;
 }
+
+@ArgsType()
+export class GetPropositionsArgs extends PaginationArgs {
+  @Field({ nullable: true })
+  mentor?: string;
+}

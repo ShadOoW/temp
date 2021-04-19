@@ -59,7 +59,8 @@ export class RequestsService {
           })
         : null;
       if (
-        (!proposition && (publicRequest || privateRequest)) ||
+        (!proposition && publicRequest && !mentor) ||
+        (!proposition && publicRequest && privateRequest) ||
         (proposition && m2mRequest)
       ) {
         throw new HttpException(
@@ -92,6 +93,8 @@ export class RequestsService {
   async findAll(args = null) {
     const { take, skip } = args;
     delete args.take;
+    delete args.mentee;
+    delete args.mentor;
     delete args.skip;
     const [requests, totalCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(args),

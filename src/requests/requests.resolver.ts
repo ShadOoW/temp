@@ -5,9 +5,10 @@ import { RequestsService } from './requests.service';
 import { Request } from './entities/request.entity';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
-import { GetRequestsArgs } from './dto/get-requests.args';
+import { GetPropositionsArgs, GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequest, GetRequests } from './dto/get-requests.dto';
 import { PubSub } from 'graphql-subscriptions';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Resolver(() => Request)
 @UseGuards(PoliciesGuard)
@@ -36,9 +37,23 @@ export class RequestsResolver {
     return this.requestsService.findAll({ ...args, from, to });
   }
 
-  @Query(() => GetRequest, { name: 'request' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.requestsService.findOne(id);
+  @Query(() => GetRequest, { name: 'menteePublicRequest' })
+  async findUserPublic(
+    @Args('mentee', { type: () => String }) from: string,
+    @Args() args: PaginationArgs,
+  ) {
+    const menteePublicRequest = await this.requestsService.findAll({
+      ...args,
+      from,
+      to: null,
+    });
+    console.log(menteePublicRequest.requests[0]);
+    return menteePublicRequest.requests[0] || {};
+  }
+
+  @Query(() => GetRequests, { name: 'publicRequests' })
+  findPublic(@Args() args: PaginationArgs) {
+    return this.requestsService.findAll({ ...args, to: null });
   }
 
   @Mutation(() => Request)

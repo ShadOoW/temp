@@ -24,6 +24,9 @@ import { RedisModule } from 'nestjs-redis';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PubSub } from 'graphql-subscriptions';
+import { PointsModule } from './points/points.module';
+import { BadgesModule } from './badges/badges.module';
+import { BalancesModule } from './balances/balances.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -62,6 +65,9 @@ import { PubSub } from 'graphql-subscriptions';
     EmailsModule,
     ChatModule,
     EventsModule,
+    PointsModule,
+    BadgesModule,
+    BalancesModule,
   ],
   providers: [
     {
