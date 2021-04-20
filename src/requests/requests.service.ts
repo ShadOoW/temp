@@ -46,22 +46,33 @@ export class RequestsService {
     const { mentee, mentor, proposition } = createRequestInput;
     try {
       const publicRequest = await this.repo.findOne({
-        where: { from: mentee, status: 'created' },
+        where: { from: mentee, to: null, status: 'created' },
       });
-      const privateRequest = mentor
-        ? await this.repo.findOne({
-            where: { from: mentee, to: Not(IsNull()), status: 'created' },
-          })
-        : null;
+      const privateRequest = await this.repo.findOne({
+        where: { from: mentee, to: Not(IsNull()), status: 'created' },
+      });
       const m2mRequest = mentor
         ? await this.repo.findOne({
             where: { from: mentee, to: mentor, status: 'created' },
           })
         : null;
+      console.log(
+        'proposition ====>',
+        proposition,
+        'publicRequest ====>',
+        publicRequest,
+        'privateRequest ====>',
+        privateRequest,
+        'm2mRequest ====>',
+        m2mRequest,
+        'mentor ====>',
+        mentor,
+      );
+
       if (
+        m2mRequest ||
         (!proposition && publicRequest && !mentor) ||
-        (!proposition && publicRequest && privateRequest) ||
-        (proposition && m2mRequest)
+        (!proposition && publicRequest && privateRequest)
       ) {
         throw new HttpException(
           ERROR_MESSAGES.CANNOT_CREATE,
@@ -79,7 +90,7 @@ export class RequestsService {
           description: createRequestInput.expectations,
         })
         .then((request) => {
-          this.eventEmitter.emit('request.created', request);
+          // this.eventEmitter.emit('request.created', request);
           return this.getRequest(request);
         });
     } catch (error) {
