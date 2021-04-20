@@ -3,8 +3,24 @@
 # ------------------------------------------------------
 
 type Badge {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+
+  """description of the badge"""
+  description: String!
+  id: String!
+
+  """image of the badge"""
+  image: String!
+
+  """message to show after get the badge"""
+  message: String!
+
+  """the name of the badge"""
+  name: String!
+
+  """badge points"""
+  points: Int!
+  updatedAt: DateTime!
 }
 
 type Balance {
@@ -13,8 +29,20 @@ type Balance {
 }
 
 input CreateBadgeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """description of the badge"""
+  description: String
+
+  """image of the badge"""
+  image: String
+
+  """message to show after get the badge"""
+  message: String
+
+  """the name of the badge"""
+  name: String!
+
+  """badge points"""
+  points: Int!
 }
 
 input CreateBalanceInput {
@@ -168,6 +196,11 @@ input EventUserInput {
   id: String!
 }
 
+type GetBadges {
+  badges: [Badge!]!
+  totalCount: Int!
+}
+
 type GetDomains {
   domains: [Domain!]!
   totalCount: Int!
@@ -269,7 +302,7 @@ type Mutation {
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): User!
-  removeBadge(id: Int!): Badge!
+  removeBadge(id: String!): Badge!
   removeBalance(id: Int!): Balance!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
@@ -279,7 +312,7 @@ type Mutation {
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
-  updateBadge(updateBadgeInput: UpdateBadgeInput!): Badge!
+  updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
@@ -347,8 +380,8 @@ type Profile {
 }
 
 type Query {
-  badge(id: Int!): Badge!
-  badges: [Badge!]!
+  badge(id: String!): Badge!
+  badges(skip: Int, take: Int): GetBadges!
   balance(id: Int!): Balance!
   balances: [Balance!]!
   domain(id: String!): Domain!
@@ -426,9 +459,20 @@ input SubscriptionUserInput {
 }
 
 input UpdateBadgeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """description of the badge"""
+  description: String!
+
+  """image of the badge"""
+  image: String
+
+  """message to show after get the badge"""
+  message: String
+
+  """the name of the badge"""
+  name: String
+
+  """badge points"""
+  points: Int
 }
 
 input UpdateBalanceInput {

@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDomainInput } from './dto/create-domain.input';
 import { UpdateDomainInput } from './dto/update-domain.input';
 import { Domain } from './entities/domain.entity';
-import { PaginationArgs } from 'src/shared/pagination.args';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Injectable()
 export class DomainsService {
@@ -57,7 +57,7 @@ export class DomainsService {
 
   async remove(id: string) {
     const domainToDelete = await this.findOne(id);
-    await this.repo.delete(domainToDelete);
+    await this.repo.delete(id);
     return domainToDelete;
   }
 }

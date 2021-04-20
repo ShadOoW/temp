@@ -31,7 +31,7 @@ export class PointsService {
   }
 
   async findOne(id: string) {
-    return await this.repo.findOne(id);
+    return await this.repo.findOneOrFail(id);
   }
 
   update(id: string, updatePointInput: UpdatePointInput) {
@@ -40,7 +40,7 @@ export class PointsService {
 
   async remove(id: string) {
     const pointToDelete = await this.findOne(id);
-    await this.repo.delete(pointToDelete);
+    await this.repo.delete(id);
     return pointToDelete;
   }
 }

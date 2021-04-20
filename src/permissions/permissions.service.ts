@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
 import { Permission } from './entities/permission.entity';
-import { PaginationArgs } from 'src/shared/pagination.args';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Injectable()
 export class PermissionsService {
@@ -56,7 +56,7 @@ export class PermissionsService {
 
   async remove(id: string) {
     const permissionToDelete = await this.findOne(id);
-    await this.repo.delete(permissionToDelete);
+    await this.repo.delete(id);
     return permissionToDelete;
   }
 }

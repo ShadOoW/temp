@@ -8,8 +8,8 @@ import { Profile } from '../profiles/entities/profile.entity';
 import { ProfilesService } from '../profiles/profiles.service';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/entities/role.entity';
-import { DomainsService } from 'src/domains/domains.service';
-import { Domain } from 'src/domains/entities/domain.entity';
+import { DomainsService } from '../domains/domains.service';
+import { Domain } from '../domains/entities/domain.entity';
 
 function genUser(username, type, role = null, domains = []) {
   const user = {

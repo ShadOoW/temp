@@ -4,7 +4,7 @@ import { configService } from '../config/config.service';
 // import { ChatService } from '../chat/chat.service';
 // import { MessageRepository } from '../chat/message.repository';
 // import { MessageEntity } from 'src/chat/entities/message.entity';
-import { RoomEntity } from 'src/chat/entities/room.entity';
+import { RoomEntity } from '../chat/entities/room.entity';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { Profile } from '../profiles/entities/profile.entity';

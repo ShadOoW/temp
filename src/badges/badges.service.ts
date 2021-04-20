@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateBadgeInput } from './dto/create-badge.input';
 import { UpdateBadgeInput } from './dto/update-badge.input';
+import { Badge } from './entities/badge.entity';
 
 @Injectable()
 export class BadgesService {
+  constructor(
+    @InjectRepository(Badge) private readonly repo: Repository<Badge>,
+  ) {}
   create(createBadgeInput: CreateBadgeInput) {
-    return 'This action adds a new badge';
+    return this.repo.save(createBadgeInput);
   }
 
-  findAll() {
-    return `This action returns all badges`;
+  async findAll(args = null) {
+    const { take, skip } = args;
+    delete args.take;
+    delete args.skip;
+    const [badges, totalCount] = await this.repo.findAndCount({
+      where: args,
+      order: {
+        createdAt: 'DESC',
+      },
+      skip,
+      take,
+    });
+    return { badges, totalCount };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} badge`;
+  async findOne(id: string) {
+    return await this.repo.findOneOrFail(id);
   }
 
-  update(id: number, updateBadgeInput: UpdateBadgeInput) {
-    return `This action updates a #${id} badge`;
+  update(id: string, updateBadgeInput: UpdateBadgeInput) {
+    return this.repo.save({ id, ...updateBadgeInput });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} badge`;
+  async remove(id: string) {
+    const pointToDelete = await this.findOne(id);
+    await this.repo.delete(id);
+    return pointToDelete;
   }
 }
