@@ -56,18 +56,6 @@ export class RequestsService {
             where: { from: mentee, to: mentor, status: 'created' },
           })
         : null;
-      console.log(
-        'proposition ====>',
-        proposition,
-        'publicRequest ====>',
-        publicRequest,
-        'privateRequest ====>',
-        privateRequest,
-        'm2mRequest ====>',
-        m2mRequest,
-        'mentor ====>',
-        mentor,
-      );
 
       if (
         m2mRequest ||
