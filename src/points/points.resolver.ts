@@ -3,6 +3,8 @@ import { PointsService } from './points.service';
 import { Point } from './entities/point.entity';
 import { CreatePointInput } from './dto/create-point.input';
 import { UpdatePointInput } from './dto/update-point.input';
+import { GetPoints } from './dto/get-points.dto';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Resolver(() => Point)
 export class PointsResolver {
@@ -13,23 +15,26 @@ export class PointsResolver {
     return this.pointsService.create(createPointInput);
   }
 
-  @Query(() => [Point], { name: 'points' })
-  findAll() {
-    return this.pointsService.findAll();
+  @Query(() => GetPoints, { name: 'points' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.pointsService.findAll(paginationArgs);
   }
 
   @Query(() => Point, { name: 'point' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.pointsService.findOne(id);
   }
 
   @Mutation(() => Point)
-  updatePoint(@Args('updatePointInput') updatePointInput: UpdatePointInput) {
-    return this.pointsService.update(updatePointInput.id, updatePointInput);
+  updatePoint(
+    @Args('id', { type: () => String }) id: string,
+    @Args('updatePointInput') updatePointInput: UpdatePointInput,
+  ) {
+    return this.pointsService.update(id, updatePointInput);
   }
 
   @Mutation(() => Point)
-  removePoint(@Args('id', { type: () => Int }) id: number) {
+  removePoint(@Args('id', { type: () => String }) id: string) {
     return this.pointsService.remove(id);
   }
 }

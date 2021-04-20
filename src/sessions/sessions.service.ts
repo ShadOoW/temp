@@ -11,7 +11,7 @@ export class SessionsService {
   ) {}
 
   create(createSessionInput: CreateSessionInput) {
-    return this.repo.save(createSessionInput).then((session) => session);
+    return this.repo.save(createSessionInput);
   }
 
   async findAll(args = null) {

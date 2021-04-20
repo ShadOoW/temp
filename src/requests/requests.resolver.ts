@@ -9,7 +9,7 @@ import {
   CreateRequestInput,
 } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
-import { GetPropositionsArgs, GetRequestsArgs } from './dto/get-requests.args';
+import { GetRequestsArgs } from './dto/get-requests.args';
 import { GetRequest, GetRequests } from './dto/get-requests.dto';
 import { PubSub } from 'graphql-subscriptions';
 import { PaginationArgs } from '../shared/pagination.args';
