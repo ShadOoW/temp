@@ -22,7 +22,7 @@ export class SubscriptionsService {
     delete args.skip;
     const [subscribers, totalCount] = await this.repo.findAndCount({
       where: args,
-      relations: ['subscriber'],
+      relations: ['subscriber', 'subscriber.profile'],
       order: {
         createdAt: 'DESC',
       },
