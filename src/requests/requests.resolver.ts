@@ -83,6 +83,11 @@ export class RequestsResolver {
     return this.requestsService.findAll({ ...args, to: null });
   }
 
+  @Query(() => GetRequest, { name: 'request' })
+  findOne(@Args('id', { type: () => String }) id: string) {
+    return this.requestsService.findOne(id);
+  }
+
   @Mutation(() => Request)
   updateRequest(
     @Args('id', { type: () => String }) id: string,

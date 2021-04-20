@@ -334,6 +334,7 @@ type Query {
   points: [Point!]!
   profile(id: String!): Profile!
   publicRequests(skip: Int, take: Int): GetRequests!
+  request(id: String!): GetRequest!
   requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
   role(id: String!): Role!
   roles(skip: Int, take: Int): GetRoles!

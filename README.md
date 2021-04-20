@@ -5,6 +5,9 @@
 ## Installation
 
 ```bash
+# Connect to EC2 server 
+$ ssh -v -i m2m-key-pair.pem ec2-user@3.89.120.51
+
 # Install yarn
 $ sudo npm install yarn -g
 
