@@ -4,6 +4,8 @@ import { rolesSeed } from './roles';
 import { requestsSeed } from './requests';
 import { domainsSeed } from './domains';
 import { chatSeed } from './chat';
+import { pointsSeed } from './points';
+import { badgesSeed } from './badges';
 
 async function run() {
   if (process.argv) {
@@ -19,6 +21,10 @@ async function run() {
       await requestsSeed();
     if (process.argv.includes('chat') || process.argv.includes('all'))
       await chatSeed();
+    if (process.argv.includes('points') || process.argv.includes('all'))
+      await pointsSeed();
+    if (process.argv.includes('badges') || process.argv.includes('all'))
+      await badgesSeed();
   }
 }
 
