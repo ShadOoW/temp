@@ -85,7 +85,11 @@ export class RequestsResolver {
 
   @Query(() => GetRequests, { name: 'publicRequests' })
   findPublic(@Args() args: PaginationArgs) {
-    return this.requestsService.findAll({ ...args, to: null });
+    return this.requestsService.findAll({
+      ...args,
+      to: null,
+      status: 'created',
+    });
   }
 
   @Query(() => GetRequest, { name: 'request' })
