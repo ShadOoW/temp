@@ -1,9 +1,13 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsDateString } from 'class-validator';
 import { InputType, Field } from '@nestjs/graphql';
 import { User } from '../../users/entities/user.entity';
 
 @InputType()
 export class CreateSessionInput {
+  @Field(() => String)
+  @IsDateString()
+  startDate: Date;
+
   @Field(() => String)
   @IsString()
   title: string;
@@ -16,7 +20,12 @@ export class CreateSessionInput {
   @Field(() => Boolean)
   @IsBoolean()
   @IsOptional()
-  videoConference?: boolean;
+  isVideoCall?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  @Field(() => Boolean)
+  isFromMentor?: boolean;
 
   @Field(() => String)
   mentee: User;

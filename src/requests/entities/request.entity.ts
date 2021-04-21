@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { User } from '../../users/entities/user.entity';
-import { RequestStatus } from '../interfaces/requestStatus';
+import { Status } from '../../shared/interfaces/globalStatus';
 
 @ObjectType()
 @Entity({ name: 'requests' })
@@ -30,7 +30,7 @@ export class Request extends BaseEntity {
     default: 'created',
   })
   @Field(() => String, { nullable: true })
-  status?: RequestStatus;
+  status?: Status;
 
   @ManyToOne(() => User, (user) => user.requestsTo)
   @Field(() => User, { nullable: true })

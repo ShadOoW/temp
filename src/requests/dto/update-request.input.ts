@@ -1,7 +1,7 @@
 import { InputType, Field, PartialType } from '@nestjs/graphql';
 import { CreateRequestInput } from './create-request.input';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
-import { RequestStatus } from '../interfaces/requestStatus';
+import { Status } from '../../shared/interfaces/globalStatus';
 
 @InputType()
 export class UpdateRequestInput extends PartialType(CreateRequestInput) {
@@ -23,7 +23,7 @@ export class UpdateRequestInput extends PartialType(CreateRequestInput) {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
-  status?: RequestStatus;
+  status?: Status;
 
   @Field(() => Boolean, { nullable: true })
   @IsOptional()

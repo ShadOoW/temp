@@ -1,4 +1,4 @@
-export enum RequestStatus {
+export enum Status {
   created = 'created',
   updated = 'updated',
   accepted = 'accepted',

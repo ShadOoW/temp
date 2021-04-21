@@ -143,10 +143,12 @@ input CreateRoleInput {
 
 input CreateSessionInput {
   description: String!
+  isFromMentor: Boolean!
+  isVideoCall: Boolean!
   mentee: String!
   mentor: String!
+  startDate: String!
   title: String!
-  videoConference: Boolean!
 }
 
 input CreateSubscriptionInput {
@@ -312,6 +314,7 @@ type Mutation {
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
+  update(id: String!, updateSessionInput: UpdateSessionInput!): Session!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
@@ -389,6 +392,8 @@ type Query {
   emailExists(email: String!): Boolean!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
   menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest
+  menteeSessions(mentee: String!, skip: Int, take: Int): GetSessions!
+  mentorSessions(mentor: String!, skip: Int, take: Int): GetSessions!
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
@@ -442,11 +447,14 @@ type Session {
   createdAt: DateTime!
   description: String!
   id: String!
+  isFromMentor: Boolean!
+  isVideoCall: Boolean!
   mentee: User!
   mentor: User!
+  startDate: String!
+  status: String
   title: String!
   updatedAt: DateTime!
-  videoConference: Boolean!
 }
 
 type Subscription {
@@ -550,6 +558,12 @@ input UpdateRoleInput {
   description: String!
   name: String!
   permissions: [RolePermissionInput!]!
+}
+
+input UpdateSessionInput {
+  description: String!
+  status: String
+  title: String!
 }
 
 input UpdateUserInput {

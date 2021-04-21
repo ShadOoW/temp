@@ -1,9 +1,11 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { Session } from './entities/session.entity';
-import { CreateSessionInput } from './dto/create-session.input';
+import { UpdateSessionInput } from './dto/update-session.input';
 import { GetSessionsArgs } from './dto/get-sessions.args';
 import { GetSessions } from './dto/get-sessions.dto';
+import { PaginationArgs } from '../shared/pagination.args';
+import { CreateSessionInput } from './dto/create-session.input copy';
 
 @Resolver(() => Session)
 export class SessionsResolver {
@@ -19,6 +21,30 @@ export class SessionsResolver {
   @Query(() => GetSessions, { name: 'sessions' })
   findAll(@Args() getSessionsArgs: GetSessionsArgs) {
     return this.sessionsService.findAll(getSessionsArgs);
+  }
+
+  @Query(() => GetSessions, { name: 'menteeSessions' })
+  menteeSessions(
+    @Args('mentee', { type: () => String }) mentee: string,
+    @Args() paginationArgs: PaginationArgs,
+  ) {
+    return this.sessionsService.findAll({ ...paginationArgs, mentee });
+  }
+
+  @Query(() => GetSessions, { name: 'mentorSessions' })
+  mentorSessions(
+    @Args('mentor', { type: () => String }) mentor: string,
+    @Args() paginationArgs: PaginationArgs,
+  ) {
+    return this.sessionsService.findAll({ ...paginationArgs, mentor });
+  }
+
+  @Mutation(() => Session)
+  update(
+    @Args('id', { type: () => String }) id: string,
+    @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
+  ) {
+    return this.sessionsService.update(id, updateSessionInput);
   }
 
   @Query(() => Session, { name: 'session' })

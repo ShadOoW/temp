@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { GetUserDto } from '../../users/dto/get-user.dto';
-import { RequestStatus } from '../interfaces/requestStatus';
+import { Status } from '../../shared/interfaces/globalStatus';
 
 @ObjectType()
 export class GetRequests {
@@ -26,7 +26,7 @@ export class GetRequest {
   expectations?: string;
 
   @Field(() => String, { nullable: true })
-  status?: RequestStatus;
+  status?: Status;
 
   @Field(() => GetUserDto, { nullable: true })
   mentor?: GetUserDto;

@@ -1,8 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
-import { CreateSessionInput } from './dto/create-session.input';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { UpdateSessionInput } from './dto/update-session.input';
 import { Session } from './entities/session.entity';
+import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
+import { CreateSessionInput } from './dto/create-session.input copy';
 
 @Injectable()
 export class SessionsService {
@@ -20,7 +22,7 @@ export class SessionsService {
     delete args.skip;
     const [sessions, totalCount] = await this.repo.findAndCount({
       where: args,
-      relations: ['mentee', 'mentor'],
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
       order: {
         createdAt: 'DESC',
       },
@@ -32,8 +34,21 @@ export class SessionsService {
 
   async findOne(id: string) {
     return await this.repo
-      .findOne(id, { relations: ['mentee', 'mentor'] })
+      .findOneOrFail(id, {
+        relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+      })
       .then((session) => session);
+  }
+
+  async update(id: string, updateSessionInput: UpdateSessionInput) {
+    const session = await this.repo.findOne({ id });
+    if (!session) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return await this.repo.save({ id, ...updateSessionInput });
   }
 
   async remove(id: string) {
