@@ -78,9 +78,9 @@ export class RequestsResolver {
     return menteePublicRequest.requests[0] || {};
   }
 
-  @Query(() => Boolean, { name: 'acceptRequest' })
-  acceptRequest(@Args('mentee', { type: () => String }) mentee: string) {
-    return this.requestsService.acceptRequest(mentee);
+  @Query(() => Boolean, { name: 'canRequest' })
+  canRequest(@Args('mentee', { type: () => String }) mentee: string) {
+    return this.requestsService.canRequest(mentee);
   }
 
   @Query(() => GetRequests, { name: 'publicRequests' })

@@ -42,7 +42,7 @@ export class RequestsService {
     };
   }
 
-  async acceptRequest(mentee: string) {
+  async canRequest(mentee: string) {
     return (
       (await this.repo.count({
         where: { from: mentee, status: Not('refused') },
