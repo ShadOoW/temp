@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, Repository } from 'typeorm';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateSessionInput } from './dto/update-session.input';
 import { Session } from './entities/session.entity';
@@ -14,6 +14,22 @@ export class SessionsService {
 
   create(createSessionInput: CreateSessionInput) {
     return this.repo.save(createSessionInput);
+  }
+
+  async findNotDue(args = null) {
+    const { take, skip } = args;
+    delete args.take;
+    delete args.skip;
+    const [sessions, totalCount] = await this.repo.findAndCount({
+      where: { startDate: LessThanOrEqual(args.date) },
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+      order: {
+        createdAt: 'DESC',
+      },
+      skip,
+      take,
+    });
+    return { sessions, totalCount };
   }
 
   async findAll(args = null) {

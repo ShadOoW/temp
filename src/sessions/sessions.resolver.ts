@@ -39,6 +39,14 @@ export class SessionsResolver {
     return this.sessionsService.findAll({ ...paginationArgs, mentor });
   }
 
+  @Query(() => GetSessions, { name: 'sessionsNotDue' })
+  sessionsNotDue(
+    @Args('date', { type: () => Date }) date: Date,
+    @Args() paginationArgs: PaginationArgs,
+  ) {
+    return this.sessionsService.findNotDue({ ...paginationArgs, date });
+  }
+
   @Mutation(() => Session, { name: 'updateSession' })
   update(
     @Args('id', { type: () => String }) id: string,

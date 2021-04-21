@@ -408,6 +408,7 @@ type Query {
   rolesByNames(rolesNames: [String!]!): [Role!]!
   session(id: String!): Session!
   sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
+  sessionsNotDue(date: DateTime!, skip: Int, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
   user(id: String!): User!
