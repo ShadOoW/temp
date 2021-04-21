@@ -314,7 +314,6 @@ type Mutation {
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
-  update(id: String!, updateSessionInput: UpdateSessionInput!): Session!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
@@ -324,6 +323,7 @@ type Mutation {
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
   updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
+  updateSession(id: String!, updateSessionInput: UpdateSessionInput!): Session!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
 }
 
@@ -561,9 +561,9 @@ input UpdateRoleInput {
 }
 
 input UpdateSessionInput {
-  description: String!
+  description: String
   status: String
-  title: String!
+  title: String
 }
 
 input UpdateUserInput {

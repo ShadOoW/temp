@@ -39,7 +39,7 @@ export class SessionsResolver {
     return this.sessionsService.findAll({ ...paginationArgs, mentor });
   }
 
-  @Mutation(() => Session)
+  @Mutation(() => Session, { name: 'updateSession' })
   update(
     @Args('id', { type: () => String }) id: string,
     @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
