@@ -42,6 +42,14 @@ export class RequestsService {
     };
   }
 
+  async acceptRequest(mentee: string) {
+    return (
+      (await this.repo.count({
+        where: { from: mentee, status: Not('refused') },
+      })) == 0
+    );
+  }
+
   async create(createRequestInput: CreateRequestInput) {
     const { mentee, mentor, proposition } = createRequestInput;
     try {

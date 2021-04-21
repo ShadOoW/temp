@@ -383,6 +383,7 @@ type Profile {
 }
 
 type Query {
+  acceptRequest(mentee: String!): Boolean!
   badge(id: String!): Badge!
   badges(skip: Int, take: Int): GetBadges!
   balance(id: Int!): Balance!

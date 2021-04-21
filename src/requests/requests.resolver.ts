@@ -78,6 +78,11 @@ export class RequestsResolver {
     return menteePublicRequest.requests[0] || {};
   }
 
+  @Query(() => Boolean, { name: 'acceptRequest' })
+  acceptRequest(@Args('mentee', { type: () => String }) mentee: string) {
+    return this.requestsService.acceptRequest(mentee);
+  }
+
   @Query(() => GetRequests, { name: 'publicRequests' })
   findPublic(@Args() args: PaginationArgs) {
     return this.requestsService.findAll({ ...args, to: null });
