@@ -8,7 +8,7 @@ import { Status } from '../../shared/interfaces/globalStatus';
 @Entity({ name: 'sessions' })
 export class Session extends BaseEntity {
   @Column({ type: 'timestamptz' })
-  @Field(() => String)
+  @Field(() => Date)
   startDate: Date;
 
   @Column({ type: 'varchar', length: 300 })

@@ -40,11 +40,8 @@ export class SessionsResolver {
   }
 
   @Query(() => GetSessions, { name: 'sessionsNotDue' })
-  sessionsNotDue(
-    @Args('date', { type: () => Date }) date: Date,
-    @Args() paginationArgs: PaginationArgs,
-  ) {
-    return this.sessionsService.findNotDue({ ...paginationArgs, date });
+  sessionsNotDue(@Args() paginationArgs: PaginationArgs) {
+    return this.sessionsService.findNotDue(paginationArgs);
   }
 
   @Mutation(() => Session, { name: 'updateSession' })
