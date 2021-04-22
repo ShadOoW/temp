@@ -1,6 +1,7 @@
 import { CreateBadgeInput } from './create-badge.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
+import { BadgePointInput } from './badge.inputs';
 
 @InputType()
 export class UpdateBadgeInput extends PartialType(CreateBadgeInput) {
@@ -9,10 +10,11 @@ export class UpdateBadgeInput extends PartialType(CreateBadgeInput) {
   @IsString()
   name?: string;
 
-  @Field(() => Int, { description: 'badge points', nullable: true })
-  @IsOptional()
-  @IsNumber()
-  points?: number;
+  @Field(() => [BadgePointInput], {
+    description: 'badge points',
+    nullable: true,
+  })
+  points?: BadgePointInput[];
 
   @Field(() => String, {
     description: 'message to show after get the badge',

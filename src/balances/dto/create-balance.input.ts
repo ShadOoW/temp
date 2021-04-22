@@ -1,7 +1,11 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { BalancePointInput } from './balance.inputs';
 
 @InputType()
 export class CreateBalanceInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => Int)
+  score: number;
+
+  @Field(() => [BalancePointInput])
+  points: BalancePointInput[];
 }

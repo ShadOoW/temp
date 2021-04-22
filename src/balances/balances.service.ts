@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateBalanceInput } from './dto/create-balance.input';
 import { UpdateBalanceInput } from './dto/update-balance.input';
+import { Balance } from './entities/balance.entity';
 
 @Injectable()
 export class BalancesService {
+  constructor(
+    @InjectRepository(Balance) private readonly repo: Repository<Balance>,
+  ) {}
   create(createBalanceInput: CreateBalanceInput) {
-    return 'This action adds a new balance';
+    return this.repo.save(createBalanceInput);
   }
 
-  findAll() {
-    return `This action returns all balances`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} balance`;
-  }
-
-  update(id: number, updateBalanceInput: UpdateBalanceInput) {
-    return `This action updates a #${id} balance`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} balance`;
+  update(id: string, updateBalanceInput: UpdateBalanceInput) {
+    return this.repo.save({ id, ...updateBalanceInput });
   }
 }

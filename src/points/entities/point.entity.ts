@@ -1,5 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Badge } from '../../badges/entities/badge.entity';
+import { Balance } from '../../balances/entities/balance.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/base.entity';
 
 @ObjectType()
@@ -24,4 +26,10 @@ export class Point extends BaseEntity {
   @Field(() => String, { description: 'image of the point' })
   @Column({ type: 'varchar', length: 300, nullable: true })
   image?: string;
+
+  @ManyToOne(() => Balance, (balance) => balance.points)
+  balance: Balance;
+
+  @ManyToOne(() => Badge, (badge) => badge.points)
+  badge: Badge;
 }
