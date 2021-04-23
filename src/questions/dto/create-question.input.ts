@@ -40,7 +40,6 @@ export class CreateQuestionInput {
   @Field(() => [PropositionInput], {
     description: 'Propositions of the question',
   })
-  @IsString()
   @IsArray()
   propositions: PropositionInput[];
 

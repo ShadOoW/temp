@@ -322,6 +322,11 @@ type GetPoints {
   totalCount: Int!
 }
 
+type GetQuestions {
+  questions: [Question!]!
+  totalCount: Int!
+}
+
 type GetRequest {
   createdAt: DateTime!
   expectations: String
@@ -499,7 +504,7 @@ input PropositionInput {
   desciption: String
 
   """Proposition points value"""
-  points: Boolean!
+  points: Int!
 
   """Proposition title"""
   title: String!
@@ -526,7 +531,7 @@ type Query {
   profile(id: String!): Profile!
   publicRequests(skip: Int, take: Int): GetRequests!
   question(id: String!): Question!
-  questions: [Question!]!
+  questions(skip: Int, take: Int): GetQuestions!
   quiz(id: String!): Quiz!
   quizzes: [Quiz!]!
   request(id: String!): GetRequest!

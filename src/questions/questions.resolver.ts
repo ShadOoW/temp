@@ -3,6 +3,8 @@ import { QuestionsService } from './questions.service';
 import { Question } from './entities/question.entity';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
+import { PaginationArgs } from '../shared/pagination.args';
+import { GetQuestions } from './dto/get-questions.dto';
 
 @Resolver(() => Question)
 export class QuestionsResolver {
@@ -15,9 +17,9 @@ export class QuestionsResolver {
     return this.questionsService.create(createQuestionInput);
   }
 
-  @Query(() => [Question], { name: 'questions' })
-  findAll() {
-    return this.questionsService.findAll();
+  @Query(() => GetQuestions, { name: 'questions' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.questionsService.findAll(paginationArgs);
   }
 
   @Query(() => Question, { name: 'question' })
