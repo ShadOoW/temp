@@ -26,33 +26,41 @@ export class SessionsResolver {
 
   @Query(() => GetSessions, { name: 'menteeSessions' })
   menteeSessions(
+    @Args('status', { type: () => String, nullable: true }) status: string,
     @Args('mentee', { type: () => String }) mentee: string,
     @Args() paginationArgs: PaginationArgs,
   ) {
-    return this.sessionsService.findAll({ ...paginationArgs, mentee });
+    return this.sessionsService.findAll({ ...paginationArgs, mentee, status });
   }
 
   @Query(() => GetSessions, { name: 'mentorSessions' })
   mentorSessions(
+    @Args('status', { type: () => String, nullable: true }) status: string,
     @Args('mentor', { type: () => String }) mentor: string,
     @Args() paginationArgs: PaginationArgs,
   ) {
-    return this.sessionsService.findAll({ ...paginationArgs, mentor });
+    return this.sessionsService.findAll({ ...paginationArgs, mentor, status });
   }
 
   @Query(() => GetSessions, { name: 'sessionsNotDue' })
-  sessionsNotDue(@Args() paginationArgs: PaginationArgs, @CurrentUser() user) {
-    console.log('sessionsNotDue ===> ', user);
-    if (user.isAdmin) return this.sessionsService.findNotDue(paginationArgs);
+  sessionsNotDue(
+    @Args('status', { type: () => String, nullable: true }) status: string,
+    @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user,
+  ) {
+    if (user.isAdmin)
+      return this.sessionsService.findNotDue({ paginationArgs, status });
     else if (user.role === 'mentor')
       return this.sessionsService.findNotDue({
         ...paginationArgs,
         mentor: user.id,
+        status,
       });
     else
       return this.sessionsService.findNotDue({
         ...paginationArgs,
         mentee: user.id,
+        status,
       });
   }
 

@@ -5,6 +5,7 @@ import { UpdateSessionInput } from './dto/update-session.input';
 import { Session } from './entities/session.entity';
 import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { CreateSessionInput } from './dto/create-session.input copy';
+import { UtilsService } from '../shared/providers/utils.service';
 
 @Injectable()
 export class SessionsService {
@@ -21,7 +22,10 @@ export class SessionsService {
     delete args.take;
     delete args.skip;
     const [sessions, totalCount] = await this.repo.findAndCount({
-      where: { ...args, startDate: MoreThanOrEqual(new Date()) },
+      where: {
+        ...UtilsService.getOptions(args),
+        startDate: MoreThanOrEqual(new Date()),
+      },
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
       order: {
         createdAt: 'DESC',
@@ -37,7 +41,7 @@ export class SessionsService {
     delete args.take;
     delete args.skip;
     const [sessions, totalCount] = await this.repo.findAndCount({
-      where: args,
+      where: UtilsService.getOptions(args),
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
       order: {
         createdAt: 'DESC',

@@ -531,8 +531,8 @@ type Query {
   evaluations(skip: Int, take: Int): GetEvaluations!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
   menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest
-  menteeSessions(mentee: String!, skip: Int, take: Int): GetSessions!
-  mentorSessions(mentor: String!, skip: Int, take: Int): GetSessions!
+  menteeSessions(mentee: String!, skip: Int, status: String, take: Int): GetSessions!
+  mentorSessions(mentor: String!, skip: Int, status: String, take: Int): GetSessions!
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): Permission!
   permissions(skip: Int, take: Int): GetPermissions!
@@ -551,7 +551,7 @@ type Query {
   rolesByNames(rolesNames: [String!]!): [Role!]!
   session(id: String!): Session!
   sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
-  sessionsNotDue(skip: Int, take: Int): GetSessions!
+  sessionsNotDue(skip: Int, status: String, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
   user(id: String!): User!
