@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ERROR_MESSAGES } from '../shared/ERROR_MESSAGES';
 import { Repository } from 'typeorm';
 import { CreateEvaluationInput } from './dto/create-evaluation.input';
 import { Evaluation } from './entities/evaluation.entity';
@@ -10,6 +11,13 @@ export class EvaluationsService {
     @InjectRepository(Evaluation) private readonly repo: Repository<Evaluation>,
   ) {}
   create(createEvaluationInput: CreateEvaluationInput) {
+    const { quiz, user } = createEvaluationInput;
+    const exist = this.repo.findOne({ where: { quiz, user } });
+    if (exist)
+      throw new HttpException(
+        ERROR_MESSAGES.CANNOT_CREATE,
+        HttpStatus.BAD_REQUEST,
+      );
     return this.repo.save(createEvaluationInput);
   }
 

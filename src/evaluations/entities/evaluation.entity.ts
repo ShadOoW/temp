@@ -35,7 +35,7 @@ export class Evaluation extends BaseEntity {
     description: 'User note',
     nullable: true,
   })
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
   @IsString()
   note?: string;

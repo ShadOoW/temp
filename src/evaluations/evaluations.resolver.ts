@@ -2,6 +2,8 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { EvaluationsService } from './evaluations.service';
 import { Evaluation } from './entities/evaluation.entity';
 import { CreateEvaluationInput } from './dto/create-evaluation.input';
+import { GetEvaluations } from './dto/get-evaluations.dto';
+import { PaginationArgs } from '../shared/pagination.args';
 
 @Resolver(() => Evaluation)
 export class EvaluationsResolver {
@@ -14,9 +16,9 @@ export class EvaluationsResolver {
     return this.evaluationsService.create(createEvaluationInput);
   }
 
-  @Query(() => [Evaluation], { name: 'evaluations' })
-  findAll() {
-    return this.evaluationsService.findAll();
+  @Query(() => GetEvaluations, { name: 'evaluations' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.evaluationsService.findAll(paginationArgs);
   }
 
   @Query(() => Evaluation, { name: 'evaluation' })

@@ -39,7 +39,7 @@ export class Quiz extends BaseEntity {
     description: 'Description of the quiz',
     nullable: true,
   })
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @IsString()
   @IsOptional()
   description?: string;

@@ -298,6 +298,11 @@ type GetDomains {
   totalCount: Int!
 }
 
+type GetEvaluations {
+  evaluations: [Evaluation!]!
+  totalCount: Int!
+}
+
 type GetEventDto {
   command: String!
   from: GetUserDto!
@@ -523,7 +528,7 @@ type Query {
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
   evaluation(id: String!): Evaluation!
-  evaluations: [Evaluation!]!
+  evaluations(skip: Int, take: Int): GetEvaluations!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
   menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest
   menteeSessions(mentee: String!, skip: Int, take: Int): GetSessions!
