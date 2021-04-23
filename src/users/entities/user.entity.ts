@@ -19,6 +19,9 @@ import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '../../chat/entities/room.entity';
 import { Event } from '../../events/entities/event.entity';
 import { Balance } from '../../balances/entities/balance.entity';
+import { Question } from '../../questions/entities/question.entity';
+import { Quiz } from '../../quizzes/entities/quiz.entity';
+import { Evaluation } from '../../evaluations/entities/evaluation.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -110,4 +113,13 @@ export class User extends BaseEntity {
   //rooms that the user is joined
   @ManyToMany(() => RoomEntity, (room) => room.members)
   rooms: RoomEntity[];
+
+  @OneToMany(() => Question, (question) => question.user)
+  questions: Question[];
+
+  @OneToMany(() => Quiz, (quiz) => quiz.user)
+  quizzes: Quiz[];
+
+  @OneToMany(() => Evaluation, (evaluation) => evaluation.user)
+  evaluations: Evaluation[];
 }

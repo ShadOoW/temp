@@ -17,15 +17,22 @@ type Badge {
 
   """the name of the badge"""
   name: String!
-
-  """badge points"""
-  points: Int!
   updatedAt: DateTime!
 }
 
+input BadgePointInput {
+  id: String!
+}
+
 type Balance {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+  id: String!
+  score: Int!
+  updatedAt: DateTime!
+}
+
+input BalancePointInput {
+  id: String!
 }
 
 input CreateBadgeInput {
@@ -42,17 +49,32 @@ input CreateBadgeInput {
   name: String!
 
   """badge points"""
-  points: Int!
-}
-
-input CreateBalanceInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  points: [BadgePointInput!]!
 }
 
 input CreateDomainInput {
   description: String!
   name: String!
+}
+
+input CreateEvaluationInput {
+  """User note"""
+  note: String
+
+  """Quiz ID"""
+  quiz: String!
+
+  """The score of the evaluation"""
+  score: Int!
+
+  """Started DateTime"""
+  startAt: DateTime
+
+  """Time Spent on the quiz"""
+  timeSpent: Int
+
+  """User ID"""
+  user: String!
 }
 
 input CreateEventInput {
@@ -126,6 +148,55 @@ input CreatePublicRequestInput {
   whyNeedCoaching: String!
 }
 
+input CreateQuestionInput {
+  """Description of the question"""
+  description: String
+
+  """Duration of the question on seconds"""
+  duration: Int
+
+  """Image of the question"""
+  image: String
+
+  """Order of the question"""
+  order: Int!
+
+  """Propositions of the question"""
+  propositions: [PropositionInput!]!
+
+  """Title of the question"""
+  title: String!
+
+  """Question created by"""
+  user: String
+}
+
+input CreateQuizInput {
+  """Description of the quiz"""
+  description: String
+
+  """Duration of the quiz on minutes"""
+  duration: Int
+
+  """Date to end the quiz"""
+  endAt: DateTime
+
+  """Image of the quiz"""
+  image: String
+
+  """Questions IDs"""
+  questions: QuestionQuizInput
+
+  """Date to start the quiz"""
+  startAt: DateTime
+
+  """Title of the quiz"""
+  title: String!
+
+  """Quiz created by"""
+  user: String
+}
+
 input CreateRequestInput {
   expectations: String
   mentee: String!
@@ -142,7 +213,8 @@ input CreateRoleInput {
 }
 
 input CreateSessionInput {
-  description: String!
+  description: Int!
+  duration: Int!
   isFromMentor: Boolean!
   isVideoCall: Boolean!
   mentee: String!
@@ -178,6 +250,24 @@ type Domain {
   description: String!
   id: String!
   name: String!
+  updatedAt: DateTime!
+}
+
+type Evaluation {
+  createdAt: DateTime!
+  id: String!
+
+  """User note"""
+  note: String
+
+  """Score of the quiz"""
+  score: Int!
+
+  """Started Time of the quiz"""
+  startAt: DateTime
+
+  """Time spent on quiz"""
+  timeSpent: Int
   updatedAt: DateTime!
 }
 
@@ -292,35 +382,40 @@ type GetUserDto {
 
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): Badge!
-  createBalance(createBalanceInput: CreateBalanceInput!): Balance!
   createDomain(createDomainInput: CreateDomainInput!): Domain!
+  createEvaluation(createEvaluationInput: CreateEvaluationInput!): Evaluation!
   createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createPoint(createPointInput: CreatePointInput!): Point!
   createPrivateRequest(createPrivateRequestInput: CreatePrivateRequestInput!): Request!
   createPublicRequest(createPublicRequestInput: CreatePublicRequestInput!): Request!
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+  createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createRequest(createRequestInput: CreateRequestInput!): Request!
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): User!
   removeBadge(id: String!): Badge!
-  removeBalance(id: Int!): Balance!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
   removePoint(id: String!): Point!
+  removeQuestion(id: String!): Question!
+  removeQuiz(id: String!): Quiz!
   removeRequest(id: String!): Request!
   removeRole(id: String!): Role!
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): User!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
-  updateBalance(updateBalanceInput: UpdateBalanceInput!): Balance!
+  updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): Point!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
+  updateQuestion(id: String!, updateQuestionInput: UpdateQuestionInput!): Question!
+  updateQuiz(id: String!, updateQuizInput: UpdateQuizInput!): Quiz!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
   updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
   updateSession(id: String!, updateSessionInput: UpdateSessionInput!): Session!
@@ -382,15 +477,43 @@ type Profile {
   yearsOfExperience: Int
 }
 
+type PropositionDto {
+  """If proposition is correct or not"""
+  correct: Boolean!
+
+  """Proposition description"""
+  desciption: String
+
+  """Proposition points value"""
+  points: Boolean!
+
+  """Proposition title"""
+  title: String!
+}
+
+input PropositionInput {
+  """If proposition is correct or not"""
+  correct: Boolean!
+
+  """Proposition description"""
+  desciption: String
+
+  """Proposition points value"""
+  points: Boolean!
+
+  """Proposition title"""
+  title: String!
+}
+
 type Query {
   badge(id: String!): Badge!
   badges(skip: Int, take: Int): GetBadges!
-  balance(id: Int!): Balance!
-  balances: [Balance!]!
   canRequest(mentee: String!): Boolean!
   domain(id: String!): Domain!
   domains(skip: Int, take: Int): GetDomains!
   emailExists(email: String!): Boolean!
+  evaluation(id: String!): Evaluation!
+  evaluations: [Evaluation!]!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
   menteePublicRequest(mentee: String!, skip: Int, take: Int): GetRequest
   menteeSessions(mentee: String!, skip: Int, take: Int): GetSessions!
@@ -402,6 +525,10 @@ type Query {
   points(skip: Int, take: Int): GetPoints!
   profile(id: String!): Profile!
   publicRequests(skip: Int, take: Int): GetRequests!
+  question(id: String!): Question!
+  questions: [Question!]!
+  quiz(id: String!): Quiz!
+  quizzes: [Quiz!]!
   request(id: String!): GetRequest!
   requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
   role(id: String!): Role!
@@ -416,6 +543,59 @@ type Query {
   userRequests(id: String!): User!
   users: [User!]!
   usersByRole(id: String!): [User!]!
+}
+
+type Question {
+  createdAt: DateTime!
+
+  """Description of the question"""
+  description: String
+
+  """Duration of the question on seconds"""
+  duration: Int
+  id: String!
+
+  """Description of the question"""
+  image: String
+
+  """Order of the question"""
+  order: Int!
+
+  """Titile of the question"""
+  propositions: [PropositionDto!]!
+
+  """Title of the question"""
+  title: String!
+  updatedAt: DateTime!
+}
+
+input QuestionQuizInput {
+  """Quiz id"""
+  id: String!
+}
+
+type Quiz {
+  createdAt: DateTime!
+
+  """Description of the quiz"""
+  description: String
+
+  """Duration of the quiz on minutes"""
+  duration: Int
+
+  """Date to end the quiz"""
+  endAt: DateTime
+  id: String!
+
+  """Image of the quiz"""
+  image: String
+
+  """Date to start the quiz"""
+  startAt: DateTime
+
+  """Title of the quiz"""
+  title: String!
+  updatedAt: DateTime!
 }
 
 type Request {
@@ -448,6 +628,7 @@ input RolePermissionInput {
 type Session {
   createdAt: DateTime!
   description: String!
+  duration: Int!
   id: String!
   isFromMentor: Boolean!
   isVideoCall: Boolean!
@@ -482,13 +663,12 @@ input UpdateBadgeInput {
   name: String
 
   """badge points"""
-  points: Int
+  points: [BadgePointInput!]
 }
 
 input UpdateBalanceInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  points: [BalancePointInput!]!
+  score: Int!
 }
 
 input UpdateDomainInput {
@@ -546,6 +726,55 @@ input UpdateProfileInput {
   yearsOfExperience: Int
 }
 
+input UpdateQuestionInput {
+  """Description of the question"""
+  description: String
+
+  """Duration of the question on seconds"""
+  duration: Int
+
+  """Image of the question"""
+  image: String
+
+  """Order of the question"""
+  order: Int
+
+  """Propositions of the question"""
+  propositions: [PropositionInput!]
+
+  """Title of the question"""
+  title: String
+
+  """Question created by"""
+  user: String
+}
+
+input UpdateQuizInput {
+  """Description of the quiz"""
+  description: String
+
+  """Duration of the quiz on minutes"""
+  duration: Int
+
+  """Date to end the quiz"""
+  endAt: DateTime
+
+  """Image of the quiz"""
+  image: String
+
+  """Questions IDs"""
+  questions: QuestionQuizInput
+
+  """Date to start the quiz"""
+  startAt: DateTime
+
+  """Title of the quiz"""
+  title: String
+
+  """Quiz created by"""
+  user: String
+}
+
 input UpdateRequestInput {
   expectations: String
   mentee: String
@@ -564,6 +793,7 @@ input UpdateRoleInput {
 
 input UpdateSessionInput {
   description: String
+  duration: Int!
   status: String
   title: String
 }
@@ -579,6 +809,7 @@ input UpdateUserInput {
 
 type User {
   active: Boolean
+  balance: Balance!
   createdAt: DateTime!
   email: String
   eventsFrom: [Event!]

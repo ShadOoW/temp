@@ -27,6 +27,9 @@ import { PubSub } from 'graphql-subscriptions';
 import { PointsModule } from './points/points.module';
 import { BadgesModule } from './badges/badges.module';
 import { BalancesModule } from './balances/balances.module';
+import { QuestionsModule } from './questions/questions.module';
+import { QuizzesModule } from './quizzes/quizzes.module';
+import { EvaluationsModule } from './evaluations/evaluations.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -68,6 +71,9 @@ import { BalancesModule } from './balances/balances.module';
     PointsModule,
     BadgesModule,
     BalancesModule,
+    QuestionsModule,
+    QuizzesModule,
+    EvaluationsModule,
   ],
   providers: [
     {

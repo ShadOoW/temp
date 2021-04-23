@@ -1,21 +1,28 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class table1618588684390 implements MigrationInterface {
-    name = 'table1618588684390'
+export class tables1619173622361 implements MigrationInterface {
+    name = 'tables1619173622361'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "balances" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "score" integer NOT NULL, CONSTRAINT "PK_74904758e813e401abc3d4261c2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "points" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "number" integer NOT NULL, "action" character varying(300) NOT NULL, "message" text, "description" text, "image" character varying(300), "balanceId" uuid, "badgeId" uuid, CONSTRAINT "PK_57a558e5e1e17668324b165dadf" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "badges" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "message" text, "description" text, "image" character varying(300), CONSTRAINT "PK_8a651318b8de577e8e217676466" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "permissions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "description" text, CONSTRAINT "PK_920331560282b8bd21bb02290df" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "roles" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "description" text, CONSTRAINT "PK_c1433d71a4838793a49dcad46ab" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "statusEnum" AS ENUM('created', 'updated', 'accepted', 'refused')`);
-        await queryRunner.query(`CREATE TABLE "requests" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300) NOT NULL, "excerpt" text, "description" text, "proposition" boolean DEFAULT false, "status" "statusEnum" NOT NULL DEFAULT 'created', "toId" uuid, "fromId" uuid, CONSTRAINT "PK_0428f484e96f9e6a55955f29b5f" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "requests" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300), "excerpt" text, "description" text, "proposition" boolean DEFAULT false, "status" "statusEnum" NOT NULL DEFAULT 'created', "toId" uuid, "fromId" uuid, CONSTRAINT "PK_0428f484e96f9e6a55955f29b5f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "domains" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "description" text, CONSTRAINT "PK_05a6b087662191c2ea7f7ddfc4d" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "profiles" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "firstName" character varying(300) NOT NULL, "lastName" character varying(300), "picture" character varying(300), "phoneNumber" character varying(300), "city" character varying(300), "company" character varying(300), "website" character varying(300), "linkedin" character varying(300), "country" character varying(300), "yearsOfExperience" integer, "coachingType" character varying(300), "canOffer" text, "professionalBg" text, "hoursPerMonth" integer, "currentPost" character varying(300), "sector" character varying(300), "whyNeedCoaching" text, "selfDescription" text, "wantedDomainId" uuid, CONSTRAINT "PK_8e520eb4da7dc01d0e190447c8e" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "subscriptions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "subscriberId" uuid, "subscribedToId" uuid, CONSTRAINT "PK_a87248d73155605cf782be9ee5e" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "sessions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300) NOT NULL, "description" text, "videoConference" boolean NOT NULL DEFAULT false, "menteeId" uuid, "mentorId" uuid, CONSTRAINT "PK_3238ef96f18b355b671619111bc" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "sessionEnum" AS ENUM('created', 'updated', 'accepted', 'refused')`);
+        await queryRunner.query(`CREATE TABLE "sessions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "startDate" TIMESTAMP WITH TIME ZONE NOT NULL, "title" character varying(300) NOT NULL, "description" text, "isVideoCall" boolean NOT NULL DEFAULT false, "isFromMentor" boolean NOT NULL DEFAULT false, "status" "sessionEnum" NOT NULL DEFAULT 'created', "duration" integer NOT NULL, "menteeId" uuid, "mentorId" uuid, CONSTRAINT "PK_3238ef96f18b355b671619111bc" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "rooms" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying NOT NULL, "isPrivate" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_0368a2d7c215f2d0458a54933f2" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "events" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "module" character varying(300) NOT NULL, "command" character varying(300) NOT NULL, "sourceId" character varying(300) NOT NULL, "payload" json, "fromId" uuid, "toId" uuid, CONSTRAINT "PK_40731c7151fe4be3116e45ddf73" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "events" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "module" character varying(300) NOT NULL, "command" character varying(300) NOT NULL, "sourceId" character varying(300) NOT NULL, "payload" json, "read" boolean NOT NULL DEFAULT false, "fromId" uuid, "toId" uuid, CONSTRAINT "PK_40731c7151fe4be3116e45ddf73" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "evaluations" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "score" integer NOT NULL, "startAt" TIMESTAMP WITH TIME ZONE, "timeSpent" integer, "note" text NOT NULL, "quizId" uuid, "userId" uuid, CONSTRAINT "PK_f683b433eba0e6dae7e19b29e29" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "quizzes" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "startAt" TIMESTAMP WITH TIME ZONE, "endAt" TIMESTAMP WITH TIME ZONE, "duration" integer, "title" character varying(300) NOT NULL, "description" text NOT NULL, "image" character varying(300), "userId" uuid, CONSTRAINT "PK_b24f0f7662cf6b3a0e7dba0a1b4" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "questions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "order" integer NOT NULL, "duration" integer, "title" text NOT NULL, "description" text, "image" character varying(300), "propositions" json NOT NULL, "userId" uuid, "quizId" uuid, CONSTRAINT "PK_08a6d4b0f49ff300bf3a0ca60ac" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "userStatusEnum" AS ENUM('open', 'close', 'away', 'busy')`);
-        await queryRunner.query(`CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "email" character varying(300) NOT NULL, "username" character varying(300), "password" character varying(300), "active" boolean NOT NULL DEFAULT false, "status" "userStatusEnum" NOT NULL DEFAULT 'close', "provider" character varying(300) NOT NULL DEFAULT 'local', "providerId" character varying(300), "isAdmin" boolean NOT NULL DEFAULT false, "roleId" uuid, "profileId" uuid, CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "REL_b1bda35cdb9a2c1b777f5541d8" UNIQUE ("profileId"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "email" character varying(300) NOT NULL, "username" character varying(300), "password" character varying(300), "active" boolean NOT NULL DEFAULT false, "status" "userStatusEnum" NOT NULL DEFAULT 'close', "provider" character varying(300) NOT NULL DEFAULT 'local', "providerId" character varying(300), "isAdmin" boolean NOT NULL DEFAULT false, "roleId" uuid, "profileId" uuid, "balanceId" uuid, CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "REL_b1bda35cdb9a2c1b777f5541d8" UNIQUE ("profileId"), CONSTRAINT "REL_ee0e324a6ec4891a73f04f5f77" UNIQUE ("balanceId"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "messages" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP, "text" character varying, "senderId" uuid, "roomId" uuid, CONSTRAINT "PK_18325f38ae6de43878487eff986" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "roles_permissions_permissions" ("rolesId" uuid NOT NULL, "permissionsId" uuid NOT NULL, CONSTRAINT "PK_b2f4e3f7fbeb7e5b495dd819842" PRIMARY KEY ("rolesId", "permissionsId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_dc2b9d46195bb3ed28abbf7c9e" ON "roles_permissions_permissions" ("rolesId") `);
@@ -26,6 +33,8 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "rooms_members_users" ("roomsId" uuid NOT NULL, "usersId" uuid NOT NULL, CONSTRAINT "PK_d34b71a644632124e85c1f7ef99" PRIMARY KEY ("roomsId", "usersId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_ec1ad921c3649b96b68c057f8b" ON "rooms_members_users" ("roomsId") `);
         await queryRunner.query(`CREATE INDEX "IDX_910ad55fed2e6464ed209c53d4" ON "rooms_members_users" ("usersId") `);
+        await queryRunner.query(`ALTER TABLE "points" ADD CONSTRAINT "FK_b14f0969d4e56dff5dac6a58cdf" FOREIGN KEY ("balanceId") REFERENCES "balances"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "points" ADD CONSTRAINT "FK_278396d738790d67859eb457f76" FOREIGN KEY ("badgeId") REFERENCES "badges"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "requests" ADD CONSTRAINT "FK_204395543f86d4afa5793a0af4c" FOREIGN KEY ("toId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "requests" ADD CONSTRAINT "FK_1fa5d0e3dd094bfc0fab02dfe68" FOREIGN KEY ("fromId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "profiles" ADD CONSTRAINT "FK_60489e3af3eae82e88657c36831" FOREIGN KEY ("wantedDomainId") REFERENCES "domains"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -35,8 +44,14 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "sessions" ADD CONSTRAINT "FK_76a16e188d03d5321aa0e0d60c3" FOREIGN KEY ("mentorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "events" ADD CONSTRAINT "FK_40840aa42c843f02dfe91cf01d7" FOREIGN KEY ("fromId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "events" ADD CONSTRAINT "FK_e94e3646540cf678e49ad37d6a0" FOREIGN KEY ("toId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "evaluations" ADD CONSTRAINT "FK_f4a2f087492c004158576b511fd" FOREIGN KEY ("quizId") REFERENCES "quizzes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "evaluations" ADD CONSTRAINT "FK_f079d95b69f82262b74ee478825" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "quizzes" ADD CONSTRAINT "FK_122eef46f116c513a2ba12ad631" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "questions" ADD CONSTRAINT "FK_bc2370231ea3e3d296963f33939" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "questions" ADD CONSTRAINT "FK_35d54f06d12ea78d4842aed6b6d" FOREIGN KEY ("quizId") REFERENCES "quizzes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_368e146b785b574f42ae9e53d5e" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_b1bda35cdb9a2c1b777f5541d87" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_ee0e324a6ec4891a73f04f5f77c" FOREIGN KEY ("balanceId") REFERENCES "balances"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "messages" ADD CONSTRAINT "FK_2db9cf2b3ca111742793f6c37ce" FOREIGN KEY ("senderId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "messages" ADD CONSTRAINT "FK_aaa8a6effc7bd20a1172d3a3bc8" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "roles_permissions_permissions" ADD CONSTRAINT "FK_dc2b9d46195bb3ed28abbf7c9e3" FOREIGN KEY ("rolesId") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -56,8 +71,14 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "roles_permissions_permissions" DROP CONSTRAINT "FK_dc2b9d46195bb3ed28abbf7c9e3"`);
         await queryRunner.query(`ALTER TABLE "messages" DROP CONSTRAINT "FK_aaa8a6effc7bd20a1172d3a3bc8"`);
         await queryRunner.query(`ALTER TABLE "messages" DROP CONSTRAINT "FK_2db9cf2b3ca111742793f6c37ce"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_ee0e324a6ec4891a73f04f5f77c"`);
         await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_b1bda35cdb9a2c1b777f5541d87"`);
         await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_368e146b785b574f42ae9e53d5e"`);
+        await queryRunner.query(`ALTER TABLE "questions" DROP CONSTRAINT "FK_35d54f06d12ea78d4842aed6b6d"`);
+        await queryRunner.query(`ALTER TABLE "questions" DROP CONSTRAINT "FK_bc2370231ea3e3d296963f33939"`);
+        await queryRunner.query(`ALTER TABLE "quizzes" DROP CONSTRAINT "FK_122eef46f116c513a2ba12ad631"`);
+        await queryRunner.query(`ALTER TABLE "evaluations" DROP CONSTRAINT "FK_f079d95b69f82262b74ee478825"`);
+        await queryRunner.query(`ALTER TABLE "evaluations" DROP CONSTRAINT "FK_f4a2f087492c004158576b511fd"`);
         await queryRunner.query(`ALTER TABLE "events" DROP CONSTRAINT "FK_e94e3646540cf678e49ad37d6a0"`);
         await queryRunner.query(`ALTER TABLE "events" DROP CONSTRAINT "FK_40840aa42c843f02dfe91cf01d7"`);
         await queryRunner.query(`ALTER TABLE "sessions" DROP CONSTRAINT "FK_76a16e188d03d5321aa0e0d60c3"`);
@@ -67,6 +88,8 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "profiles" DROP CONSTRAINT "FK_60489e3af3eae82e88657c36831"`);
         await queryRunner.query(`ALTER TABLE "requests" DROP CONSTRAINT "FK_1fa5d0e3dd094bfc0fab02dfe68"`);
         await queryRunner.query(`ALTER TABLE "requests" DROP CONSTRAINT "FK_204395543f86d4afa5793a0af4c"`);
+        await queryRunner.query(`ALTER TABLE "points" DROP CONSTRAINT "FK_278396d738790d67859eb457f76"`);
+        await queryRunner.query(`ALTER TABLE "points" DROP CONSTRAINT "FK_b14f0969d4e56dff5dac6a58cdf"`);
         await queryRunner.query(`DROP INDEX "IDX_910ad55fed2e6464ed209c53d4"`);
         await queryRunner.query(`DROP INDEX "IDX_ec1ad921c3649b96b68c057f8b"`);
         await queryRunner.query(`DROP TABLE "rooms_members_users"`);
@@ -79,9 +102,13 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "messages"`);
         await queryRunner.query(`DROP TABLE "users"`);
         await queryRunner.query(`DROP TYPE "userStatusEnum"`);
+        await queryRunner.query(`DROP TABLE "questions"`);
+        await queryRunner.query(`DROP TABLE "quizzes"`);
+        await queryRunner.query(`DROP TABLE "evaluations"`);
         await queryRunner.query(`DROP TABLE "events"`);
         await queryRunner.query(`DROP TABLE "rooms"`);
         await queryRunner.query(`DROP TABLE "sessions"`);
+        await queryRunner.query(`DROP TYPE "sessionEnum"`);
         await queryRunner.query(`DROP TABLE "subscriptions"`);
         await queryRunner.query(`DROP TABLE "profiles"`);
         await queryRunner.query(`DROP TABLE "domains"`);
@@ -89,6 +116,9 @@ export class table1618588684390 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "statusEnum"`);
         await queryRunner.query(`DROP TABLE "roles"`);
         await queryRunner.query(`DROP TABLE "permissions"`);
+        await queryRunner.query(`DROP TABLE "badges"`);
+        await queryRunner.query(`DROP TABLE "points"`);
+        await queryRunner.query(`DROP TABLE "balances"`);
     }
 
 }

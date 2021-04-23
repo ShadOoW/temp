@@ -1,5 +1,11 @@
-import { IsString, IsOptional, IsBoolean, IsDateString } from 'class-validator';
-import { InputType, Field } from '@nestjs/graphql';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+} from 'class-validator';
+import { InputType, Field, Int } from '@nestjs/graphql';
 import { User } from '../../users/entities/user.entity';
 
 @InputType()
@@ -12,10 +18,15 @@ export class CreateSessionInput {
   @IsString()
   title: string;
 
-  @Field(() => String)
-  @IsString()
+  @Field(() => Int)
+  @IsNumber()
   @IsOptional()
   description?: string;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsOptional()
+  duration?: number;
 
   @Field(() => Boolean)
   @IsBoolean()

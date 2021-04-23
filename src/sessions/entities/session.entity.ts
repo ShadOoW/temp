@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity } from '../../shared/base.entity';
 import { User } from '../../users/entities/user.entity';
 import { Status } from '../../shared/interfaces/globalStatus';
@@ -43,4 +43,8 @@ export class Session extends BaseEntity {
   })
   @Field(() => String, { nullable: true })
   status?: Status;
+
+  @Field(() => Int)
+  @Column({ type: 'int' })
+  duration?: number;
 }
