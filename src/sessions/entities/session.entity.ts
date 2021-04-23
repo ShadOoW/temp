@@ -45,6 +45,6 @@ export class Session extends BaseEntity {
   status?: Status;
 
   @Field(() => Int)
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   duration?: number;
 }

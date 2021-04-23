@@ -215,7 +215,13 @@ export class UsersService {
         { email, isAdmin: true },
         { username, active: true },
       ],
-      relations: ['role', 'role.permissions', 'profile'],
+      relations: [
+        'role',
+        'role.permissions',
+        'profile',
+        'profile.coachingDomains',
+        'profile.wantedDomain',
+      ],
     });
     if (!user) {
       throw new HttpException(

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { Session } from './entities/session.entity';
 import { UpdateSessionInput } from './dto/update-session.input';
@@ -6,6 +6,7 @@ import { GetSessionsArgs } from './dto/get-sessions.args';
 import { GetSessions } from './dto/get-sessions.dto';
 import { PaginationArgs } from '../shared/pagination.args';
 import { CreateSessionInput } from './dto/create-session.input copy';
+import { User as CurrentUser } from '../users/decorators/user.decorator';
 
 @Resolver(() => Session)
 export class SessionsResolver {
@@ -40,8 +41,19 @@ export class SessionsResolver {
   }
 
   @Query(() => GetSessions, { name: 'sessionsNotDue' })
-  sessionsNotDue(@Args() paginationArgs: PaginationArgs) {
-    return this.sessionsService.findNotDue(paginationArgs);
+  sessionsNotDue(@Args() paginationArgs: PaginationArgs, @CurrentUser() user) {
+    console.log('sessionsNotDue ===> ', user);
+    if (user.isAdmin) return this.sessionsService.findNotDue(paginationArgs);
+    else if (user.role === 'mentor')
+      return this.sessionsService.findNotDue({
+        ...paginationArgs,
+        mentor: user.id,
+      });
+    else
+      return this.sessionsService.findNotDue({
+        ...paginationArgs,
+        mentee: user.id,
+      });
   }
 
   @Mutation(() => Session, { name: 'updateSession' })

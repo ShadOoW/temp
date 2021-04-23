@@ -18,7 +18,7 @@ export class UpdateSessionInput {
   @IsOptional()
   status?: Status;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   duration?: number;

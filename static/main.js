@@ -1,7 +1,7 @@
 const app = new Vue({
   el: '#app',
   data: {
-    title: 'Nestjs Websockets Chat',
+    title: 'Chat',
     name: '',
     text: '',
     messages: [],

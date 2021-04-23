@@ -21,7 +21,7 @@ export class SessionsService {
     delete args.take;
     delete args.skip;
     const [sessions, totalCount] = await this.repo.findAndCount({
-      where: { startDate: MoreThanOrEqual(new Date()) },
+      where: { ...args, startDate: MoreThanOrEqual(new Date()) },
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
       order: {
         createdAt: 'DESC',

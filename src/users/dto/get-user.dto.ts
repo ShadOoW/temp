@@ -99,7 +99,15 @@ export class GetUserDto {
           })),
         ],
       },
-      profile: userEntity.profile,
+      profile: {
+        ...userEntity.profile,
+        coachingDomains: [
+          ...(userEntity.profile?.coachingDomains || []).map(
+            (domain) => domain.name,
+          ),
+        ],
+        wantedDomain: userEntity.profile?.wantedDomain?.name,
+      },
       createdAt: userEntity.createdAt,
     };
   }
@@ -109,6 +117,7 @@ export class GetUserDto {
       id: userEntity.id,
       isAdmin: userEntity.isAdmin,
       profile: userEntity.profile.id,
+      role: userEntity.role?.name,
       permissions: [
         ...(userEntity.role?.permissions || []).map((permission) => ({
           name: permission.name,

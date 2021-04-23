@@ -88,20 +88,44 @@ export async function usersSeed() {
   const { domains } = await domainService.findAll();
 
   if (roles.length && domains.length) {
+    const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
     const { id: mentorId } = roles.find((r) => r.name === 'mentor');
     const { id: menteeId } = roles.find((r) => r.name === 'mentee');
     const defaults = [
       genUser('admin', 'admin'),
-      genUser('mentee', 'mentee', menteeId, domains.slice(0, 2)),
-      genUser('mentor', 'mentor', mentorId, domains.slice(1, 3)),
+      genUser(
+        'mentee',
+        'mentee',
+        menteeId,
+        domains.slice(domainIndex, domainIndex + 1),
+      ),
+      genUser(
+        'mentor',
+        'mentor',
+        mentorId,
+        domains.slice(domainIndex, domainIndex + 2),
+      ),
     ];
     const mentors = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
-      return genUser(username, 'mentor', mentorId, domains.slice(2, 4));
+      const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
+
+      return genUser(
+        username,
+        'mentor',
+        mentorId,
+        domains.slice(domainIndex, domainIndex + 2),
+      );
     });
     const mentees = _.range(1, 5).map(() => {
       const username = faker.internet.userName();
-      return genUser(username, 'mentee', menteeId, domains.slice(0, 1));
+      const domainIndex = Math.floor(Math.random() * (domains.length - 1) + 1);
+      return genUser(
+        username,
+        'mentee',
+        menteeId,
+        domains.slice(domainIndex, domainIndex + 1),
+      );
     });
     const work = [...defaults, ...mentors, ...mentees].map((user, index) =>
       userService

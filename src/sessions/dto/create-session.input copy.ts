@@ -18,24 +18,24 @@ export class CreateSessionInput {
   @IsString()
   title: string;
 
-  @Field(() => Int)
-  @IsNumber()
+  @Field(() => String, { nullable: true })
+  @IsString()
   @IsOptional()
   description?: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   duration?: number;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   @IsBoolean()
   @IsOptional()
   isVideoCall?: boolean;
 
   @IsBoolean()
   @IsOptional()
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   isFromMentor?: boolean;
 
   @Field(() => String)

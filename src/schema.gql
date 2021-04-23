@@ -213,10 +213,10 @@ input CreateRoleInput {
 }
 
 input CreateSessionInput {
-  description: Int!
-  duration: Int!
-  isFromMentor: Boolean!
-  isVideoCall: Boolean!
+  description: String
+  duration: Int
+  isFromMentor: Boolean
+  isVideoCall: Boolean
   mentee: String!
   mentor: String!
   startDate: String!
@@ -811,7 +811,7 @@ input UpdateRoleInput {
 
 input UpdateSessionInput {
   description: String
-  duration: Int!
+  duration: Int
   status: String
   title: String
 }
