@@ -14,7 +14,7 @@ export async function badgesSeed() {
   const connection = await createConnection(opt as ConnectionOptions);
   const badgeService = new BadgesService(connection.getRepository(Badge));
   const pointService = new PointsService(connection.getRepository(Point));
-  const { points } = await pointService.findAll();
+  const { points } = await pointService.findAll({});
   if (points.length && points.length > 4) {
     const work = [
       {
