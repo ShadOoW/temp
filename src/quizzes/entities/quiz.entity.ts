@@ -54,6 +54,10 @@ export class Quiz extends BaseEntity {
   image?: string;
 
   @OneToMany(() => Question, (question) => question.quiz)
+  @Field(() => [Question], {
+    description: 'Questions of the quiz',
+    nullable: true,
+  })
   questions: Question[];
 
   @ManyToOne(() => User, (user) => user.quizzes)

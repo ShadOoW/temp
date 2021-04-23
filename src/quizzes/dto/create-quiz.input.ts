@@ -49,7 +49,7 @@ export class CreateQuizInput {
   @IsOptional()
   image?: string;
 
-  @Field(() => QuestionQuizInput, {
+  @Field(() => [QuestionQuizInput], {
     description: 'Questions IDs',
     nullable: true,
   })

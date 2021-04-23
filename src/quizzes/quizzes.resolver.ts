@@ -3,6 +3,8 @@ import { QuizzesService } from './quizzes.service';
 import { Quiz } from './entities/quiz.entity';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
+import { PaginationArgs } from '../shared/pagination.args';
+import { GetQuizzes } from './dto/get-quizzes.dto';
 
 @Resolver(() => Quiz)
 export class QuizzesResolver {
@@ -13,9 +15,9 @@ export class QuizzesResolver {
     return this.quizzesService.create(createQuizInput);
   }
 
-  @Query(() => [Quiz], { name: 'quizzes' })
-  findAll() {
-    return this.quizzesService.findAll();
+  @Query(() => GetQuizzes, { name: 'quizzes' })
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.quizzesService.findAll(paginationArgs);
   }
 
   @Query(() => Quiz, { name: 'quiz' })

@@ -1,4 +1,4 @@
-import { InputType, Field, ObjectType } from '@nestjs/graphql';
+import { InputType, Field, ObjectType, Int } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @ObjectType()
@@ -19,7 +19,7 @@ export class PropositionDto {
   @IsBoolean()
   correct: boolean;
 
-  @Field(() => Boolean, { description: 'Proposition points value' })
+  @Field(() => Int, { description: 'Proposition points value' })
   @IsNumber()
   points: number;
 }

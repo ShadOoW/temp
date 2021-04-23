@@ -185,7 +185,7 @@ input CreateQuizInput {
   image: String
 
   """Questions IDs"""
-  questions: QuestionQuizInput
+  questions: [QuestionQuizInput!]
 
   """Date to start the quiz"""
   startAt: DateTime
@@ -324,6 +324,11 @@ type GetPoints {
 
 type GetQuestions {
   questions: [Question!]!
+  totalCount: Int!
+}
+
+type GetQuizzes {
+  quizzes: [Quiz!]!
   totalCount: Int!
 }
 
@@ -490,7 +495,7 @@ type PropositionDto {
   desciption: String
 
   """Proposition points value"""
-  points: Boolean!
+  points: Int!
 
   """Proposition title"""
   title: String!
@@ -533,7 +538,7 @@ type Query {
   question(id: String!): Question!
   questions(skip: Int, take: Int): GetQuestions!
   quiz(id: String!): Quiz!
-  quizzes: [Quiz!]!
+  quizzes(skip: Int, take: Int): GetQuizzes!
   request(id: String!): GetRequest!
   requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
   role(id: String!): Role!
@@ -594,6 +599,9 @@ type Quiz {
 
   """Image of the quiz"""
   image: String
+
+  """Questions of the quiz"""
+  questions: [Question!]
 
   """Date to start the quiz"""
   startAt: DateTime
@@ -768,7 +776,7 @@ input UpdateQuizInput {
   image: String
 
   """Questions IDs"""
-  questions: QuestionQuizInput
+  questions: [QuestionQuizInput!]
 
   """Date to start the quiz"""
   startAt: DateTime
