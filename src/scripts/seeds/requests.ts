@@ -2,16 +2,16 @@ import * as _ from 'lodash';
 import * as faker from 'faker';
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../../config/config.service';
-import { RequestsService } from '../../users-service/requests/requests.service';
-import { Request } from '../../users-service/requests/entities/request.entity';
-import { SubscriptionsService } from '../../users-service/subscriptions/subscriptions.service';
-import { Subscription } from '../../users-service/subscriptions/entities/subscription.entity';
-import { UsersService } from '../../users-service/users/users.service';
-import { ProfilesService } from '../../users-service/profiles/profiles.service';
-import { Profile } from '../../users-service/profiles/entities/profile.entity';
-import { User } from '../../users-service/users/entities/user.entity';
-import { RolesService } from '../../users-service/roles/roles.service';
-import { Role } from '../../users-service/roles/entities/role.entity';
+import { RequestsService } from '../../users-micro/requests/requests.service';
+import { Request } from '../../users-micro/requests/entities/request.entity';
+import { SubscriptionsService } from '../../users-micro/subscriptions/subscriptions.service';
+import { Subscription } from '../../users-micro/subscriptions/entities/subscription.entity';
+import { UsersService } from '../../users-micro/users/users.service';
+import { ProfilesService } from '../../users-micro/profiles/profiles.service';
+import { Profile } from '../../users-micro/profiles/entities/profile.entity';
+import { User } from '../../users-micro/users/entities/user.entity';
+import { RolesService } from '../../users-micro/roles/roles.service';
+import { Role } from '../../users-micro/roles/entities/role.entity';
 
 async function genRequest(
   subcriptionService,

@@ -4,7 +4,7 @@ import { Role } from '../../roles/entities/role.entity';
 import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 import { Subscription } from '../../subscriptions/entities/subscription.entity';
-import { Session } from '../../../course-service/sessions/entities/session.entity';
+import { Session } from '../../../education-micro/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
 
 @ObjectType()

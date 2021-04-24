@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/base.entity';
 import { MessageDto } from '../dto/Message.dto';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 import { RoomEntity } from './room.entity';
 
 @Entity({ name: 'messages' })

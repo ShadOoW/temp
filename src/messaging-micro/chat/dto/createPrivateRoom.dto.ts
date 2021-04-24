@@ -2,7 +2,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 
 export class CreatePrivateRoomDto {
   @IsNotEmpty()

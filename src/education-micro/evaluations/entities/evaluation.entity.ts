@@ -2,7 +2,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Quiz } from '../../quizzes/entities/quiz.entity';
 import { BaseEntity } from '../../../shared/base.entity';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 @ObjectType()

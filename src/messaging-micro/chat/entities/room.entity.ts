@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/base.entity';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 import { MessageEntity } from './message.entity';
 import { RoomDto } from '../dto/Room.dto';
 

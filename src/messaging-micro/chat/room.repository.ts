@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { RoomEntity } from './entities/room.entity';
-import { User } from '../../users-service/users/entities/user.entity';
+import { User } from '../../users-micro/users/entities/user.entity';
 import { CreateRoomDto } from './dto/createRoom.dto';
 // import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
 

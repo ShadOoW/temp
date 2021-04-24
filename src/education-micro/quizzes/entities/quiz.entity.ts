@@ -3,7 +3,7 @@ import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Evaluation } from '../../evaluations/entities/evaluation.entity';
 import { Question } from '../../questions/entities/question.entity';
 import { BaseEntity } from '../../../shared/base.entity';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @ObjectType()

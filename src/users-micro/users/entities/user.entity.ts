@@ -14,14 +14,14 @@ import { Role } from '../../roles/entities/role.entity';
 import { Request } from '../../requests/entities/request.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 import { Subscription } from '../../subscriptions/entities/subscription.entity';
-import { Session } from '../../../course-service/sessions/entities/session.entity';
+import { Session } from '../../../education-micro/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
-import { RoomEntity } from '../../../contact-service/chat/entities/room.entity';
-import { Event } from '../../../events-service/events/entities/event.entity';
-import { Balance } from '../../../game-service/balances/entities/balance.entity';
-import { Question } from '../../../course-service/questions/entities/question.entity';
-import { Quiz } from '../../../course-service/quizzes/entities/quiz.entity';
-import { Evaluation } from '../../../course-service/evaluations/entities/evaluation.entity';
+import { RoomEntity } from '../../../messaging-micro/chat/entities/room.entity';
+import { Event } from '../../../events-micro/events/entities/event.entity';
+import { Balance } from '../../../gamification-micro/balances/entities/balance.entity';
+import { Question } from '../../../education-micro/questions/entities/question.entity';
+import { Quiz } from '../../../education-micro/quizzes/entities/quiz.entity';
+import { Evaluation } from '../../../education-micro/evaluations/entities/evaluation.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })

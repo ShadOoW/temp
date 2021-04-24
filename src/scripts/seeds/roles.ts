@@ -1,9 +1,9 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../../config/config.service';
-import { RolesService } from '../../users-service/roles/roles.service';
-import { Role } from '../../users-service/roles/entities/role.entity';
-import { PermissionsService } from '../../users-service/permissions/permissions.service';
-import { Permission } from '../../users-service/permissions/entities/permission.entity';
+import { RolesService } from '../../users-micro/roles/roles.service';
+import { Role } from '../../users-micro/roles/entities/role.entity';
+import { PermissionsService } from '../../users-micro/permissions/permissions.service';
+import { Permission } from '../../users-micro/permissions/entities/permission.entity';
 
 export async function rolesSeed() {
   const opt = {

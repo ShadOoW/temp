@@ -4,11 +4,11 @@ import { configService } from '../../config/config.service';
 // import { ChatService } from '../chat/chat.service';
 // import { MessageRepository } from '../chat/message.repository';
 // import { MessageEntity } from 'src/chat/entities/message.entity';
-import { RoomEntity } from '../../contact-service/chat/entities/room.entity';
-import { UsersService } from '../../users-service/users/users.service';
-import { User } from '../../users-service/users/entities/user.entity';
-import { Profile } from '../../users-service/profiles/entities/profile.entity';
-import { ProfilesService } from '../../users-service/profiles/profiles.service';
+import { RoomEntity } from '../../messaging-micro/chat/entities/room.entity';
+import { UsersService } from '../../users-micro/users/users.service';
+import { User } from '../../users-micro/users/entities/user.entity';
+import { Profile } from '../../users-micro/profiles/entities/profile.entity';
+import { ProfilesService } from '../../users-micro/profiles/profiles.service';
 
 export async function chatSeed() {
   const opt = {

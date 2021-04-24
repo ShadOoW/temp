@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../../config/config.service';
-import { PermissionsService } from '../../users-service/permissions/permissions.service';
-import { Permission } from '../../users-service/permissions/entities/permission.entity';
+import { PermissionsService } from '../../users-micro/permissions/permissions.service';
+import { Permission } from '../../users-micro/permissions/entities/permission.entity';
 
 export async function permissionsSeed() {
   const opt = {

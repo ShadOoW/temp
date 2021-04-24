@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { EventsService } from '../../../events-service/events/events.service';
-import { CreateEventInput } from '../../../events-service/events/dto/create-event.input';
+import { EventsService } from '../../../events-micro/events/events.service';
+import { CreateEventInput } from '../../../events-micro/events/dto/create-event.input';
 import { Request } from '../entities/request.entity';
 
 @Injectable()

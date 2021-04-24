@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PropositionInput } from '../dto/proposition.input';
 import { Quiz } from '../../quizzes/entities/quiz.entity';

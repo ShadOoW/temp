@@ -6,7 +6,7 @@ import {
   IsNumber,
 } from 'class-validator';
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 
 @InputType()
 export class CreateSessionInput {

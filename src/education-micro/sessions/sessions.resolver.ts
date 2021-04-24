@@ -6,7 +6,7 @@ import { GetSessionsArgs } from './dto/get-sessions.args';
 import { GetSessions } from './dto/get-sessions.dto';
 import { PaginationArgs } from '../../shared/pagination.args';
 import { CreateSessionInput } from './dto/create-session.input copy';
-import { User as CurrentUser } from '../../users-service/users/decorators/user.decorator';
+import { User as CurrentUser } from '../../users-micro/users/decorators/user.decorator';
 
 @Resolver(() => Session)
 export class SessionsResolver {

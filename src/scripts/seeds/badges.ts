@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../../config/config.service';
-import { BadgesService } from '../../game-service/badges/badges.service';
-import { Badge } from '../../game-service/badges/entities/badge.entity';
+import { BadgesService } from '../../gamification-micro/badges/badges.service';
+import { Badge } from '../../gamification-micro/badges/entities/badge.entity';
 import { PointsService } from '../points/points.service';
 import { Point } from '../points/entities/point.entity';
 

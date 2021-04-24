@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { GetUserDto } from '../../../users-service/users/dto/get-user.dto';
+import { GetUserDto } from '../../../users-micro/users/dto/get-user.dto';
 
 @ObjectType()
 export class GetEvents {

@@ -1,7 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Quiz } from '../../quizzes/entities/quiz.entity';
-import { User } from '../../../users-service/users/entities/user.entity';
+import { User } from '../../../users-micro/users/entities/user.entity';
 
 @InputType()
 export class CreateEvaluationInput {
