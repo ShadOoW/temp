@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { UsersModule } from '../src/users/users.module';
+import { UsersModule } from '../src/users-service/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from '../src/config/config.service';
 // import { Repository } from 'typeorm';
