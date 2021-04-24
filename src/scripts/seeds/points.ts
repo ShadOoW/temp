@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import { configService } from '../../config/config.service';
-import { PointsService } from '../points/points.service';
-import { Point } from '../points/entities/point.entity';
+import { configService } from '@config/config.service';
+import { PointsService } from '@gamification/points/points.service';
+import { Point } from '@gamification/points/entities/point.entity';
 
 export async function pointsSeed() {
   const opt = {

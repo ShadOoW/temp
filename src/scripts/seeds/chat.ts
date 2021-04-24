@@ -1,14 +1,14 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import { configService } from '../../config/config.service';
+import { configService } from '@config/config.service';
 // import { RoomRepository } from '../chat/room.repository';
 // import { ChatService } from '../chat/chat.service';
 // import { MessageRepository } from '../chat/message.repository';
 // import { MessageEntity } from 'src/chat/entities/message.entity';
-import { RoomEntity } from '../../messaging-micro/chat/entities/room.entity';
-import { UsersService } from '../../users-micro/users/users.service';
-import { User } from '../../users-micro/users/entities/user.entity';
-import { Profile } from '../../users-micro/profiles/entities/profile.entity';
-import { ProfilesService } from '../../users-micro/profiles/profiles.service';
+import { RoomEntity } from '@messaging/chat/entities/room.entity';
+import { UsersService } from '@users/users/users.service';
+import { User } from '@users/users/entities/user.entity';
+import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfilesService } from '@users/profiles/profiles.service';
 
 export async function chatSeed() {
   const opt = {

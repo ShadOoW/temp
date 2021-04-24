@@ -1,15 +1,15 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import { configService } from '../../config/config.service';
+import { configService } from '@config/config.service';
 import * as _ from 'lodash';
 import * as faker from 'faker';
-import { UsersService } from '../../users-micro/users/users.service';
-import { User } from '../../users-micro/users/entities/user.entity';
-import { Profile } from '../../users-micro/profiles/entities/profile.entity';
-import { ProfilesService } from '../../users-micro/profiles/profiles.service';
-import { RolesService } from '../../users-micro/roles/roles.service';
-import { Role } from '../../users-micro/roles/entities/role.entity';
-import { DomainsService } from '../../users-micro/domains/domains.service';
-import { Domain } from '../../users-micro/domains/entities/domain.entity';
+import { UsersService } from '@users/users/users.service';
+import { User } from '@users/users/entities/user.entity';
+import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfilesService } from '@users/profiles/profiles.service';
+import { RolesService } from '@users/roles/roles.service';
+import { Role } from '@users/roles/entities/role.entity';
+import { DomainsService } from '@users/domains/domains.service';
+import { Domain } from '@users/domains/entities/domain.entity';
 
 function genUser(username, type, role = null, domains = []) {
   const user = {

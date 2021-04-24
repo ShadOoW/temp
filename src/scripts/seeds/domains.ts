@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import { configService } from '../../config/config.service';
-import { DomainsService } from '../../users-micro/domains/domains.service';
-import { Domain } from '../../users-micro/domains/entities/domain.entity';
+import { configService } from '@config/config.service';
+import { DomainsService } from '@users/domains/domains.service';
+import { Domain } from '@users/domains/entities/domain.entity';
 
 export async function domainsSeed() {
   const opt = {
