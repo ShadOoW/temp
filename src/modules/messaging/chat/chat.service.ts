@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // import { CreateMessageDto } from './dto/createMessage.dto';
 import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
-import { User } from '@users/users/users/entities/user.entity';
+import { User } from '@users/users/entities/user.entity';
 import { RoomEntity } from './entities/room.entity';
 import { RoomDto } from './dto/Room.dto';
 import { CreateRoomDto } from './dto/createRoom.dto';

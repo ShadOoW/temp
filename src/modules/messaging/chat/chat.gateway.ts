@@ -18,7 +18,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import * as socketioJwt from 'socketio-jwt';
 
-import { UsersService } from '@users/users/users/users.service';
+import { UsersService } from '@users/users/users.service';
 import { ConfigService } from '@shared/services/config.service';
 import { ChatService } from './chat.service';
 import { CreateMessageDto } from './dto/createMessage.dto';
@@ -29,7 +29,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // import { UserRepository } from '../user/user.repository';
 import { RoomRepository } from './room.repository';
 import { UtilsService } from '@shared/providers/utils.service';
-import { AuthService } from '@users/users/auth/auth.service';
+import { AuthService } from '@users/auth/auth.service';
 import { RoomEntity } from './entities/room.entity';
 import { JoinRoomDto } from './dto/joinRoom.dto';
 

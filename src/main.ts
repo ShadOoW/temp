@@ -3,6 +3,7 @@
  * The App use Swagger for documenting, and Express for APIs
  * All routes strat with prefix API/V1 means first version of the app
  */
+import 'module-alias/register';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import 'dotenv/config';

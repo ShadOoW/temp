@@ -123,5 +123,16 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "_moduleAliases": {
+    "@src": "src",
+    "@config": "src/config",
+    "@shared": "src/shared",
+    "@modules": "src/modules",
+    "@users": "src/modules/users",
+    "@events": "src/modules/events",
+    "@gamification": "src/modules/gamification",
+    "@messaging": "src/modules/messaging",
+    "@education": "src/modules/education"
   }
 }

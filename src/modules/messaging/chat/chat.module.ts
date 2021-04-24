@@ -1,13 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
 
-import { UsersModule } from '@users/users/users/users.module';
+import { UsersModule } from '@users/users/users.module';
 import { ChatGateway } from './chat.gateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatService } from './chat.service';
 import { MessageRepository } from './message.repository';
 import { RoomRepository } from './room.repository';
-import { AuthModule } from '@users/users/auth/auth.module';
-import { UsersRepository } from '@users/users/users/users.repository';
+import { AuthModule } from '@users/auth/auth.module';
+import { UsersRepository } from '@users/users/users.repository';
 import { ConfigService } from '@shared/services/config.service';
 
 @Module({

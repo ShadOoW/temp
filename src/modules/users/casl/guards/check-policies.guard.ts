@@ -4,7 +4,7 @@ import {
   PolicyHandler,
   CHECK_POLICIES_KEY,
 } from '../decorators/check-policies.decorator';
-import { CaslAbilityFactory, AppAbility } from '@users/casl-ability.factory';
+import { CaslAbilityFactory, AppAbility } from '../casl-ability.factory';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
