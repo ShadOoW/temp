@@ -274,13 +274,13 @@ type Evaluation {
 type Event {
   command: String!
   createdAt: DateTime!
-  from: User!
+  from: UserEntity!
   id: String!
   module: String!
   payload: String!
   read: Boolean!
   sourceId: String!
-  to: User
+  to: UserEntity
   updatedAt: DateTime!
 }
 
@@ -410,7 +410,7 @@ type Mutation {
   createRole(createRoleInput: CreateRoleInput!): Role!
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): UserEntity!
   removeBadge(id: String!): Badge!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
@@ -421,7 +421,7 @@ type Mutation {
   removeRole(id: String!): Role!
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
-  removeUser(id: String!): User!
+  removeUser(id: String!): UserEntity!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
@@ -434,7 +434,7 @@ type Mutation {
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
   updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
   updateSession(id: String!, updateSessionInput: UpdateSessionInput!): Session!
-  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): UserEntity!
 }
 
 type Permission {
@@ -554,10 +554,10 @@ type Query {
   sessionsNotDue(skip: Int, status: String, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
-  user(id: String!): User!
-  userRequests(id: String!): User!
-  users: [User!]!
-  usersByRole(id: String!): [User!]!
+  user(id: String!): UserEntity!
+  userRequests(id: String!): UserEntity!
+  users: [UserEntity!]!
+  usersByRole(id: String!): [UserEntity!]!
 }
 
 type Question {
@@ -620,12 +620,12 @@ type Request {
   createdAt: DateTime!
   description: String
   excerpt: String!
-  from: User!
+  from: UserEntity!
   id: String!
   proposition: Boolean
   status: String
   title: String!
-  to: User
+  to: UserEntity
   updatedAt: DateTime!
 }
 
@@ -636,7 +636,7 @@ type Role {
   name: String
   permissions: [Permission!]!
   updatedAt: DateTime!
-  users: [User!]!
+  users: [UserEntity!]!
 }
 
 input RolePermissionInput {
@@ -650,8 +650,8 @@ type Session {
   id: String!
   isFromMentor: Boolean!
   isVideoCall: Boolean!
-  mentee: User!
-  mentor: User!
+  mentee: UserEntity!
+  mentor: UserEntity!
   startDate: DateTime!
   status: String
   title: String!
@@ -825,14 +825,12 @@ input UpdateUserInput {
   username: String
 }
 
-type User {
+type UserEntity {
   active: Boolean
   balance: Balance!
-  createdAt: DateTime!
   email: String
   eventsFrom: [Event!]
   eventsTo: [Event!]
-  id: String!
   isAdmin: Boolean!
   menteeSessions: [Session!]!
   mentorSessions: [Session!]!
@@ -846,14 +844,13 @@ type User {
   status: String
   subscribers: [UserSubscription!]!
   subscriptions: [UserSubscription!]!
-  updatedAt: DateTime!
   username: String
 }
 
 type UserSubscription {
   createdAt: DateTime!
   id: String!
-  subscribedTo: User!
-  subscriber: User!
+  subscribedTo: UserEntity!
+  subscriber: UserEntity!
   updatedAt: DateTime!
 }

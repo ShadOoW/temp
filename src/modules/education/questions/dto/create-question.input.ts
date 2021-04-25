@@ -48,5 +48,5 @@ export class CreateQuestionInput {
     nullable: true,
   })
   @IsString()
-  user: User;
+  user: UserEntity;
 }

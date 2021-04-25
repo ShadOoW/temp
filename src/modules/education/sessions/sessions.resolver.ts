@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { Session } from './entities/session.entity';
 import { UpdateSessionInput } from './dto/update-session.input';
@@ -6,7 +6,7 @@ import { GetSessionsArgs } from './dto/get-sessions.args';
 import { GetSessions } from './dto/get-sessions.dto';
 import { PaginationArgs } from '@shared/pagination.args';
 import { CreateSessionInput } from './dto/create-session.input copy';
-import { User as CurrentUser } from '@users/users/decorators/user.decorator';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => Session)
 export class SessionsResolver {

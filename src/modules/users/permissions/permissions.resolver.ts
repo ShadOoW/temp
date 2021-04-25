@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { PoliciesGuard } from '@users/casl/guards/check-policies.guard';
+import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PermissionsService } from './permissions.service';
 import { Permission } from './entities/permission.entity';
@@ -8,7 +8,7 @@ import { UpdatePermissionInput } from './dto/update-permission.input';
 import { PaginationArgs } from '@shared/pagination.args';
 import { GetPermissions } from './dto/get-permissions.dto';
 import { AppAbility } from '@users/casl/casl-ability.factory';
-import { CheckPolicies } from '@users/casl/decorators/check-policies.decorator';
+import { CheckPolicies } from '@src/decorators/check-policies.decorator';
 import { Actions } from '@shared/actions';
 
 @Resolver(() => Permission)

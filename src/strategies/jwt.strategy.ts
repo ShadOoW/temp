@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from '../modules/users/auth/auth.service';
 import { IPayload } from '@users/users/interfaces/payload';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 

@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { PoliciesGuard } from '@users/casl/guards/check-policies.guard';
+import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RequestsService } from './requests.service';
 import { Request } from './entities/request.entity';

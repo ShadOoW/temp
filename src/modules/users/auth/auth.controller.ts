@@ -14,7 +14,7 @@ import { UsersService } from '@users/users/users.service';
 import { AuthService } from './auth.service';
 // import { IUser } from '@users/users/interfaces/user';
 import { CreateUserInput } from '@users/users/dto/create-user.input';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LocalAuthGuard } from '@src/guards/local-auth.guard';
 import { Public } from '@shared/public.decorator';
 
 @Controller('auth')

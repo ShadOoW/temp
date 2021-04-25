@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { PoliciesGuard } from '@users/casl/guards/check-policies.guard';
+import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProfilesService } from './profiles.service';
 import { Profile } from './entities/profile.entity';
@@ -8,7 +8,7 @@ import {
   AppAbility,
   CaslAbilityFactory,
 } from '@users/casl/casl-ability.factory';
-import { CheckPolicies } from '@users/casl/decorators/check-policies.decorator';
+import { CheckPolicies } from '@src/decorators/check-policies.decorator';
 import { Actions } from '@shared/actions';
 
 @Resolver(() => Profile)

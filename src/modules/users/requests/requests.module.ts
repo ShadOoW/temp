@@ -7,8 +7,8 @@ import { Subscription } from '@users/subscriptions/entities/subscription.entity'
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
 import { CaslModule } from '@users/casl/casl.module';
 import { RequestListener } from './listeners/request.listener';
-import { EventsService } from '@events/events/events.service';
-import { Event } from '@events/events/entities/event.entity';
+import { EventsService } from '@src/modules/events/events/events.service';
+import { Event } from '@src/modules/events/events/entities/event.entity';
 
 @Module({
   imports: [

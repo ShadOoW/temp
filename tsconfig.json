@@ -17,9 +17,9 @@
       "@shared/*": ["src/shared/*"],
       "@modules/*": ["src/modules/*"],
       "@users/*": ["src/modules/users/*"],
-      "@events/*": ["src/modules/events/*"],
+      "@events/*": ["src/guards/events/*"],
       "@gamification/*": ["src/modules/gamification/*"],
-      "@messaging/*": ["src/modules/messaging/*"],
+      "@messaging/*": ["src/guards/messaging/*"],
       "@education/*": ["src/modules/education/*"]
     }
   }

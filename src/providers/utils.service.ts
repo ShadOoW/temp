@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { RedisService } from 'nestjs-redis';
@@ -26,9 +27,10 @@ export class UtilsService {
     options?: any,
   ): T | T[] {
     if (_.isArray(entity)) {
+      //@ts-ignore
       return entity.map((u) => new model(u, options));
     }
-
+    // @ts-ignore
     return new model(entity, options);
   }
 
