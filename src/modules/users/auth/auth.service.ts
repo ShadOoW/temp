@@ -10,7 +10,7 @@ import { CreateUserInput } from '@users/users/dto/create-user.input';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from '@users/users/users.repository';
 
@@ -66,7 +66,7 @@ export class AuthService {
   /*
    * login user on socket, set user on client request
    * */
-  async loginSocket(client: Socket): Promise<User> {
+  async loginSocket(client: Socket): Promise<UserEntity> {
     const { iat, exp, id: userId } = client.request.decoded_token;
 
     const timeDiff = exp - iat;

@@ -1,11 +1,11 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { UsersModule } from '../src/users-micro/users/users.module';
+import { UsersModule } from '@users/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from '../src/config/config.service';
 // import { Repository } from 'typeorm';
-// import { User } from '../models/User.entity';
+// import { UserEntity } from '../models/User.entity';
 // import { CreateUserDto } from './dto/create-user.dto';
 
 describe('GET / users', () => {

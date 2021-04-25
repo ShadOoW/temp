@@ -3,7 +3,7 @@ import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Evaluation } from '../../evaluations/entities/evaluation.entity';
 import { Question } from '../../questions/entities/question.entity';
 import { BaseEntity } from '@shared/base.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @ObjectType()
@@ -60,8 +60,8 @@ export class Quiz extends BaseEntity {
   })
   questions: Question[];
 
-  @ManyToOne(() => User, (user) => user.quizzes)
-  user: User;
+  @ManyToOne(() => UserEntity, (user) => user.quizzes)
+  user: UserEntity;
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.quiz)
   evaluations: Evaluation;

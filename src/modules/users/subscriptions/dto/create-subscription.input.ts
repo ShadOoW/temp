@@ -1,15 +1,15 @@
 import { IsUUID } from 'class-validator';
 import { InputType, Field } from '@nestjs/graphql';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { SubscriptionUserInput } from './subscription.inputs';
 
 @InputType()
 export class CreateSubscriptionInput {
   @Field(() => SubscriptionUserInput)
   @IsUUID()
-  subscriber: User;
+  subscriber: UserEntity;
 
   @Field(() => SubscriptionUserInput)
   @IsUUID()
-  subscribedTo: User;
+  subscribedTo: UserEntity;
 }

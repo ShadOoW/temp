@@ -1,13 +1,13 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { RoomEntity } from './entities/room.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { CreateRoomDto } from './dto/createRoom.dto';
 // import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
 
 @EntityRepository(RoomEntity)
 export class RoomRepository extends Repository<RoomEntity> {
-  initJoin(user: User, client) {
+  initJoin(user: UserEntity, client) {
     // join connected user to all the rooms that is member of.
 
     const roomsToJoin = [];
@@ -18,7 +18,7 @@ export class RoomRepository extends Repository<RoomEntity> {
     client.join(roomsToJoin);
   }
 
-  async join(room: RoomEntity, user: User) {
+  async join(room: RoomEntity, user: UserEntity) {
     if (room.isPrivate && room.members.length >= 2) return false;
     room.members.push(user);
     await this.save(room);

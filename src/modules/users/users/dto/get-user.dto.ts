@@ -1,4 +1,4 @@
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Role } from '@users/roles/entities/role.entity';
 import { Request } from '@users/requests/entities/request.entity';
@@ -82,7 +82,7 @@ export class GetUserDto {
     };
   }
 
-  public static getUser(userEntity: User): any {
+  public static getUser(userEntity: UserEntity): any {
     return {
       id: userEntity.id,
       username: userEntity.username,
@@ -112,7 +112,7 @@ export class GetUserDto {
     };
   }
 
-  public static getUserAuthInfo(userEntity: User): any {
+  public static getUserAuthInfo(userEntity: UserEntity): any {
     return {
       id: userEntity.id,
       isAdmin: userEntity.isAdmin,

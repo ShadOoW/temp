@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { PoliciesGuard } from '@users/casl/guards/check-policies.guard';
@@ -9,8 +9,9 @@ import { AppAbility } from '@users/casl/casl-ability.factory';
 import { CheckPolicies } from '@users/casl/decorators/check-policies.decorator';
 import { Actions } from '@shared/actions';
 import { Public } from '@shared/public.decorator';
+import { UserDto } from './dto/user.dto';
 
-@Resolver(() => User)
+@Resolver(() => UserEntity)
 @UseGuards(PoliciesGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
@@ -21,37 +22,42 @@ export class UsersResolver {
     return !!(await this.usersService.findByUserName({ email }));
   }
 
-  @Mutation(() => User)
-  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return await this.usersService.create(createUserInput);
+  @Mutation(() => UserEntity)
+  async createUser(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+  ): Promise<UserDto> {
+    const createdUser = await this.usersService.create(createUserInput);
+    return createdUser.toDto();
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
-  @Query(() => [User], { name: 'users' })
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @Query(() => [UserEntity], { name: 'users' })
   findAll() {
     return this.usersService.findAll();
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
-  @Query(() => [User], { name: 'usersByRole' })
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @Query(() => [UserEntity], { name: 'usersByRole' })
   findByRole(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findByRole(id);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
-  @Query(() => User, { name: 'userRequests' })
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @Query(() => UserEntity, { name: 'userRequests' })
   findUserRequests(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findUserRequests(id);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, User))
-  @Query(() => User, { name: 'user' })
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @Query(() => UserEntity, { name: 'user' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findOne(id);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Update, User))
-  @Mutation(() => User)
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Update, UserEntity),
+  )
+  @Mutation(() => UserEntity)
   updateUser(
     @Args('id', { type: () => String }) id: string,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
@@ -59,8 +65,10 @@ export class UsersResolver {
     return this.usersService.update(id, updateUserInput);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Delete, User))
-  @Mutation(() => User)
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Delete, UserEntity),
+  )
+  @Mutation(() => UserEntity)
   removeUser(@Args('id', { type: () => String }) id: string) {
     return this.usersService.remove(id);
   }

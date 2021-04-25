@@ -3,7 +3,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MessageEntity } from '../entities/message.entity';
 import { RoomEntity } from '../entities/room.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { AbstractDto } from '@shared/abstract.dto';
 
 export class RoomDto extends AbstractDto {
@@ -14,7 +14,7 @@ export class RoomDto extends AbstractDto {
   isPrivate: boolean;
 
   @ApiProperty()
-  members: User[];
+  members: UserEntity[];
 
   @ApiProperty()
   messages: MessageEntity[];

@@ -11,7 +11,7 @@ import { AuthController } from './auth.controller';
 // import { FacebookStrategy } from './strategies/facebook.strategy';
 // import { LinkedinStrategy } from './strategies/linkedin.strategy';
 import { UsersService } from '@users/users/users.service';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { Profile } from '@users/profiles/entities/profile.entity';
 import { EmailsService } from '@users/emails/emails.service';
@@ -24,7 +24,7 @@ import { UsersRepository } from '@users/users/users.repository';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Profile, User]),
+    TypeOrmModule.forFeature([Profile, UserEntity]),
     UsersModule,
     PassportModule,
     JwtModule.register({

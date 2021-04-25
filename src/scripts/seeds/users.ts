@@ -3,7 +3,7 @@ import { configService } from '@config/config.service';
 import * as _ from 'lodash';
 import * as faker from 'faker';
 import { UsersService } from '@users/users/users.service';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { Profile } from '@users/profiles/entities/profile.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { RolesService } from '@users/roles/roles.service';
@@ -78,7 +78,7 @@ export async function usersSeed() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const userService = new UsersService(
-    connection.getRepository(User),
+    connection.getRepository(UserEntity),
     new ProfilesService(connection.getRepository(Profile)),
   );
   const roleService = new RolesService(connection.getRepository(Role));

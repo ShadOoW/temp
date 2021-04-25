@@ -1,6 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { PropositionInput } from './proposition.input';
 
 @InputType()

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // import { CreateMessageDto } from './dto/createMessage.dto';
 import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './entities/room.entity';
 import { RoomDto } from './dto/Room.dto';
 import { CreateRoomDto } from './dto/createRoom.dto';
@@ -34,8 +34,8 @@ export class ChatService {
    * check room if not exists create it, and save the message in room.
    */
   async createPrivateMessage(
-    sender: User,
-    receiver: User,
+    sender: UserEntity,
+    receiver: UserEntity,
     msg: string,
   ): Promise<MessageEntity> {
     let room = await this.roomRepository.checkPrivateRoomExists(
@@ -56,7 +56,7 @@ export class ChatService {
    * check if user is joined the room before, if yes then save the message in room.
    */
   async createPublicRoomMessage(
-    sender: User,
+    sender: UserEntity,
     room: RoomEntity,
     msg: string,
   ): Promise<MessageEntity> {
@@ -88,7 +88,7 @@ export class ChatService {
     return createdRoom;
   }
 
-  async joinRoom(room: RoomEntity, user: User): Promise<boolean> {
+  async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
     return await this.roomRepository.join(room, user);
   }
 }

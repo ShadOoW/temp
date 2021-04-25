@@ -7,7 +7,7 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Actions } from '@shared/actions';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
 import { Role } from '@users/roles/entities/role.entity';
 import { Profile } from '@users/profiles/entities/profile.entity';
@@ -15,7 +15,7 @@ import { Request } from '@users/requests/entities/request.entity';
 
 type Subjects =
   | InferSubjects<
-      typeof User | typeof Permission | typeof Role | typeof Profile
+      typeof UserEntity | typeof Permission | typeof Role | typeof Profile
     >
   | 'all';
 
@@ -32,7 +32,7 @@ export class CaslAbilityFactory {
       if (user.isAdmin) can(Actions.Manage, 'all');
 
       // authorize RUD by check userId
-      if (args.id === user.id) can([Actions.Update], User);
+      if (args.id === user.id) can([Actions.Update], UserEntity);
 
       // authorize role management
       if (permissions.some((p) => p.name === 'manage:role'))
@@ -56,8 +56,8 @@ export class CaslAbilityFactory {
       }
 
       // permissions not authorized
-      cannot(Actions.Delete, [User, Profile]);
-      can([Actions.Read], User);
+      cannot(Actions.Delete, [UserEntity, Profile]);
+      can([Actions.Read], UserEntity);
     } else {
       cannot(Actions.Manage, 'all');
     }

@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '@shared/base.entity';
 import { MessageDto } from '../dto/Message.dto';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './room.entity';
 
 @Entity({ name: 'messages' })
@@ -14,8 +14,8 @@ export class MessageEntity extends BaseEntity {
   // @ManyToOne(type => User,)
   // owner: User;
 
-  @ManyToOne(() => User)
-  sender: User;
+  @ManyToOne(() => UserEntity)
+  sender: UserEntity;
 
   // @ManyToOne(type => User, user => user.received_messages, {nullable: true})
   // receiver: User;

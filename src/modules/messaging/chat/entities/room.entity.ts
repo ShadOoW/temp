@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '@shared/base.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { MessageEntity } from './message.entity';
 import { RoomDto } from '../dto/Room.dto';
 
@@ -14,9 +14,9 @@ export class RoomEntity extends BaseEntity {
   // @ManyToOne(type => User,)
   // owner: User;
 
-  @ManyToMany(() => User, (user) => user.rooms, { cascade: true })
+  @ManyToMany(() => UserEntity, (user) => user.rooms, { cascade: true })
   @JoinTable()
-  members?: User[];
+  members?: UserEntity[];
 
   @OneToMany(() => MessageEntity, (message) => message.room)
   messages?: MessageEntity[];

@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { QuestionQuizInput } from './question-quiz.input';
 
 @InputType()
@@ -61,5 +61,5 @@ export class CreateQuizInput {
     nullable: true,
   })
   @IsString()
-  user: User;
+  user: UserEntity;
 }

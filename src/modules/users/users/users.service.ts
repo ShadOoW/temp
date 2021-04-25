@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
@@ -22,7 +22,7 @@ import {
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly repo: Repository<User>,
+    @InjectRepository(UserEntity) private readonly repo: Repository<UserEntity>,
     private profileService: ProfilesService,
     private emailService: EmailsService = null,
   ) {}
@@ -32,7 +32,7 @@ export class UsersService {
    * @param {CreateUserInput} createUserInput
    * @returns {object} user infos
    */
-  async create(createUserInputs: CreateUserInput): Promise<IUser> {
+  async create(createUserInputs: CreateUserInput): Promise<UserEntity> {
     const { provider, password, profile } = createUserInputs;
     const createUserDto = await CreateUserInput.toEntity(createUserInputs);
     if (provider === 'local' && !password)

@@ -3,7 +3,7 @@ import { IsString, IsArray, IsOptional } from 'class-validator';
 import { Role } from '../entities/role.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 
 @InputType()
 export class CreateRoleInput {
@@ -22,7 +22,7 @@ export class CreateRoleInput {
   // @Field(() => [RolePermissionInput])
   @IsArray()
   @IsOptional()
-  users?: User[];
+  users?: UserEntity[];
 
   public static from(dto: Partial<CreateRoleInput>) {
     const it = new CreateRoleInput();

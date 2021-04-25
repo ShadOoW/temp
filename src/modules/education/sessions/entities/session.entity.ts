@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { Status } from '@shared/interfaces/globalStatus';
 
 @ObjectType()
@@ -15,13 +15,13 @@ export class Session extends BaseEntity {
   @Field(() => String)
   title: string;
 
-  @ManyToOne(() => User, (user) => user.menteeSessions)
-  @Field(() => User)
-  mentee: User;
+  @ManyToOne(() => UserEntity, (user) => user.menteeSessions)
+  @Field(() => UserEntity)
+  mentee: UserEntity;
 
-  @ManyToOne(() => User, (user) => user.mentorSessions)
-  @Field(() => User)
-  mentor: User;
+  @ManyToOne(() => UserEntity, (user) => user.mentorSessions)
+  @Field(() => UserEntity)
+  mentor: UserEntity;
 
   @Column({ type: 'text', nullable: true })
   @Field(() => String)

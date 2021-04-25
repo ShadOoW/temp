@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PropositionInput } from '../dto/proposition.input';
 import { Quiz } from '../../quizzes/entities/quiz.entity';
@@ -52,8 +52,8 @@ export class Question extends BaseEntity {
   @IsArray()
   propositions: PropositionDto[];
 
-  @ManyToOne(() => User, (user) => user.questions)
-  user: User;
+  @ManyToOne(() => UserEntity, (user) => user.questions)
+  user: UserEntity;
 
   @ManyToOne(() => Quiz, (quiz) => quiz.questions)
   quiz: Quiz;

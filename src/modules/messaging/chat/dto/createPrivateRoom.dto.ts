@@ -2,16 +2,16 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 
 export class CreatePrivateRoomDto {
   @IsNotEmpty()
   @ApiProperty()
-  sender: User;
+  sender: UserEntity;
 
   @IsNotEmpty()
   @ApiProperty()
-  receiver: User;
+  receiver: UserEntity;
 
   // @ApiProperty()
   // members: UserEntity[];

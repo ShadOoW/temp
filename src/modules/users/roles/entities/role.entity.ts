@@ -2,7 +2,7 @@ import { Entity, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 
 @ObjectType()
 @Entity({ name: 'roles' })
@@ -20,7 +20,7 @@ export class Role extends BaseEntity {
   @Field(() => [Permission])
   permissions: Permission[];
 
-  @OneToMany(() => User, (user) => user.role)
-  @Field(() => [User])
-  users: User[];
+  @OneToMany(() => UserEntity, (user) => user.role)
+  @Field(() => [UserEntity])
+  users: UserEntity[];
 }

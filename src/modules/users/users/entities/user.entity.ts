@@ -9,7 +9,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseEntity } from '@shared/base.entity';
+// import { BaseEntity } from '@shared/base.entity';
 import { Role } from '@users/roles/entities/role.entity';
 import { Request } from '@users/requests/entities/request.entity';
 import { Profile } from '@users/profiles/entities/profile.entity';
@@ -22,11 +22,14 @@ import { Balance } from '@gamification/balances/entities/balance.entity';
 import { Question } from '@education/questions/entities/question.entity';
 import { Quiz } from '@education/quizzes/entities/quiz.entity';
 import { Evaluation } from '@education/evaluations/entities/evaluation.entity';
+import { AbstractEntity } from '@src/common/abstract.entity';
+import { UserDto } from '../dto/user.dto';
+// import { AbstractDto } from '@src/common/dto/abstract.dto';
 
 @ObjectType()
 @Entity({ name: 'users' })
 @Unique(['email'])
-export class User extends BaseEntity {
+export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ type: 'varchar', length: 300 })
   @Field(() => String, { nullable: true })
   email: string;
@@ -122,4 +125,6 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.user)
   evaluations: Evaluation[];
+
+  dtoClass = UserDto;
 }

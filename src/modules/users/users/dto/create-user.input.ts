@@ -6,7 +6,7 @@ import {
   IsBoolean,
   IsUUID,
 } from 'class-validator';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { CreateProfileInput } from '@users/profiles/dto/create-profile.input';
 import * as bcrypt from 'bcrypt';
 
@@ -49,7 +49,7 @@ export class CreateUserInput {
   profile: any;
 
   public static async toEntity(inputs: Partial<CreateUserInput>) {
-    const it = new User();
+    const it = new UserEntity();
     const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
     it.username = inputs.username;
     it.email = inputs.email;

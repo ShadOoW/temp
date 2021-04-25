@@ -1,16 +1,16 @@
 import { Entity, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 
 @ObjectType('UserSubscription')
 @Entity({ name: 'subscriptions' })
 export class Subscription extends BaseEntity {
-  @ManyToOne(() => User, (user) => user.subscriptions)
-  @Field(() => User)
-  subscriber: User;
+  @ManyToOne(() => UserEntity, (user) => user.subscriptions)
+  @Field(() => UserEntity)
+  subscriber: UserEntity;
 
-  @ManyToOne(() => User, (user) => user.subscribers)
-  @Field(() => User)
-  subscribedTo: User;
+  @ManyToOne(() => UserEntity, (user) => user.subscribers)
+  @Field(() => UserEntity)
+  subscribedTo: UserEntity;
 }

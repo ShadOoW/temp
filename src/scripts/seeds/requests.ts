@@ -9,7 +9,7 @@ import { Subscription } from '@users/subscriptions/entities/subscription.entity'
 import { UsersService } from '@users/users/users.service';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { Profile } from '@users/profiles/entities/profile.entity';
-import { User } from '@users/users/entities/user.entity';
+import { UserEntity } from '@users/users/entities/user.entity';
 import { RolesService } from '@users/roles/roles.service';
 import { Role } from '@users/roles/entities/role.entity';
 
@@ -54,7 +54,7 @@ export async function requestsSeed() {
     null,
   );
   const userService = new UsersService(
-    connection.getRepository(User),
+    connection.getRepository(UserEntity),
     new ProfilesService(connection.getRepository(Profile)),
   );
   const roleService = new RolesService(connection.getRepository(Role));
