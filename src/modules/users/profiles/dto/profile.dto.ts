@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/Abstract.dto';
-import { Domain } from '../../domains/entities/domain.entity';
+import { DomainDto } from '../../domains/dto/domain.dto';
 import { ProfileEntity } from '../entities/profile.entity';
 
 @ObjectType()
@@ -41,8 +41,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   coachingType?: string;
 
-  @Field(() => [Domain])
-  coachingDomains?: Domain[];
+  @Field(() => [DomainDto])
+  coachingDomains?: DomainDto[];
 
   @Field(() => String, { nullable: true })
   canOffer?: string;
@@ -59,8 +59,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   sector?: string;
 
-  @Field(() => Domain, { nullable: true })
-  wantedDomain?: Domain;
+  @Field(() => DomainDto, { nullable: true })
+  wantedDomain?: DomainDto;
 
   @Field(() => String, { nullable: true })
   whyNeedCoaching?: string;

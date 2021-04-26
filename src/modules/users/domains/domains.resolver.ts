@@ -1,46 +1,50 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { DomainsService } from './domains.service';
-import { Domain } from './entities/domain.entity';
 import { CreateDomainInput } from './dto/create-domain.input';
 import { UpdateDomainInput } from './dto/update-domain.input';
-import { PaginationArgs } from '@shared/pagination.args';
-import { GetDomains } from './dto/get-domains.dto';
 import { Public } from '@shared/public.decorator';
+import { DomainDto } from './dto/domain.dto';
+import { DomainsPageDto } from './dto/domains-page.dto';
+import { DomainsPageOptionsDto } from './dto/domains-page-options.dto';
 
-@Resolver(() => Domain)
+@Resolver(() => DomainDto)
 export class DomainsResolver {
   constructor(private readonly domainsService: DomainsService) {}
 
-  @Mutation(() => Domain)
+  @Mutation(() => DomainDto)
   createDomain(
     @Args('createDomainInput')
     createDomainInput: CreateDomainInput,
-  ) {
+  ): Promise<DomainDto> {
     return this.domainsService.create(createDomainInput);
   }
 
   @Public()
-  @Query(() => GetDomains, { name: 'domains' })
-  findAll(@Args() paginationArgs: PaginationArgs) {
-    return this.domainsService.findAll(paginationArgs);
+  @Query(() => DomainsPageDto, { name: 'domains' })
+  findAll(
+    @Args() pageOptionsDto: DomainsPageOptionsDto,
+  ): Promise<DomainsPageDto> {
+    return this.domainsService.findAll(pageOptionsDto);
   }
 
-  @Query(() => Domain, { name: 'domain' })
-  findOne(@Args('id', { type: () => String }) id: string) {
+  @Query(() => DomainDto, { name: 'domain' })
+  findOne(@Args('id', { type: () => String }) id: string): Promise<DomainDto> {
     return this.domainsService.findOne(id);
   }
 
-  @Mutation(() => Domain)
+  @Mutation(() => DomainDto)
   updateDomain(
     @Args('id', { type: () => String }) id: string,
     @Args('updateDomainInput')
     updateDomainInput: UpdateDomainInput,
-  ) {
+  ): Promise<DomainDto> {
     return this.domainsService.update(id, updateDomainInput);
   }
 
-  @Mutation(() => Domain)
-  removeDomain(@Args('id', { type: () => String }) id: string) {
+  @Mutation(() => DomainDto)
+  removeDomain(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<DomainDto> {
     return this.domainsService.remove(id);
   }
 }

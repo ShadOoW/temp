@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
-import { Domain } from '@users/domains/entities/domain.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { ProfileDto } from '../dto/profile.dto';
+import { DomainDto } from '../../domains/dto/domain.dto';
 
 @Entity({ name: 'profiles' })
 export class ProfileEntity extends AbstractEntity<ProfileDto> {
@@ -41,9 +41,9 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'varchar', length: 300, nullable: true })
   coachingType?: string;
 
-  @ManyToMany(() => Domain, { nullable: true })
+  @ManyToMany(() => DomainDto, { nullable: true })
   @JoinTable()
-  coachingDomains?: Domain[];
+  coachingDomains?: DomainDto[];
 
   @Column({ type: 'text', nullable: true })
   canOffer?: string;
@@ -60,8 +60,8 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'varchar', length: 300, nullable: true })
   sector?: string;
 
-  @ManyToOne(() => Domain)
-  wantedDomain?: Domain;
+  @ManyToOne(() => DomainDto)
+  wantedDomain?: DomainDto;
 
   @Column({ type: 'text', nullable: true })
   whyNeedCoaching?: string;

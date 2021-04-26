@@ -9,7 +9,7 @@ import { ProfilesService } from '@users/profiles/profiles.service';
 import { RolesService } from '@users/roles/roles.service';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { DomainsService } from '@users/domains/domains.service';
-import { Domain } from '@users/domains/entities/domain.entity';
+import { DomainEntity } from '@users/domains/entities/domain.entity';
 
 function genUser(username, type, role = null, domains = []) {
   const user = {
@@ -82,7 +82,9 @@ export async function usersSeed() {
     new ProfilesService(connection.getRepository(ProfileEntity)),
   );
   const roleService = new RolesService(connection.getRepository(RoleEntity));
-  const domainService = new DomainsService(connection.getRepository(Domain));
+  const domainService = new DomainsService(
+    connection.getRepository(DomainEntity),
+  );
 
   const { roles } = await roleService.findAll();
   const { domains } = await domainService.findAll();

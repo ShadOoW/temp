@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { DomainsService } from '@users/domains/domains.service';
-import { Domain } from '@users/domains/entities/domain.entity';
+import { DomainEntity } from '@users/domains/entities/domain.entity';
 
 export async function domainsSeed() {
   const opt = {
@@ -10,7 +10,9 @@ export async function domainsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const domainService = new DomainsService(connection.getRepository(Domain));
+  const domainService = new DomainsService(
+    connection.getRepository(DomainEntity),
+  );
 
   const work = [
     // Domain domains

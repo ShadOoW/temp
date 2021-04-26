@@ -1,18 +1,19 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { CreateDomainInput } from './dto/create-domain.input';
 import { UpdateDomainInput } from './dto/update-domain.input';
-import { Domain } from './entities/domain.entity';
-import { PaginationArgs } from '@shared/pagination.args';
+import { DomainEntity } from './entities/domain.entity';
+import { DomainsPageOptionsDto } from './dto/domains-page-options.dto';
+import { DomainsPageDto } from './dto/domains-page.dto';
 
 @Injectable()
 export class DomainsService {
   constructor(
-    @InjectRepository(Domain)
-    private readonly repo: Repository<Domain>,
+    @InjectRepository(DomainEntity)
+    private readonly repo: Repository<DomainEntity>,
   ) {}
 
   async create(createDomainInput: CreateDomainInput) {
@@ -21,27 +22,20 @@ export class DomainsService {
     if (domain) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return this.repo
-      .save(createDomainInput)
-      .then((e) => CreateDomainInput.fromEntity(e));
+    return (await this.repo.save(createDomainInput)).toDto();
   }
 
-  async findAll(pagination: PaginationArgs = null) {
-    const { take, skip } = pagination || {};
-    const [domains, totalCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      take,
-      skip,
+  async findAll(pageOptionsDto: DomainsPageOptionsDto) {
+    const [domains, domainsCount] = await this.repo.findAndCount();
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: domainsCount,
     });
-    return { domains, totalCount };
+    return new DomainsPageDto(domains.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo
-      .findOne(id)
-      .then((domain) => CreateDomainInput.fromEntity(domain));
+    return (await this.repo.findOne(id)).toDto();
   }
 
   async update(id: string, updateDomainInput: UpdateDomainInput) {
@@ -52,12 +46,12 @@ export class DomainsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ id, ...updateDomainInput });
+    return (await this.repo.save({ id, ...updateDomainInput })).toDto();
   }
 
   async remove(id: string) {
-    const domainToDelete = await this.findOne(id);
+    const domainToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return domainToDelete;
+    return domainToDelete.toDto();
   }
 }
