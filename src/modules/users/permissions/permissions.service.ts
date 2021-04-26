@@ -5,42 +5,41 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
-import { Permission } from './entities/permission.entity';
-import { PaginationArgs } from '@shared/pagination.args';
+import { PermissionEntity } from './entities/permission.entity';
+import { PermissionDto } from './dto/permission.dto';
+import { PermissionsPageDto } from './dto/permissions-page.dto';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { PermissionsPageOptionsDto } from './dto/permissions-page-options.dto';
 
 @Injectable()
 export class PermissionsService {
   constructor(
-    @InjectRepository(Permission) private readonly repo: Repository<Permission>,
+    @InjectRepository(PermissionEntity)
+    private readonly repo: Repository<PermissionEntity>,
   ) {}
 
-  async create(createPermissionInput: CreatePermissionInput) {
+  async create(
+    createPermissionInput: CreatePermissionInput,
+  ): Promise<PermissionDto> {
     const { name } = createPermissionInput;
-    const permission = await this.repo.findOne({ name });
-    if (permission) {
+    const exists = await this.repo.findOne({ name });
+    if (exists) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return this.repo
-      .save(createPermissionInput)
-      .then((e) => CreatePermissionInput.fromEntity(e));
+    return (await this.repo.save(createPermissionInput)).toDto();
   }
 
-  async findAll(pagination: PaginationArgs = null) {
-    const { take, skip } = pagination || {};
-    const [permissions, totalCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      take,
-      skip,
+  async findAll(pageOptionsDto: PermissionsPageOptionsDto) {
+    const [permissions, permissionsCount] = await this.repo.findAndCount();
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: permissionsCount,
     });
-    return { permissions, totalCount };
+    return new PermissionsPageDto(permissions.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo
-      .findOne(id)
-      .then((permission) => CreatePermissionInput.fromEntity(permission));
+    return (await this.repo.findOne(id)).toDto();
   }
 
   async update(id: string, updatePermissionInput: UpdatePermissionInput) {
@@ -55,8 +54,8 @@ export class PermissionsService {
   }
 
   async remove(id: string) {
-    const permissionToDelete = await this.findOne(id);
+    const permissionToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return permissionToDelete;
+    return permissionToDelete.toDto();
   }
 }

@@ -3,7 +3,7 @@ import { configService } from '@config/config.service';
 import { RolesService } from '@users/roles/roles.service';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { PermissionsService } from '@users/permissions/permissions.service';
-import { Permission } from '@users/permissions/entities/permission.entity';
+import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 
 export async function rolesSeed() {
   const opt = {
@@ -13,7 +13,7 @@ export async function rolesSeed() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const permissionService = new PermissionsService(
-    connection.getRepository(Permission),
+    connection.getRepository(PermissionEntity),
   );
   const roleService = new RolesService(connection.getRepository(RoleEntity));
   const { permissions } = await permissionService.findAll();

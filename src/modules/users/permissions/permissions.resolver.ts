@@ -2,42 +2,47 @@ import { UseGuards } from '@nestjs/common';
 import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PermissionsService } from './permissions.service';
-import { Permission } from './entities/permission.entity';
+import { PermissionEntity } from './entities/permission.entity';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
-import { PaginationArgs } from '@shared/pagination.args';
-import { GetPermissions } from './dto/get-permissions.dto';
 import { AppAbility } from '@users/casl/casl-ability.factory';
 import { CheckPolicies } from '@src/decorators/check-policies.decorator';
 import { Actions } from '@shared/actions';
+import { PermissionDto } from './dto/permission.dto';
+import { PermissionsPageDto } from './dto/permissions-page.dto';
+import { PermissionsPageOptionsDto } from './dto/permissions-page-options.dto';
 
-@Resolver(() => Permission)
+@Resolver(() => PermissionDto)
 @UseGuards(PoliciesGuard)
 export class PermissionsResolver {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  @Mutation(() => Permission)
+  @Mutation(() => PermissionDto)
   createPermission(
     @Args('createPermissionInput') createPermissionInput: CreatePermissionInput,
-  ) {
+  ): Promise<PermissionDto> {
     return this.permissionsService.create(createPermissionInput);
   }
 
-  @Query(() => GetPermissions, { name: 'permissions' })
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, Permission))
-  findAll(@Args() paginationArgs: PaginationArgs) {
-    return this.permissionsService.findAll(paginationArgs);
+  @Query(() => PermissionsPageDto, { name: 'permissions' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Read, PermissionEntity),
+  )
+  findAll(@Args() pageOptionsDto: PermissionsPageOptionsDto) {
+    return this.permissionsService.findAll(pageOptionsDto);
   }
 
-  @Query(() => Permission, { name: 'permission' })
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, Permission))
+  @Query(() => PermissionDto, { name: 'permission' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Read, PermissionEntity),
+  )
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.permissionsService.findOne(id);
   }
 
-  @Mutation(() => Permission)
+  @Mutation(() => PermissionDto)
   @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Update, Permission),
+    ability.can(Actions.Update, PermissionEntity),
   )
   updatePermission(
     @Args('id', { type: () => String }) id: string,
@@ -46,9 +51,9 @@ export class PermissionsResolver {
     return this.permissionsService.update(id, updatePermissionInput);
   }
 
-  @Mutation(() => Permission)
+  @Mutation(() => PermissionDto)
   @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Delete, Permission),
+    ability.can(Actions.Delete, PermissionEntity),
   )
   removePermission(@Args('id', { type: () => String }) id: string) {
     return this.permissionsService.remove(id);

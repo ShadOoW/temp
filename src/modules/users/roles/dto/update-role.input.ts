@@ -1,7 +1,7 @@
 import { CreateRoleInput } from './create-role.input';
 import { InputType, Field, PartialType } from '@nestjs/graphql';
 import { IsString, IsArray } from 'class-validator';
-import { Permission } from '@users/permissions/entities/permission.entity';
+import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
 
 @InputType()
@@ -16,5 +16,5 @@ export class UpdateRoleInput extends PartialType(CreateRoleInput) {
 
   @Field(() => [RolePermissionInput])
   @IsArray()
-  permissions: Permission[];
+  permissions: PermissionEntity[];
 }

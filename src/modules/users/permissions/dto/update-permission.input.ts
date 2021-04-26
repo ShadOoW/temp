@@ -4,11 +4,11 @@ import { IsString } from 'class-validator';
 
 @InputType()
 export class UpdatePermissionInput extends PartialType(CreatePermissionInput) {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
-  name: string;
+  name?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
-  description: string;
+  description?: string;
 }

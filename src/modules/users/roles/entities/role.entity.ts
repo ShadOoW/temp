@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Permission } from '@users/permissions/entities/permission.entity';
+import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { RoleDto } from '../dto/role.dto';
@@ -12,9 +12,9 @@ export class RoleEntity extends AbstractEntity<RoleDto> {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @ManyToMany(() => Permission)
+  @ManyToMany(() => PermissionEntity)
   @JoinTable()
-  permissions: Permission[];
+  permissions: PermissionEntity[];
 
   @OneToMany(() => UserEntity, (user) => user.role)
   users: UserEntity[];

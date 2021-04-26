@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { PermissionsService } from '@users/permissions/permissions.service';
-import { Permission } from '@users/permissions/entities/permission.entity';
+import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 
 export async function permissionsSeed() {
   const opt = {
@@ -11,7 +11,7 @@ export async function permissionsSeed() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const permissionService = new PermissionsService(
-    connection.getRepository(Permission),
+    connection.getRepository(PermissionEntity),
   );
 
   const work = [

@@ -1,7 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsArray, IsOptional } from 'class-validator';
 import { RoleEntity } from '../entities/role.entity';
-import { Permission } from '@users/permissions/entities/permission.entity';
+import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
 import { UserEntity } from '@users/users/entities/user.entity';
 
@@ -17,7 +17,7 @@ export class CreateRoleInput {
 
   @Field(() => [RolePermissionInput])
   @IsArray()
-  permissions: Permission[];
+  permissions: PermissionEntity[];
 
   // @Field(() => [RolePermissionInput])
   @IsArray()

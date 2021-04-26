@@ -317,11 +317,6 @@ type GetEvents {
   totalCount: Int!
 }
 
-type GetPermissions {
-  permissions: [Permission!]!
-  totalCount: Int!
-}
-
 type GetPoints {
   points: [Point!]!
   totalCount: Int!
@@ -375,7 +370,7 @@ type Mutation {
   createDomain(createDomainInput: CreateDomainInput!): Domain!
   createEvaluation(createEvaluationInput: CreateEvaluationInput!): Evaluation!
   createEvent(createEventInput: CreateEventInput!): Event!
-  createPermission(createPermissionInput: CreatePermissionInput!): Permission!
+  createPermission(createPermissionInput: CreatePermissionInput!): PermissionDto!
   createPoint(createPointInput: CreatePointInput!): Point!
   createPrivateRequest(createPrivateRequestInput: CreatePrivateRequestInput!): Request!
   createPublicRequest(createPublicRequestInput: CreatePublicRequestInput!): Request!
@@ -388,7 +383,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): UserDto!
   removeBadge(id: String!): Badge!
   removeDomain(id: String!): Domain!
-  removePermission(id: String!): Permission!
+  removePermission(id: String!): PermissionDto!
   removePoint(id: String!): Point!
   removeQuestion(id: String!): Question!
   removeQuiz(id: String!): Quiz!
@@ -401,7 +396,7 @@ type Mutation {
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
-  updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
+  updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): PermissionDto!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): Point!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): ProfileDto!
   updateQuestion(id: String!, updateQuestionInput: UpdateQuestionInput!): Question!
@@ -419,12 +414,14 @@ type PageMetaDto {
   take: Int!
 }
 
-type Permission {
-  createdAt: DateTime!
+type PermissionDto {
   description: String!
-  id: String!
   name: String!
-  updatedAt: DateTime!
+}
+
+type PermissionsPageDto {
+  data: [PermissionDto!]!
+  meta: PageMetaDto!
 }
 
 type Point {
@@ -516,8 +513,8 @@ type Query {
   menteeSessions(mentee: String!, skip: Int, status: String, take: Int): GetSessions!
   mentorSessions(mentor: String!, skip: Int, status: String, take: Int): GetSessions!
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
-  permission(id: String!): Permission!
-  permissions(skip: Int, take: Int): GetPermissions!
+  permission(id: String!): PermissionDto!
+  permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): PermissionsPageDto!
   point(id: String!): Point!
   points(skip: Int, take: Int): GetPoints!
   profile(id: String!): ProfileDto!
@@ -539,7 +536,7 @@ type Query {
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
   users(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
-  usersByRole(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): [UsersPageDto!]!
+  usersByRole(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
 }
 
 type Question {
@@ -684,8 +681,8 @@ input UpdateEventInput {
 }
 
 input UpdatePermissionInput {
-  description: String!
-  name: String!
+  description: String
+  name: String
 }
 
 input UpdatePointInput {

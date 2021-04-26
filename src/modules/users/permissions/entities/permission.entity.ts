@@ -1,15 +1,14 @@
 import { Entity, Column } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseEntity } from '@shared/base.entity';
+import { PermissionDto } from '../dto/permission.dto';
+import { AbstractEntity } from '@src/common/abstract.entity';
 
-@ObjectType()
 @Entity({ name: 'permissions' })
-export class Permission extends BaseEntity {
-  @Field(() => String)
+export class PermissionEntity extends AbstractEntity<PermissionDto> {
   @Column({ type: 'varchar', length: 300, nullable: false })
   name: string;
 
   @Column({ type: 'text', nullable: true })
-  @Field(() => String)
   description?: string;
+
+  dtoClass = PermissionDto;
 }

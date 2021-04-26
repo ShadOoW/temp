@@ -38,7 +38,7 @@ export class UsersResolver {
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
-  @Query(() => [UsersPageDto], { name: 'usersByRole' })
+  @Query(() => UsersPageDto, { name: 'usersByRole' })
   findByRole(
     @Args() pageOptionsDto: UsersPageOptionsDto,
     @Args('id', { type: () => String }) id: string,
