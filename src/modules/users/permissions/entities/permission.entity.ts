@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
-import { PermissionDto } from '../dto/permission.dto';
 import { AbstractEntity } from '@src/common/abstract.entity';
+import { PermissionDto } from '../dto/permission.dto';
 
 @Entity({ name: 'permissions' })
 export class PermissionEntity extends AbstractEntity<PermissionDto> {

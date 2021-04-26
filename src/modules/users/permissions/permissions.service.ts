@@ -1,14 +1,13 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
 import { PermissionEntity } from './entities/permission.entity';
 import { PermissionDto } from './dto/permission.dto';
 import { PermissionsPageDto } from './dto/permissions-page.dto';
-import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { PermissionsPageOptionsDto } from './dto/permissions-page-options.dto';
 
 @Injectable()

@@ -1,13 +1,13 @@
-import { UseGuards } from '@nestjs/common';
-import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { AppAbility } from '@users/casl/casl-ability.factory';
+import { CheckPolicies } from '@src/decorators/check-policies.decorator';
+import { PoliciesGuard } from '@src/guards/check-policies.guard';
+import { Actions } from '@shared/actions';
 import { PermissionsService } from './permissions.service';
 import { PermissionEntity } from './entities/permission.entity';
 import { CreatePermissionInput } from './dto/create-permission.input';
 import { UpdatePermissionInput } from './dto/update-permission.input';
-import { AppAbility } from '@users/casl/casl-ability.factory';
-import { CheckPolicies } from '@src/decorators/check-policies.decorator';
-import { Actions } from '@shared/actions';
 import { PermissionDto } from './dto/permission.dto';
 import { PermissionsPageDto } from './dto/permissions-page.dto';
 import { PermissionsPageOptionsDto } from './dto/permissions-page-options.dto';

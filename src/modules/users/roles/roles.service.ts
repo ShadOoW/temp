@@ -1,15 +1,14 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
-import { Repository, In } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { RoleEntity } from './entities/role.entity';
 import { RoleDto } from './dto/role.dto';
 import { RolesPageDto } from './dto/roles-page.dto';
 import { RolesPageOptionsDto } from './dto/roles-page-options.dto';
-import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 
 @Injectable()
 export class RolesService {
@@ -23,13 +22,15 @@ export class RolesService {
     if (role) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return await this.repo.save(createRoleInput);
+    return (await this.repo.save(createRoleInput)).toDto();
   }
 
   async findByNames(names) {
-    return await this.repo.find({
-      where: { name: In(names) },
-    });
+    return (
+      await this.repo.find({
+        where: { name: In(names) },
+      })
+    ).toDtos();
   }
 
   async findAll(pageOptionsDto: RolesPageOptionsDto): Promise<RolesPageDto> {
@@ -47,9 +48,7 @@ export class RolesService {
   }
 
   async findOne(id: string) {
-    return await this.repo
-      .findOne(id)
-      .then((role) => CreateRoleInput.fromEntity(role));
+    return (await this.repo.findOne(id)).toDto();
   }
 
   async update(id: string, updateRoleInput: UpdateRoleInput) {
@@ -60,12 +59,12 @@ export class RolesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ id, ...updateRoleInput });
+    return (await this.repo.save({ id, ...updateRoleInput })).toDto();
   }
 
   async remove(id: string) {
-    const roleToDelete = await this.findOne(id);
+    const roleToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return roleToDelete;
+    return roleToDelete.toDto();
   }
 }
