@@ -274,13 +274,13 @@ type Evaluation {
 type Event {
   command: String!
   createdAt: DateTime!
-  from: UserEntity!
+  from: UserDto!
   id: String!
   module: String!
   payload: String!
   read: Boolean!
   sourceId: String!
-  to: UserEntity
+  to: UserDto
   updatedAt: DateTime!
 }
 
@@ -305,11 +305,11 @@ type GetEvaluations {
 
 type GetEventDto {
   command: String!
-  from: GetUserDto!
+  from: UserDto!
   module: String!
   payload: String!
   sourceId: String!
-  to: GetUserDto
+  to: UserDto
 }
 
 type GetEvents {
@@ -341,8 +341,8 @@ type GetRequest {
   createdAt: DateTime!
   expectations: String
   id: String
-  mentee: GetUserDto!
-  mentor: GetUserDto
+  mentee: UserDto!
+  mentor: UserDto
   message: String
   proposition: Boolean
   status: String
@@ -352,11 +352,6 @@ type GetRequest {
 
 type GetRequests {
   requests: [GetRequest!]!
-  totalCount: Int!
-}
-
-type GetRoles {
-  roles: [Role!]!
   totalCount: Int!
 }
 
@@ -375,26 +370,6 @@ type GetSubscriptions {
   totalCount: Int!
 }
 
-type GetUserDto {
-  active: Boolean
-  email: String
-  id: String
-  isAdmin: Boolean
-  menteeSessions: [Session!]
-  mentorSessions: [Session!]
-  password: String
-  profile: Profile
-  provider: String
-  providerId: String
-  requestsFrom: [Request!]
-  requestsTo: [Request!]
-  role: Role
-  status: String
-  subscribers: [UserSubscription!]
-  subscriptions: [UserSubscription!]
-  username: String
-}
-
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): Badge!
   createDomain(createDomainInput: CreateDomainInput!): Domain!
@@ -407,10 +382,10 @@ type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createRequest(createRequestInput: CreateRequestInput!): Request!
-  createRole(createRoleInput: CreateRoleInput!): Role!
+  createRole(createRoleInput: CreateRoleInput!): RoleDto!
   createSession(createSessionInput: CreateSessionInput!): Session!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
-  createUser(createUserInput: CreateUserInput!): UserEntity!
+  createUser(createUserInput: CreateUserInput!): UserDto!
   removeBadge(id: String!): Badge!
   removeDomain(id: String!): Domain!
   removePermission(id: String!): Permission!
@@ -418,23 +393,30 @@ type Mutation {
   removeQuestion(id: String!): Question!
   removeQuiz(id: String!): Quiz!
   removeRequest(id: String!): Request!
-  removeRole(id: String!): Role!
+  removeRole(id: String!): RoleDto!
   removeSession(id: String!): Session!
   removeSubscription(id: Int!): UserSubscription!
-  removeUser(id: String!): UserEntity!
+  removeUser(id: String!): UserDto!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): Permission!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): Point!
-  updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): Profile!
+  updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): ProfileDto!
   updateQuestion(id: String!, updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(id: String!, updateQuizInput: UpdateQuizInput!): Quiz!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): Request!
-  updateRole(id: String!, updateRoleInput: UpdateRoleInput!): Role!
+  updateRole(id: String!, updateRoleInput: UpdateRoleInput!): RoleDto!
   updateSession(id: String!, updateSessionInput: UpdateSessionInput!): Session!
-  updateUser(id: String!, updateUserInput: UpdateUserInput!): UserEntity!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): UserDto!
+}
+
+type PageMetaDto {
+  itemCount: Int!
+  page: Int!
+  pageCount: Int!
+  take: Int!
 }
 
 type Permission {
@@ -465,19 +447,19 @@ type Point {
   updatedAt: DateTime!
 }
 
-type Profile {
+type ProfileDto {
   canOffer: String
   city: String
   coachingDomains: [Domain!]!
   coachingType: String
   company: String
   country: String
-  createdAt: DateTime!
+  createdAt: DateTime
   currentPost: String
   domainExpertise: String
   firstName: String
   hoursPerMonth: Int
-  id: String!
+  id: String
   lastName: String
   linkedin: String
   phoneNumber: String
@@ -485,7 +467,7 @@ type Profile {
   professionalBg: String
   sector: String
   selfDescription: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
   wantedDomain: Domain
   website: String
   whyNeedCoaching: String
@@ -538,7 +520,7 @@ type Query {
   permissions(skip: Int, take: Int): GetPermissions!
   point(id: String!): Point!
   points(skip: Int, take: Int): GetPoints!
-  profile(id: String!): Profile!
+  profile(id: String!): ProfileDto!
   publicRequests(skip: Int, take: Int): GetRequests!
   question(id: String!): Question!
   questions(skip: Int, take: Int): GetQuestions!
@@ -546,18 +528,18 @@ type Query {
   quizzes(skip: Int, take: Int): GetQuizzes!
   request(id: String!): GetRequest!
   requests(mentee: String, mentor: String, proposition: Boolean, skip: Int, status: String, take: Int): GetRequests!
-  role(id: String!): Role!
-  roles(skip: Int, take: Int): GetRoles!
-  rolesByNames(rolesNames: [String!]!): [Role!]!
+  role(id: String!): RoleDto!
+  roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): RolesPageDto!
+  rolesByNames(rolesNames: [String!]!): RolesPageDto!
   session(id: String!): Session!
   sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
   sessionsNotDue(skip: Int, status: String, take: Int): GetSessions!
   subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
   subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
-  user(id: String!): UserEntity!
-  userRequests(id: String!): UserEntity!
-  users: [UserEntity!]!
-  usersByRole(id: String!): [UserEntity!]!
+  user(id: String!): UserDto!
+  userRequests(id: String!): UserDto!
+  users(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
+  usersByRole(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): [UsersPageDto!]!
 }
 
 type Question {
@@ -620,27 +602,30 @@ type Request {
   createdAt: DateTime!
   description: String
   excerpt: String!
-  from: UserEntity!
+  from: UserDto!
   id: String!
   proposition: Boolean
   status: String
   title: String!
-  to: UserEntity
+  to: UserDto
   updatedAt: DateTime!
 }
 
-type Role {
-  createdAt: DateTime!
-  description: String!
-  id: String!
-  name: String
-  permissions: [Permission!]!
-  updatedAt: DateTime!
-  users: [UserEntity!]!
+type RoleDto {
+  createdAt: DateTime
+  description: String
+  id: String
+  name: String!
+  updatedAt: DateTime
 }
 
 input RolePermissionInput {
   id: String!
+}
+
+type RolesPageDto {
+  data: [RoleDto!]!
+  meta: PageMetaDto!
 }
 
 type Session {
@@ -650,8 +635,8 @@ type Session {
   id: String!
   isFromMentor: Boolean!
   isVideoCall: Boolean!
-  mentee: UserEntity!
-  mentor: UserEntity!
+  mentee: UserDto!
+  mentor: UserDto!
   startDate: DateTime!
   status: String
   title: String!
@@ -825,32 +810,30 @@ input UpdateUserInput {
   username: String
 }
 
-type UserEntity {
+type UserDto {
   active: Boolean
-  balance: Balance!
-  email: String
-  eventsFrom: [Event!]
-  eventsTo: [Event!]
+  createdAt: DateTime
+  email: String!
+  id: String
   isAdmin: Boolean!
-  menteeSessions: [Session!]!
-  mentorSessions: [Session!]!
-  password: String
-  profile: Profile!
-  provider: String
+  profile: ProfileDto
+  provider: String!
   providerId: String
-  requestsFrom: [Request!]!
-  requestsTo: [Request!]!
-  role: Role
-  status: String
-  subscribers: [UserSubscription!]!
-  subscriptions: [UserSubscription!]!
+  role: RoleDto
+  status: String!
+  updatedAt: DateTime
   username: String
 }
 
 type UserSubscription {
   createdAt: DateTime!
   id: String!
-  subscribedTo: UserEntity!
-  subscriber: UserEntity!
+  subscribedTo: UserDto!
+  subscriber: UserDto!
   updatedAt: DateTime!
+}
+
+type UsersPageDto {
+  data: [UserDto!]!
+  meta: PageMetaDto!
 }

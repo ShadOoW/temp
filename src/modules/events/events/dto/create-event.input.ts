@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { GetUserDto } from '@users/users/dto/get-user.dto';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @InputType()
 export class EventUserInput {
@@ -31,8 +31,8 @@ export class CreateEventInput {
     module: string,
     command: string,
     sourceId: string,
-    from: GetUserDto = null,
-    to: GetUserDto = null,
+    from: UserDto = null,
+    to: UserDto = null,
     payload: any = null,
   ) {
     this.module = module;

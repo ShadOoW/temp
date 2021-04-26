@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import * as faker from 'faker';
 import { UsersService } from '@users/users/users.service';
 import { UserEntity } from '@users/users/entities/user.entity';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { RolesService } from '@users/roles/roles.service';
-import { Role } from '@users/roles/entities/role.entity';
+import { RoleEntity } from '@users/roles/entities/role.entity';
 import { DomainsService } from '@users/domains/domains.service';
 import { Domain } from '@users/domains/entities/domain.entity';
 
@@ -79,9 +79,9 @@ export async function usersSeed() {
   const connection = await createConnection(opt as ConnectionOptions);
   const userService = new UsersService(
     connection.getRepository(UserEntity),
-    new ProfilesService(connection.getRepository(Profile)),
+    new ProfilesService(connection.getRepository(ProfileEntity)),
   );
-  const roleService = new RolesService(connection.getRepository(Role));
+  const roleService = new RolesService(connection.getRepository(RoleEntity));
   const domainService = new DomainsService(connection.getRepository(Domain));
 
   const { roles } = await roleService.findAll();

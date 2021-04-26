@@ -3,6 +3,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Status } from '@shared/interfaces/globalStatus';
+import { UserDto } from '@users/users/dto/user.dto';
 
 @ObjectType()
 @Entity({ name: 'requests' })
@@ -33,10 +34,10 @@ export class Request extends BaseEntity {
   status?: Status;
 
   @ManyToOne(() => UserEntity, (user) => user.requestsTo)
-  @Field(() => UserEntity, { nullable: true })
+  @Field(() => UserDto, { nullable: true })
   to?: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.requestsFrom)
-  @Field(() => UserEntity)
+  @Field(() => UserDto)
   from: UserEntity;
 }

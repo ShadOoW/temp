@@ -1,29 +1,29 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { RoomEntity } from './entities/room.entity';
-import { UserEntity } from '@users/users/entities/user.entity';
 import { CreateRoomDto } from './dto/createRoom.dto';
+import { UserDto } from '@users/users/dto/user.dto';
 // import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
 
 @EntityRepository(RoomEntity)
 export class RoomRepository extends Repository<RoomEntity> {
-  initJoin(user: UserEntity, client) {
-    // join connected user to all the rooms that is member of.
+  // initJoin(user: UserDto, client) {
+  //   // join connected user to all the rooms that is member of.
 
-    const roomsToJoin = [];
-    user.rooms.forEach((room) => {
-      return roomsToJoin.push(room.name);
-    });
+  //   const roomsToJoin = [];
+  //   user.rooms.forEach((room) => {
+  //     return roomsToJoin.push(room.name);
+  //   });
 
-    client.join(roomsToJoin);
-  }
+  //   client.join(roomsToJoin);
+  // }
 
-  async join(room: RoomEntity, user: UserEntity) {
-    if (room.isPrivate && room.members.length >= 2) return false;
-    room.members.push(user);
-    await this.save(room);
-    return true;
-  }
+  // async join(room: RoomEntity, user: UserDto) {
+  //   if (room.isPrivate && room.members.length >= 2) return false;
+  //   room.members.push(user);
+  //   await this.save(room);
+  //   return true;
+  // }
 
   async createPublicRoom(data: CreateRoomDto, sender): Promise<RoomEntity> {
     const nroom = new RoomEntity();

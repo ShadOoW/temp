@@ -1,26 +1,23 @@
 import { Entity, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseEntity } from '@shared/base.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
+import { AbstractEntity } from '@src/common/abstract.entity';
+import { RoleDto } from '../dto/role.dto';
 
-@ObjectType()
 @Entity({ name: 'roles' })
-export class Role extends BaseEntity {
+export class RoleEntity extends AbstractEntity<RoleDto> {
   @Column({ type: 'varchar', length: 300, nullable: false })
-  @Field(() => String, { nullable: true })
   name: string;
 
   @Column({ type: 'text', nullable: true })
-  @Field(() => String)
   description?: string;
 
   @ManyToMany(() => Permission)
   @JoinTable()
-  @Field(() => [Permission])
   permissions: Permission[];
 
   @OneToMany(() => UserEntity, (user) => user.role)
-  @Field(() => [UserEntity])
   users: UserEntity[];
+
+  dtoClass = RoleDto;
 }

@@ -3,6 +3,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Status } from '@shared/interfaces/globalStatus';
+import { UserDto } from '@users/users/dto/user.dto';
 
 @ObjectType()
 @Entity({ name: 'sessions' })
@@ -16,11 +17,11 @@ export class Session extends BaseEntity {
   title: string;
 
   @ManyToOne(() => UserEntity, (user) => user.menteeSessions)
-  @Field(() => UserEntity)
-  mentee: UserEntity;
+  @Field(() => UserDto)
+  mentee: UserDto;
 
   @ManyToOne(() => UserEntity, (user) => user.mentorSessions)
-  @Field(() => UserEntity)
+  @Field(() => UserDto)
   mentor: UserEntity;
 
   @Column({ type: 'text', nullable: true })

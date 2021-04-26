@@ -7,9 +7,7 @@ import { Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../auth/dto/login.dto';
-import { IUser } from './interfaces/user';
 import { CreateUserInput } from './dto/create-user.input';
-import { GetUserDto } from './dto/get-user.dto';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { EmailsService } from '@users/emails/emails.service';
 import {
@@ -18,6 +16,10 @@ import {
   // CREATE_USER_SUBJECT,
   // CREATE_USER_TEMPLATE,
 } from '@shared/emails';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UsersPageDto } from './dto/users-page.dto';
+import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,60 +34,52 @@ export class UsersService {
    * @param {CreateUserInput} createUserInput
    * @returns {object} user infos
    */
-  async create(createUserInputs: CreateUserInput): Promise<UserEntity> {
+  async create(createUserInputs: CreateUserInput): Promise<UserDto> {
     const { provider, password, profile } = createUserInputs;
-    const createUserDto = await CreateUserInput.toEntity(createUserInputs);
     if (provider === 'local' && !password)
       throw new HttpException(
         ERROR_MESSAGES.PASSWORD_REQUIRED,
         HttpStatus.BAD_REQUEST,
       );
     const createdProfile = await this.profileService.create(profile);
-    return this.repo
-      .save({ ...createUserDto, profile: createdProfile })
-      .then(async (createdUser) => {
-        // this.emailService.sendMail(
-        //   CREATE_USER_TEMPLATE,
-        //   createdUser.email,
-        //   CREATE_USER_SUBJECT,
-        //   {
-        //     firstName: createdUser.profile?.firstName,
-        //     lastName: createdUser.profile?.lastName,
-        //   },
-        // );
-        return GetUserDto.getUser(await this.findOne(createdUser.id));
-      });
+    const createdUser = await this.repo.save({
+      ...createUserInputs,
+      profile: createdProfile,
+    });
+    return createdUser.toDto();
   }
 
   /**
    * Finds all users related with (user role & role permissions)
    * @returns  {Array} of users info
    */
-  async findAll(): Promise<IUser[]> {
-    return await this.repo
-      .find({
-        relations: [
-          'role',
-          'role.permissions',
-          'profile',
-          'profile.coachingDomains',
-          'profile.wantedDomain',
-        ],
-      })
-      .then((users) => users.map((user) => GetUserDto.getUser(user)));
+  async findAll(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
+    const [users, usersCount] = await this.repo.findAndCount({
+      relations: [
+        'role',
+        'role.permissions',
+        'profile',
+        'profile.coachingDomains',
+        'profile.wantedDomain',
+      ],
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: usersCount,
+    });
+    return new UsersPageDto(users.toDtos(), pageMetaDto);
   }
 
   /**
    * Finds all users by RoleID related with (user role & role permissions)
    * @returns  {Array} of users info
    */
-  async findByRole(roleId: string): Promise<IUser[]> {
-    return await this.repo
-      .find({
-        relations: ['role', 'role.permissions', 'profile'],
-        where: { role: roleId },
-      })
-      .then((users) => users.map((user) => GetUserDto.getUser(user)));
+  async findByRole(roleId: string): Promise<UserDto[]> {
+    const usersByRole = await this.repo.find({
+      relations: ['role', 'role.permissions', 'profile'],
+      where: { role: roleId },
+    });
+    return usersByRole.toDtos();
   }
 
   /**
@@ -93,14 +87,11 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async getUserPermissions(id: string = null): Promise<any> {
-    return await this.repo
-      .findOne(id, {
-        relations: ['role', 'role.permissions', 'profile'],
-      })
-      .then((user) => {
-        return GetUserDto.getUserAuthInfo(user);
-      });
+  async getUserPermissions(id: string = null): Promise<UserDto> {
+    const userWithPermissions = await this.repo.findOne(id, {
+      relations: ['role', 'role.permissions', 'profile'],
+    });
+    return userWithPermissions.toDto();
   }
 
   /**
@@ -108,20 +99,17 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async findOne(id: string = null): Promise<any> {
-    return await this.repo
-      .findOne(id, {
-        relations: [
-          'role',
-          'role.permissions',
-          'profile',
-          'profile.coachingDomains',
-          'profile.wantedDomain',
-        ],
-      })
-      .then((user) => {
-        return GetUserDto.getUser(user);
-      });
+  async findOne(id: string): Promise<UserDto> {
+    const user = await this.repo.findOne(id, {
+      relations: [
+        'role',
+        'role.permissions',
+        'profile',
+        'profile.coachingDomains',
+        'profile.wantedDomain',
+      ],
+    });
+    return user.toDto();
   }
 
   /**
@@ -130,11 +118,12 @@ export class UsersService {
    * @returns  {object} user infos
    */
   async findUserRequests(id: string): Promise<any> {
-    return await this.repo
+    const userWithRequests = await this.repo
       .findOne(id, {
         relations: ['requestsTo', 'requestsFrom'],
       })
       .then((user) => user);
+    return userWithRequests.toDto();
   }
 
   /**
@@ -142,12 +131,13 @@ export class UsersService {
    * @param {string} id of user
    * @returns  {object} user infos
    */
-  async findUserRooms(id: string): Promise<any> {
-    return await this.repo
+  async findUserRooms(id: string): Promise<UserDto> {
+    const userWithRooms = await this.repo
       .findOne(id, {
         relations: ['rooms'],
       })
       .then((user) => user);
+    return userWithRooms.toDto();
   }
   /**
    * Updates user
@@ -155,7 +145,7 @@ export class UsersService {
    * @param {UpdateUserInput} updateUserInput
    * @returns {object} user infos or exeption
    */
-  async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
+  async update(id: string, updateUserInput: UpdateUserInput): Promise<UserDto> {
     const { active } = updateUserInput;
     const user = await this.repo.findOne(
       { id },
@@ -180,9 +170,8 @@ export class UsersService {
         },
       );
     }
-    return this.repo
-      .save({ id, ...updateUserInput })
-      .then((user) => GetUserDto.getUser(user));
+    const updatedUser = await this.repo.save({ id, ...updateUserInput });
+    return updatedUser.toDto();
   }
 
   /**
@@ -190,8 +179,8 @@ export class UsersService {
    * @param {string} id of user
    * @returns {object} removed user data or exeption
    */
-  async remove(id: string): Promise<IUser> {
-    const userToDelete = await this.findOne(id);
+  async remove(id: string): Promise<UserDto> {
+    const userToDelete = await this.repo.findOne(id);
     if (!userToDelete) {
       throw new HttpException(
         ERROR_MESSAGES.UNAUTHORIZE,
@@ -199,7 +188,7 @@ export class UsersService {
       );
     }
     await this.repo.delete(id);
-    return userToDelete;
+    return userToDelete.toDto();
   }
 
   /**
@@ -207,7 +196,7 @@ export class UsersService {
    * @param {LoginDto} userDTO
    * @returns {object} user info or exeption
    */
-  async findByLogin(loginDTO: LoginDto): Promise<IUser> {
+  async findByLogin(loginDTO: LoginDto): Promise<UserDto> {
     const { username, email, password } = loginDTO;
     const user = await this.repo.findOne({
       where: [
@@ -231,7 +220,7 @@ export class UsersService {
     }
 
     if (await bcrypt.compare(password, user.password)) {
-      return GetUserDto.getUser(user);
+      return user.toDto();
     } else {
       throw new HttpException(
         ERROR_MESSAGES.INVALID_CREDENTIALS,
@@ -245,10 +234,11 @@ export class UsersService {
    * @param {LoginDto} userDTO
    * @returns {object} user info or exeption
    */
-  async findByUserName(loginDTO: LoginDto): Promise<any> {
+  async findByUserName(loginDTO: LoginDto): Promise<UserDto> {
     const { email } = loginDTO;
-    return await this.repo.findOne({
+    const userByName = await this.repo.findOne({
       where: [{ email }],
     });
+    return userByName.toDto();
   }
 }

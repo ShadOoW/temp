@@ -7,7 +7,7 @@ import { configService } from '@config/config.service';
 import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
 import { UsersService } from '@users/users/users.service';
 import { UserEntity } from '@users/users/entities/user.entity';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
 
 export async function chatSeed() {
@@ -20,7 +20,7 @@ export async function chatSeed() {
   const roomRepo = connection.getRepository(RoomEntity);
   const userService = new UsersService(
     connection.getRepository(UserEntity),
-    new ProfilesService(connection.getRepository(Profile)),
+    new ProfilesService(connection.getRepository(ProfileEntity)),
   );
   const nroom = new RoomEntity();
   nroom.members = await userService.findOne(

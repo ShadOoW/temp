@@ -47,19 +47,4 @@ export class CreateUserInput {
 
   @Field(() => CreateProfileInput, { nullable: true })
   profile: any;
-
-  public static async toEntity(inputs: Partial<CreateUserInput>) {
-    const it = new UserEntity();
-    const hash = inputs.password ? await bcrypt.hash(inputs.password, 10) : '';
-    it.username = inputs.username;
-    it.email = inputs.email;
-    it.active = inputs.active;
-    it.isAdmin = inputs.isAdmin;
-    it.provider = inputs.provider;
-    it.providerId = inputs.providerId;
-    it.role = inputs.role;
-    it.profile = inputs.profile;
-    it.password = hash;
-    return it;
-  }
 }

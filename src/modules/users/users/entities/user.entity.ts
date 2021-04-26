@@ -8,11 +8,10 @@ import {
   JoinColumn,
   ManyToMany,
 } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
-// import { BaseEntity } from '@shared/base.entity';
-import { Role } from '@users/roles/entities/role.entity';
+import { Field } from '@nestjs/graphql';
+import { RoleEntity } from '@users/roles/entities/role.entity';
 import { Request } from '@users/requests/entities/request.entity';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { Subscription } from '@users/subscriptions/entities/subscription.entity';
 import { Session } from '@education/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
@@ -24,26 +23,23 @@ import { Quiz } from '@education/quizzes/entities/quiz.entity';
 import { Evaluation } from '@education/evaluations/entities/evaluation.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { UserDto } from '../dto/user.dto';
-// import { AbstractDto } from '@src/common/dto/abstract.dto';
+import { RoleDto } from '../../roles/dto/role.dto';
+import { ProfileDto } from '../../profiles/dto/profile.dto';
 
-@ObjectType()
 @Entity({ name: 'users' })
 @Unique(['email'])
 export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ type: 'varchar', length: 300 })
-  @Field(() => String, { nullable: true })
   email: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String, { nullable: true })
   username?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String, { nullable: true })
   password: string;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean, { nullable: true })
+  @Field(() => Boolean)
   active: boolean;
 
   @Column({
@@ -52,29 +48,24 @@ export class UserEntity extends AbstractEntity<UserDto> {
     enumName: 'userStatusEnum',
     default: 'close',
   })
-  @Field(() => String, { nullable: true })
-  status?: UserStatus;
+  status: UserStatus;
 
   @Column({ type: 'varchar', length: 300, default: 'local' })
-  @Field(() => String, { nullable: true })
   provider: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String, { nullable: true })
   providerId: string;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean)
   isAdmin: boolean;
 
-  @ManyToOne(() => Role, (role) => role.users)
-  @Field(() => Role, { nullable: true })
-  role: Role;
+  @ManyToOne(() => RoleEntity, (role) => role.users)
+  @Field(() => RoleDto, { nullable: true })
+  role: RoleEntity;
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => ProfileEntity)
   @JoinColumn()
-  @Field(() => Profile)
-  profile: Profile;
+  profile: ProfileDto;
 
   @OneToOne(() => Balance)
   @JoinColumn()

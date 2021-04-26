@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { ProfilesModule } from '@users/profiles/profiles.module';
 import { ProfilesService } from '@users/profiles/profiles.service';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { CaslModule } from '@users/casl/casl.module';
 import { EmailsService } from '@users/emails/emails.service';
 import { UsersRepository } from './users.repository';
@@ -14,7 +14,7 @@ import { UsersRepository } from './users.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, Profile]),
+    TypeOrmModule.forFeature([UserEntity, ProfileEntity]),
     ProfilesModule,
     CaslModule,
   ],

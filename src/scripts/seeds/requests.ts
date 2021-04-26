@@ -8,10 +8,10 @@ import { SubscriptionsService } from '@users/subscriptions/subscriptions.service
 import { Subscription } from '@users/subscriptions/entities/subscription.entity';
 import { UsersService } from '@users/users/users.service';
 import { ProfilesService } from '@users/profiles/profiles.service';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RolesService } from '@users/roles/roles.service';
-import { Role } from '@users/roles/entities/role.entity';
+import { RoleEntity } from '@users/roles/entities/role.entity';
 
 async function genRequest(
   subcriptionService,
@@ -55,9 +55,9 @@ export async function requestsSeed() {
   );
   const userService = new UsersService(
     connection.getRepository(UserEntity),
-    new ProfilesService(connection.getRepository(Profile)),
+    new ProfilesService(connection.getRepository(ProfileEntity)),
   );
-  const roleService = new RolesService(connection.getRepository(Role));
+  const roleService = new RolesService(connection.getRepository(RoleEntity));
 
   const { roles } = await roleService.findAll();
   const mentees = await userService.findByRole(

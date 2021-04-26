@@ -11,16 +11,16 @@ export class UtilsService {
    * @param options
    * @returns {T[] | T}
    */
-  public static toDto<T, E>(
-    model: new (entity: E, options?: any) => T,
-    entity: E,
-    options?: any,
-  ): T;
-  public static toDto<T, E>(
-    model: new (entity: E, options?: any) => T,
-    entity: E[],
-    options?: any,
-  ): T[];
+  // public static toDto<T, E>(
+  //   model: new (entity: E, options?: any) => T,
+  //   entity: E,
+  //   options?: any,
+  // ): T;
+  // public static toDto<T, E>(
+  //   model: new (entity: E, options?: any) => T,
+  //   entity: E[],
+  //   options?: any,
+  // ): T[];
   public static toDto<T, E>(
     model: new (entity: E, options?: any) => T,
     entity: E | E[],

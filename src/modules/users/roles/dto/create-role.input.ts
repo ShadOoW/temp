@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsArray, IsOptional } from 'class-validator';
-import { Role } from '../entities/role.entity';
+import { RoleEntity } from '../entities/role.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
 import { RolePermissionInput } from './role.input';
 import { UserEntity } from '@users/users/entities/user.entity';
@@ -32,7 +32,7 @@ export class CreateRoleInput {
     return it;
   }
 
-  public static fromEntity(entity: Role) {
+  public static fromEntity(entity: RoleEntity) {
     return this.from({
       name: entity.name,
       description: entity.description,

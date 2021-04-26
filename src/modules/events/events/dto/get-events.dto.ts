@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { GetUserDto } from '@users/users/dto/get-user.dto';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @ObjectType()
 export class GetEvents {
@@ -20,11 +20,11 @@ export class GetEventDto {
   @Field(() => String)
   sourceId: string;
 
-  @Field(() => GetUserDto)
-  from?: GetUserDto;
+  @Field(() => UserDto)
+  from?: UserDto;
 
-  @Field(() => GetUserDto, { nullable: true })
-  to?: GetUserDto;
+  @Field(() => UserDto, { nullable: true })
+  to?: UserDto;
 
   @Field(() => String)
   payload?: string;

@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
+import { UserDto } from '@users/users/dto/user.dto';
 
 @ObjectType()
 @Entity({ name: 'events' })
@@ -19,11 +20,11 @@ export class Event extends BaseEntity {
   sourceId: string;
 
   @ManyToOne(() => UserEntity, (user) => user.eventsFrom)
-  @Field(() => UserEntity)
+  @Field(() => UserDto)
   from?: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.eventsTo)
-  @Field(() => UserEntity, { nullable: true })
+  @Field(() => UserDto, { nullable: true })
   to?: UserEntity;
 
   @Column({ type: 'json', nullable: true })

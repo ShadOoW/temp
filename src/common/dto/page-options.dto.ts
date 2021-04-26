@@ -1,3 +1,4 @@
+import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
   IsEnum,
@@ -11,15 +12,18 @@ import {
 
 import { Order } from '../constants/order';
 
+@ArgsType()
 export class PageOptionsDto {
   @IsEnum(Order)
   @IsOptional()
+  @Field(() => String)
   readonly order: Order = Order.ASC;
 
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @IsOptional()
+  @Field(() => Int)
   readonly page: number = 1;
 
   @Type(() => Number)
@@ -27,6 +31,7 @@ export class PageOptionsDto {
   @Min(10)
   @Max(50)
   @IsOptional()
+  @Field(() => Int)
   readonly take: number = 10;
 
   get skip(): number {
@@ -36,5 +41,6 @@ export class PageOptionsDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @Field(() => String, { nullable: true })
   readonly q?: string;
 }

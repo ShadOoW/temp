@@ -10,8 +10,10 @@ import { CheckPolicies } from '@src/decorators/check-policies.decorator';
 import { Actions } from '@shared/actions';
 import { Public } from '@shared/public.decorator';
 import { UserDto } from './dto/user.dto';
+import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UsersPageDto } from './dto/users-page.dto';
 
-@Resolver(() => UserEntity)
+@Resolver(() => UserDto)
 @UseGuards(PoliciesGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
@@ -22,34 +24,36 @@ export class UsersResolver {
     return !!(await this.usersService.findByUserName({ email }));
   }
 
-  @Mutation(() => UserEntity)
+  @Mutation(() => UserDto)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<UserDto> {
-    const createdUser = await this.usersService.create(createUserInput);
-    return createdUser.toDto();
+    return await this.usersService.create(createUserInput);
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
-  @Query(() => [UserEntity], { name: 'users' })
-  findAll() {
-    return this.usersService.findAll();
+  @Query(() => UsersPageDto, { name: 'users' })
+  findAll(@Args() pageOptionsDto: UsersPageOptionsDto) {
+    return this.usersService.findAll(pageOptionsDto);
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
-  @Query(() => [UserEntity], { name: 'usersByRole' })
-  findByRole(@Args('id', { type: () => String }) id: string) {
+  @Query(() => [UsersPageDto], { name: 'usersByRole' })
+  findByRole(
+    @Args() pageOptionsDto: UsersPageOptionsDto,
+    @Args('id', { type: () => String }) id: string,
+  ) {
     return this.usersService.findByRole(id);
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
-  @Query(() => UserEntity, { name: 'userRequests' })
+  @Query(() => UserDto, { name: 'userRequests' })
   findUserRequests(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findUserRequests(id);
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
-  @Query(() => UserEntity, { name: 'user' })
+  @Query(() => UserDto, { name: 'user' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findOne(id);
   }
@@ -57,7 +61,7 @@ export class UsersResolver {
   @CheckPolicies((ability: AppAbility) =>
     ability.can(Actions.Update, UserEntity),
   )
-  @Mutation(() => UserEntity)
+  @Mutation(() => UserDto)
   updateUser(
     @Args('id', { type: () => String }) id: string,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
@@ -68,7 +72,7 @@ export class UsersResolver {
   @CheckPolicies((ability: AppAbility) =>
     ability.can(Actions.Delete, UserEntity),
   )
-  @Mutation(() => UserEntity)
+  @Mutation(() => UserDto)
   removeUser(@Args('id', { type: () => String }) id: string) {
     return this.usersService.remove(id);
   }

@@ -13,7 +13,7 @@ import { AuthController } from './auth.controller';
 import { UsersService } from '@users/users/users.service';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { EmailsService } from '@users/emails/emails.service';
 import { UsersRepository } from '@users/users/users.repository';
 
@@ -24,7 +24,7 @@ import { UsersRepository } from '@users/users/users.repository';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Profile, UserEntity]),
+    TypeOrmModule.forFeature([ProfileEntity, UserEntity]),
     UsersModule,
     PassportModule,
     JwtModule.register({

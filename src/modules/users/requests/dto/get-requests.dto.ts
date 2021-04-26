@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { GetUserDto } from '@users/users/dto/get-user.dto';
 import { Status } from '@shared/interfaces/globalStatus';
+import { UserDto } from '../../users/dto/user.dto';
 
 @ObjectType()
 export class GetRequests {
@@ -28,11 +28,11 @@ export class GetRequest {
   @Field(() => String, { nullable: true })
   status?: Status;
 
-  @Field(() => GetUserDto, { nullable: true })
-  mentor?: GetUserDto;
+  @Field(() => UserDto, { nullable: true })
+  mentor?: UserDto;
 
-  @Field(() => GetUserDto)
-  mentee: GetUserDto;
+  @Field(() => UserDto)
+  mentee: UserDto;
 
   @Field(() => Date)
   createdAt?: Date;

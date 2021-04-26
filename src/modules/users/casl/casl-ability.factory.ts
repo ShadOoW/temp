@@ -9,13 +9,16 @@ import {
 import { Actions } from '@shared/actions';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Permission } from '@users/permissions/entities/permission.entity';
-import { Role } from '@users/roles/entities/role.entity';
-import { Profile } from '@users/profiles/entities/profile.entity';
+import { RoleEntity } from '@users/roles/entities/role.entity';
+import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { Request } from '@users/requests/entities/request.entity';
 
 type Subjects =
   | InferSubjects<
-      typeof UserEntity | typeof Permission | typeof Role | typeof Profile
+      | typeof UserEntity
+      | typeof Permission
+      | typeof RoleEntity
+      | typeof ProfileEntity
     >
   | 'all';
 
@@ -35,28 +38,28 @@ export class CaslAbilityFactory {
       if (args.id === user.id) can([Actions.Update], UserEntity);
 
       // authorize role management
-      if (permissions.some((p) => p.name === 'manage:role'))
-        can(Actions.Manage, Role);
+      // if (permissions.some((p) => p.name === 'manage:role'))
+      //   can(Actions.Manage, RoleEntity);
 
-      // authorize permission management
-      if (permissions.some((p) => p.name === 'manage:permission'))
-        can(Actions.Manage, Permission);
+      // // authorize permission management
+      // if (permissions.some((p) => p.name === 'manage:permission'))
+      //   can(Actions.Manage, Permission);
 
-      // authorize profile management
-      if (permissions.some((p) => p.name === 'manage:profile')) {
-        can([Actions.Create, Actions.Read], Profile);
-        if (profile === args.id) can(Actions.Update, Profile);
-      } else if (permissions.some((p) => p.name === 'update:profile')) {
-        if (profile === args.id) can(Actions.Update, Profile);
-      }
+      // // authorize profile management
+      // if (permissions.some((p) => p.name === 'manage:profile')) {
+      //   can([Actions.Create, Actions.Read], ProfileEntity);
+      //   if (profile === args.id) can(Actions.Update, ProfileEntity);
+      // } else if (permissions.some((p) => p.name === 'update:profile')) {
+      //   if (profile === args.id) can(Actions.Update, ProfileEntity);
+      // }
 
       // authorize request management
-      if (permissions.some((p) => p.name === 'manage:request')) {
-        can(Actions.Manage, Request);
-      }
+      // if (permissions.some((p) => p.name === 'manage:request')) {
+      //   can(Actions.Manage, Request);
+      // }
 
       // permissions not authorized
-      cannot(Actions.Delete, [UserEntity, Profile]);
+      cannot(Actions.Delete, [UserEntity, ProfileEntity]);
       can([Actions.Read], UserEntity);
     } else {
       cannot(Actions.Manage, 'all');

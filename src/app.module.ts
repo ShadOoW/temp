@@ -1,3 +1,4 @@
+import './boilerplate.polyfill';
 // import { ServeStaticModule } from '@nestjs/serve-static';
 import { Global, Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';

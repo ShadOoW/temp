@@ -13,6 +13,7 @@ import { Socket } from 'socket.io';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from '@users/users/users.repository';
+import { UserDto } from '../users/dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +67,7 @@ export class AuthService {
   /*
    * login user on socket, set user on client request
    * */
-  async loginSocket(client: Socket): Promise<UserEntity> {
+  async loginSocket(client: Socket): Promise<UserDto> {
     const { iat, exp, id: userId } = client.request.decoded_token;
 
     const timeDiff = exp - iat;

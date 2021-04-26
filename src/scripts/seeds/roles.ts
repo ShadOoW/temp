@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { RolesService } from '@users/roles/roles.service';
-import { Role } from '@users/roles/entities/role.entity';
+import { RoleEntity } from '@users/roles/entities/role.entity';
 import { PermissionsService } from '@users/permissions/permissions.service';
 import { Permission } from '@users/permissions/entities/permission.entity';
 
@@ -15,7 +15,7 @@ export async function rolesSeed() {
   const permissionService = new PermissionsService(
     connection.getRepository(Permission),
   );
-  const roleService = new RolesService(connection.getRepository(Role));
+  const roleService = new RolesService(connection.getRepository(RoleEntity));
   const { permissions } = await permissionService.findAll();
   if (permissions.length) {
     const work = [

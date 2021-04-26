@@ -88,7 +88,7 @@ export class ChatService {
     return createdRoom;
   }
 
-  async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
-    return await this.roomRepository.join(room, user);
-  }
+  // async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
+  //   return await this.roomRepository.join(room, user);
+  // }
 }

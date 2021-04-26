@@ -5,24 +5,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
-import { Role } from './entities/role.entity';
-import { PaginationArgs } from '@shared/pagination.args';
+import { RoleEntity } from './entities/role.entity';
+import { RoleDto } from './dto/role.dto';
+import { RolesPageDto } from './dto/roles-page.dto';
+import { RolesPageOptionsDto } from './dto/roles-page-options.dto';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 
 @Injectable()
 export class RolesService {
   constructor(
-    @InjectRepository(Role) private readonly repo: Repository<Role>,
+    @InjectRepository(RoleEntity) private readonly repo: Repository<RoleEntity>,
   ) {}
 
-  async create(createRoleInput: CreateRoleInput) {
+  async create(createRoleInput: CreateRoleInput): Promise<RoleDto> {
     const { name } = createRoleInput;
     const role = await this.repo.findOne({ name });
     if (role) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return await this.repo
-      .save(createRoleInput)
-      .then((e) => CreateRoleInput.fromEntity(e));
+    return await this.repo.save(createRoleInput);
   }
 
   async findByNames(names) {
@@ -31,17 +32,18 @@ export class RolesService {
     });
   }
 
-  async findAll(pagination: PaginationArgs = null) {
-    const { skip, take } = pagination || {};
-    const [roles, totalCount] = await this.repo.findAndCount({
+  async findAll(pageOptionsDto: RolesPageOptionsDto): Promise<RolesPageDto> {
+    const [roles, rolesCount] = await this.repo.findAndCount({
       relations: ['permissions'],
       order: {
         createdAt: 'DESC',
       },
-      skip,
-      take,
     });
-    return { roles, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: rolesCount,
+    });
+    return new RolesPageDto(roles.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {

@@ -5,12 +5,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProfileInput } from './dto/create-profile.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
-import { Profile } from './entities/profile.entity';
+import { ProfileEntity } from './entities/profile.entity';
 
 @Injectable()
 export class ProfilesService {
   constructor(
-    @InjectRepository(Profile) private readonly repo: Repository<Profile>,
+    @InjectRepository(ProfileEntity)
+    private readonly repo: Repository<ProfileEntity>,
   ) {}
   create(createProfileInput: CreateProfileInput) {
     return this.repo.save(createProfileInput).then((e) => e);
