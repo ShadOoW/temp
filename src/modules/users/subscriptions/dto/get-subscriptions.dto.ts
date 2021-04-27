@@ -1,10 +1,10 @@
-import { Subscription } from '../entities/subscription.entity';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { SubscriptionDto } from './subscription.dto';
 
 @ObjectType()
 export class GetSubscriptions {
-  @Field(() => [Subscription])
-  subscriptions: Subscription[];
+  @Field(() => [SubscriptionDto])
+  subscriptions: SubscriptionDto[];
 
   @Field(() => Int)
   totalCount: number;
@@ -12,8 +12,8 @@ export class GetSubscriptions {
 
 @ObjectType()
 export class GetSubscribers {
-  @Field(() => [Subscription])
-  subscribers: Subscription[];
+  @Field(() => [SubscriptionDto])
+  subscribers: SubscriptionDto[];
 
   @Field(() => Int)
   totalCount: number;

@@ -5,7 +5,7 @@ import { configService } from '@config/config.service';
 import { RequestsService } from '@users/requests/requests.service';
 import { Request } from '@users/requests/entities/request.entity';
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
-import { Subscription } from '@users/subscriptions/entities/subscription.entity';
+import { SubscriptionEntity } from '@users/subscriptions/entities/subscription.entity';
 import { UsersService } from '@users/users/users.service';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
@@ -46,7 +46,7 @@ export async function requestsSeed() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const subcriptionService = new SubscriptionsService(
-    connection.getRepository(Subscription),
+    connection.getRepository(SubscriptionEntity),
   );
   const requestService = new RequestsService(
     connection.getRepository(Request),

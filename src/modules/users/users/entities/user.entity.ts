@@ -12,7 +12,7 @@ import { Field } from '@nestjs/graphql';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { Request } from '@users/requests/entities/request.entity';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
-import { Subscription } from '@users/subscriptions/entities/subscription.entity';
+import { SubscriptionEntity } from '@users/subscriptions/entities/subscription.entity';
 import { Session } from '@education/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
@@ -25,6 +25,7 @@ import { AbstractEntity } from '@src/common/abstract.entity';
 import { UserDto } from '../dto/user.dto';
 import { RoleDto } from '../../roles/dto/role.dto';
 import { ProfileDto } from '../../profiles/dto/profile.dto';
+import { SubscriptionDto } from '../../subscriptions/dto/subscription.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -88,13 +89,19 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Field(() => [Request])
   requestsFrom: Request[];
 
-  @OneToMany(() => Subscription, (subscription) => subscription.subscriber)
-  @Field(() => [Subscription])
-  subscriptions: Subscription[];
+  @OneToMany(
+    () => SubscriptionEntity,
+    (subscription) => subscription.subscriber,
+  )
+  @Field(() => [SubscriptionDto])
+  subscriptions: SubscriptionDto[];
 
-  @OneToMany(() => Subscription, (subscription) => subscription.subscribedTo)
-  @Field(() => [Subscription])
-  subscribers: Subscription[];
+  @OneToMany(
+    () => SubscriptionEntity,
+    (subscription) => subscription.subscribedTo,
+  )
+  @Field(() => [SubscriptionDto])
+  subscribers: SubscriptionDto[];
 
   @OneToMany(() => Session, (session) => session.mentee)
   @Field(() => [Session])

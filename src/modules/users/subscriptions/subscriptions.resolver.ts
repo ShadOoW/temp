@@ -1,45 +1,33 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SubscriptionsService } from './subscriptions.service';
-import { Subscription } from './entities/subscription.entity';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { GetSubscriptions, GetSubscribers } from './dto/get-subscriptions.dto';
-import { PaginationArgs } from '@shared/pagination.args';
+import { SubscriptionDto } from './dto/subscription.dto';
+import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
 
-@Resolver(() => Subscription)
+@Resolver(() => SubscriptionDto)
 export class SubscriptionsResolver {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
-  @Mutation(() => Subscription)
+  @Mutation(() => SubscriptionDto)
   createSubscription(
     @Args('createSubscriptionInput')
     createSubscriptionInput: CreateSubscriptionInput,
   ) {
     return this.subscriptionsService.create(createSubscriptionInput);
   }
-
+  // TODO Get user id
   @Query(() => GetSubscriptions, { name: 'subscriptions' })
-  findSubscriptions(
-    @Args() paginationArgs: PaginationArgs,
-    @Args('id', { type: () => String }) id: string,
-  ) {
-    return this.subscriptionsService.findSubscriptions({
-      ...paginationArgs,
-      subscriber: id,
-    });
+  findSubscriptions(@Args() pageOptionsDto: SubscriptionsPageOptionsDto) {
+    return this.subscriptionsService.findSubscriptions(pageOptionsDto);
   }
-
+  // TODO Get user id
   @Query(() => GetSubscribers, { name: 'subscribers' })
-  findSubscribers(
-    @Args() paginationArgs: PaginationArgs,
-    @Args('id', { type: () => String }) id: string,
-  ) {
-    return this.subscriptionsService.findSubscribers({
-      ...paginationArgs,
-      subscribedTo: id,
-    });
+  findSubscribers(@Args() pageOptionsDto: SubscriptionsPageOptionsDto) {
+    return this.subscriptionsService.findSubscribers(pageOptionsDto);
   }
-
-  @Mutation(() => Subscription)
+  // TODO Remove subscription
+  @Mutation(() => SubscriptionDto)
   removeSubscription(@Args('id', { type: () => Int }) id: number) {
     return this.subscriptionsService.remove(id);
   }

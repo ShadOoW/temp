@@ -2,51 +2,44 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
-import { Subscription } from './entities/subscription.entity';
+import { SubscriptionEntity } from './entities/subscription.entity';
+import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
+import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 
 @Injectable()
 export class SubscriptionsService {
   constructor(
-    @InjectRepository(Subscription)
-    private readonly repo: Repository<Subscription>,
+    @InjectRepository(SubscriptionEntity)
+    private readonly repo: Repository<SubscriptionEntity>,
   ) {}
 
-  create(createSubscriptionInput: CreateSubscriptionInput) {
-    return this.repo.save(createSubscriptionInput);
+  async create(createSubscriptionInput: CreateSubscriptionInput) {
+    return (await this.repo.save(createSubscriptionInput)).toDto();
   }
 
-  async findSubscribers(args = null) {
-    const { take, skip } = args;
-    delete args.id;
-    delete args.take;
-    delete args.skip;
-    const [subscribers, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
+    const [subscribers, subscribersCount] = await this.repo.findAndCount({
+      where: pageOptionsDto,
       relations: ['subscriber', 'subscriber.profile'],
-      order: {
-        createdAt: 'DESC',
-      },
-      skip,
-      take,
     });
-    return { subscribers, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: subscribersCount,
+    });
+    return new SubscriptionsPageDto(subscribers.toDtos(), pageMetaDto);
   }
 
-  async findSubscriptions(args = null) {
-    const { take, skip } = args;
-    delete args.id;
-    delete args.take;
-    delete args.skip;
-    const [subscriptions, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findSubscriptions(pageOptionsDto: SubscriptionsPageOptionsDto) {
+    const [subscriptions, subscriptionsCount] = await this.repo.findAndCount({
+      where: pageOptionsDto,
       relations: ['subscribedTo', 'subscribedTo.profile'],
-      order: {
-        createdAt: 'DESC',
-      },
-      skip,
-      take,
     });
-    return { subscriptions, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: subscriptionsCount,
+    });
+    return new SubscriptionsPageDto(subscriptions.toDtos(), pageMetaDto);
   }
 
   remove(id: number) {
