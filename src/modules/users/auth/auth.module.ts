@@ -15,7 +15,6 @@ import { UserEntity } from '@users/users/entities/user.entity';
 import { ProfilesService } from '@users/profiles/profiles.service';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { EmailsService } from '@users/emails/emails.service';
-import { UsersRepository } from '@users/users/users.repository';
 
 /**
  * Auth module import UsersModule to register user
@@ -39,7 +38,6 @@ import { UsersRepository } from '@users/users/users.repository';
     JwtStrategy,
     ProfilesService,
     EmailsService,
-    UsersRepository,
   ],
   exports: [AuthService, JwtModule],
   controllers: [AuthController],
