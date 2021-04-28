@@ -53,9 +53,9 @@ export class ChatGateway
     @InjectRepository(RoomRepository)
     public readonly roomRepository: RoomRepository,
   ) {}
-  handleConnection(client: any, ...args: any[]) {
-    throw new Error('Method not implemented.');
-  }
+  // handleConnection(client: any, ...args: any[]) {
+  //   throw new Error('Method not implemented.');
+  // }
 
   // @Client({
   //     transport: Transport.REDIS, options: {
@@ -82,14 +82,12 @@ export class ChatGateway
   // @UseGuards(WsAuthGuard)
   @SubscribeMessage('msgToServer')
   async handleMessage(client: Socket, payload: CreateMessageDto) {
-    console.log('STEP1 => msgToServer', 'payload', payload);
     const createdMessage = await this._chatService.createMessage(
       payload,
       client.request.user,
     );
     this.logger.log(payload, 'msgToServer');
     const ans = { name: client.request.user.email, text: payload.text };
-    console.log(this.server.clients().sockets);
     const tt = await this.redisService
       .getClient()
       .get(`users:${client.request.user.id}`);
@@ -154,12 +152,10 @@ export class ChatGateway
   // }
 
   @SubscribeMessage('getRooms')
-  async handleGetRooms(@ConnectedSocket() client: Socket, payload) {
-    console.log('STEP2 => getRooms', 'payload', payload);
-
+  async handleGetRooms(@ConnectedSocket() client: Socket) {
     const pvrooms: RoomEntity[] = await this.roomRepository.find({
       where: { isPrivate: true },
-      relations: ['members'],
+      relations: ['members', 'messages'],
     });
     const pubrooms: RoomEntity[] = await this.roomRepository.find({
       where: { isPrivate: false },
@@ -201,44 +197,44 @@ export class ChatGateway
       .emit('msgToRoomClient', answerPayload);
   }
 
-  // @SubscribeMessage('msgPrivateToServer')
-  // async handlePrivateMessage(client: Socket, payload: CreatePrivateMessageDto) {
-  //   console.log('STEP4 => handlePrivateMessage', 'payload', payload);
+  @SubscribeMessage('msgPrivateToServer')
+  async handlePrivateMessage(client: Socket, payload: CreatePrivateMessageDto) {
+    const receiver = await this.usersService.findOne(payload.receiver);
+    //
+    if (!receiver) {
+      console.log('receiver not found');
+      return;
+    }
+    const createdMessage = await this._chatService.createPrivateMessage(
+      client.request.user,
+      receiver,
+      payload.text,
+    );
 
-  //   const receiver = await this.usersService.findOne(payload.receiver);
-  //   //
-  //   if (!receiver) {
-  //     console.log('receiver not found');
-  //     return;
-  //   }
-  //   const createdMessage = await this._chatService.createPrivateMessage(
-  //     client.request.user,
-  //     receiver,
-  //     payload.text,
-  //   );
+    const answerPayload = {
+      name: client.request.user.email,
+      text: payload.text,
+    };
+    const receiverSocketId: string = await this.redisService
+      .getClient()
+      .get(`users:${payload.receiver}`);
+    console.log(`receiverSocketId:${receiverSocketId}`);
 
-  //   const answerPayload = {
-  //     name: client.request.user.email,
-  //     text: payload.text,
-  //   };
-  //   const receiverSocketId: string = await this.redisService
-  //     .getClient()
-  //     .get(`users:${payload.receiver}`);
+    // join two clients to room
+    const receiverSocketObject = this.server.clients().sockets[
+      receiverSocketId
+    ];
 
-  //   // join two clients to room
-  //   const receiverSocketObject = this.server.clients().sockets[
-  //     receiverSocketId
-  //   ];
-  //   receiverSocketObject.join(createdMessage.room.name);
-  //   client.join(createdMessage.room.name);
+    receiverSocketObject.join(createdMessage.room.name);
+    client.join(createdMessage.room.name);
 
-  //   // if receiver is online
-  //   if (receiverSocketId) {
-  //     this.server
-  //       .to(createdMessage.room.name)
-  //       .emit('msgPrivateToClient', answerPayload);
-  //   }
-  // }
+    // if receiver is online
+    if (receiverSocketId) {
+      this.server
+        .to(createdMessage.room.name)
+        .emit('msgPrivateToClient', answerPayload);
+    }
+  }
 
   afterInit(server: Server) {
     this.logger.log('Init');
@@ -249,19 +245,19 @@ export class ChatGateway
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  // async handleConnection(client: Socket, ...args: any[]) {
-  //   const user = await this.authService.loginSocket(client);
-  //   // set on redis=> key: user.id,  value: socketId
-  //   await UtilsService.setUserIdAndSocketIdOnRedis(
-  //     this.redisService,
-  //     client.request.user.id,
-  //     client.id,
-  //   );
-  //   // join to all user's room, so can get sent messages immediately
-  //   this.roomRepository.initJoin(user, client);
+  async handleConnection(client: Socket, ...args: any[]) {
+    const user = await this.authService.loginSocket(client);
+    // set on redis=> key: user.id,  value: socketId
+    await UtilsService.setUserIdAndSocketIdOnRedis(
+      this.redisService,
+      client.request.user.id,
+      client.id,
+    );
+    // join to all user's room, so can get sent messages immediately
+    this.roomRepository.initJoin(user, client);
 
-  //   this.logger.log(`Client connected: ${client.id}`);
-  // }
+    this.logger.log(`Client connected: ${client.id}`);
+  }
 
   @SubscribeMessage('createRoom')
   async createRoom(client: Socket, payload: CreateRoomDto) {

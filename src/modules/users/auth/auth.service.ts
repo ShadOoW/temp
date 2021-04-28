@@ -63,15 +63,13 @@ export class AuthService {
    * login user on socket, set user on client request
    * */
   async loginSocket(client: Socket): Promise<UserDto> {
-    const { iat, exp, id: userId } = client.request.decoded_token;
-
+    const { iat, exp, sub: userId } = client.request.decoded_token;
     const timeDiff = exp - iat;
     if (timeDiff <= 0) {
       throw new UnauthorizedException();
       // return false;
     }
     const user = await this.usersService.findUserRooms(userId);
-
     if (!user) {
       throw new UnauthorizedException();
       // return false;

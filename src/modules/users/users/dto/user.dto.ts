@@ -3,6 +3,7 @@ import { AbstractDto } from '@src/common/dto/Abstract.dto';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RoleDto } from '@users/roles/dto/role.dto';
 import { ProfileDto } from '@users/profiles/dto/profile.dto';
+import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
 
 @ObjectType()
 export class UserDto extends AbstractDto {
@@ -33,6 +34,8 @@ export class UserDto extends AbstractDto {
   @Field(() => ProfileDto, { nullable: true })
   profile: ProfileDto;
 
+  rooms: RoomEntity[];
+
   constructor(user: UserEntity) {
     super(user);
     this.email = user.email;
@@ -44,5 +47,6 @@ export class UserDto extends AbstractDto {
     this.isAdmin = user.isAdmin;
     this.role = user.role;
     this.profile = user.profile;
+    this.rooms = user.rooms;
   }
 }

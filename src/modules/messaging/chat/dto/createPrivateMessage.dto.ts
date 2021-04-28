@@ -1,21 +1,15 @@
-'use strict';
-
-import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 // import { RoomEntity } from '../entities/room.entity';
 
 export class CreatePrivateMessageDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  // @IsString()
+  // @IsNotEmpty()
   text: string;
 
-  @IsUUID()
-  @ApiProperty()
+  // @IsUUID()
   receiver: string;
 
-  @IsUUID()
-  @ApiProperty()
+  // @IsUUID()
   room: string;
 
   constructor(text, room) {

@@ -66,4 +66,11 @@ const configService = new ConfigService(process.env).ensureValues([
   'POSTGRES_DATABASE',
 ]);
 
+// const configRedis = new ConfigService(process.env).ensureValues([
+//   'REDIS_HOST',
+//   'REDIS_PORT',
+//   'REDIS_DB',
+//   'REDIS_PASSWORD',
+//   'REDIS_PRIFIX',
+// ]);
 export { configService };

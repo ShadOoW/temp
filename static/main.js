@@ -34,10 +34,12 @@ const app = new Vue({
       }
     },
     sendMessagePM() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
       if (this.validateInput()) {
         const message = {
           text: this.text,
-          receiver: '38856fc3-586b-4aca-97dd-9d13fc0c7580',
+          receiver: urlParams.get('receiver'),
         };
         this.socket.emit('msgPrivateToServer', message);
         this.text = '';
@@ -56,11 +58,11 @@ const app = new Vue({
     },
   },
   created() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
     this.socket = io('http://localhost:3000', {
       // 'query': 'token=' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4ODU2ZmMzLTU4NmItNGFjYS05N2RkLTlkMTNmYzBjNzU4MCIsImlhdCI6MTU4MTYxODI3Nn0.zvHEzdSYrs_VpCCiFA37fBOkafpC1lI-axOhkcfpmxw'
-      query:
-        'token=' +
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbnRlZUBlbWFpbC5jb20iLCJzdWIiOiIyMzgyYWZhZS0yYmU3LTQxOWMtYTUxYi1jMzYyMWI1MzM3YzIiLCJpYXQiOjE2MTg0ODU4MTIsImV4cCI6MTYxODUwMDIxMn0.pNBDlhUZxmTsLXVaUbuJiqnh49zKeLstyWodOllLRUk',
+      query: 'token=' + urlParams.get('token'),
     });
 
     this.socket.on('connect', (message) => {
@@ -76,13 +78,6 @@ const app = new Vue({
     this.socket.on('getRooms', (message) => {
       console.log(message);
       this.rooms = [...message];
-      const recieved = [];
-      message.map((m) => recieved.push(...m.messages));
-      console.log(recieved.map((r) => ({ name: 'yassine', text: r.text })));
-
-      recieved.map((r) =>
-        this.receivedMessage({ name: 'yassine', text: r.text }),
-      );
     });
 
     this.socket.on('msgPrivateToClient', (message) => {

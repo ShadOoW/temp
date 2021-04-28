@@ -11,6 +11,7 @@ import { RoomDto } from './dto/Room.dto';
 import { CreateRoomDto } from './dto/createRoom.dto';
 import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
 import { CreateMessageDto } from './dto/createMessage.dto';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @Injectable()
 export class ChatService {
@@ -35,7 +36,7 @@ export class ChatService {
    */
   async createPrivateMessage(
     sender: UserEntity,
-    receiver: UserEntity,
+    receiver: UserDto,
     msg: string,
   ): Promise<MessageEntity> {
     let room = await this.roomRepository.checkPrivateRoomExists(
@@ -88,7 +89,7 @@ export class ChatService {
     return createdRoom;
   }
 
-  // async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
-  //   return await this.roomRepository.join(room, user);
-  // }
+  async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
+    return await this.roomRepository.join(room, user);
+  }
 }
