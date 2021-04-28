@@ -4,6 +4,7 @@ import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { GetSubscriptions, GetSubscribers } from './dto/get-subscriptions.dto';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
+import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
 
 @Resolver(() => SubscriptionDto)
 export class SubscriptionsResolver {
@@ -17,18 +18,22 @@ export class SubscriptionsResolver {
     return this.subscriptionsService.create(createSubscriptionInput);
   }
   // TODO Get user id
-  @Query(() => GetSubscriptions, { name: 'subscriptions' })
-  findSubscriptions(@Args() pageOptionsDto: SubscriptionsPageOptionsDto) {
-    return this.subscriptionsService.findSubscriptions(pageOptionsDto);
+  @Query(() => SubscriptionsPageDto, { name: 'subscriptions' })
+  findSubscriptions(
+    @Args('id', { type: () => String }) id: string,
+    @Args() pageOptionsDto: SubscriptionsPageOptionsDto,
+  ) {
+    return this.subscriptionsService.findSubscriptions({
+      id,
+      ...pageOptionsDto,
+    });
   }
   // TODO Get user id
-  @Query(() => GetSubscribers, { name: 'subscribers' })
-  findSubscribers(@Args() pageOptionsDto: SubscriptionsPageOptionsDto) {
-    return this.subscriptionsService.findSubscribers(pageOptionsDto);
-  }
-  // TODO Remove subscription
-  @Mutation(() => SubscriptionDto)
-  removeSubscription(@Args('id', { type: () => Int }) id: number) {
-    return this.subscriptionsService.remove(id);
+  @Query(() => SubscriptionsPageDto, { name: 'subscribers' })
+  findSubscribers(
+    @Args('id', { type: () => String }) id: string,
+    @Args() pageOptionsDto: SubscriptionsPageOptionsDto,
+  ) {
+    return this.subscriptionsService.findSubscribers({ id, ...pageOptionsDto });
   }
 }

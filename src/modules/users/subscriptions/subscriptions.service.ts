@@ -20,7 +20,7 @@ export class SubscriptionsService {
 
   async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
     const [subscribers, subscribersCount] = await this.repo.findAndCount({
-      where: pageOptionsDto,
+      where: { subscribedTo: pageOptionsDto.id },
       relations: ['subscriber', 'subscriber.profile'],
     });
     const pageMetaDto = new PageMetaDto({
@@ -32,7 +32,8 @@ export class SubscriptionsService {
 
   async findSubscriptions(pageOptionsDto: SubscriptionsPageOptionsDto) {
     const [subscriptions, subscriptionsCount] = await this.repo.findAndCount({
-      where: pageOptionsDto,
+      where: { subscriber: pageOptionsDto.id },
+
       relations: ['subscribedTo', 'subscribedTo.profile'],
     });
     const pageMetaDto = new PageMetaDto({
@@ -40,9 +41,5 @@ export class SubscriptionsService {
       itemCount: subscriptionsCount,
     });
     return new SubscriptionsPageDto(subscriptions.toDtos(), pageMetaDto);
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} subscription`;
   }
 }

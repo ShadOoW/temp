@@ -3,8 +3,15 @@
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
-
 ```bash
+# Run projuct on root
+$ sudo yum install -y epel-release
+$ sudo amazon-linux-extras install epel
+$ sudo yum -y install nginx
+$ sudo systemctl start nginx
+$ sudo systemctl status nginx
+$ sudo systemctl enable nginx
+$ sudo vi /etc/nginx/nginx.conf
 # Connect to EC2 server 
 $ ssh -v -i m2m-key-pair.pem ec2-user@3.89.120.51
 
@@ -16,7 +23,6 @@ $ export NODE_OPTIONS=--max-old-space-size=8192
 
 # Install Redis
 $ sudo amazon-linux-extras install redis4.0
-
 # Check redis status
 $ service redis status
 

@@ -245,12 +245,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Domain {
-  createdAt: DateTime!
+type DomainDto {
   description: String!
-  id: String!
   name: String!
-  updatedAt: DateTime!
+}
+
+type DomainsPageDto {
+  data: [DomainDto!]!
+  meta: PageMetaDto!
 }
 
 type Evaluation {
@@ -290,11 +292,6 @@ input EventUserInput {
 
 type GetBadges {
   badges: [Badge!]!
-  totalCount: Int!
-}
-
-type GetDomains {
-  domains: [Domain!]!
   totalCount: Int!
 }
 
@@ -355,19 +352,9 @@ type GetSessions {
   totalCount: Int!
 }
 
-type GetSubscribers {
-  subscribers: [UserSubscription!]!
-  totalCount: Int!
-}
-
-type GetSubscriptions {
-  subscriptions: [UserSubscription!]!
-  totalCount: Int!
-}
-
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): Badge!
-  createDomain(createDomainInput: CreateDomainInput!): Domain!
+  createDomain(createDomainInput: CreateDomainInput!): DomainDto!
   createEvaluation(createEvaluationInput: CreateEvaluationInput!): Evaluation!
   createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): PermissionDto!
@@ -382,7 +369,7 @@ type Mutation {
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): UserDto!
   removeBadge(id: String!): Badge!
-  removeDomain(id: String!): Domain!
+  removeDomain(id: String!): DomainDto!
   removePermission(id: String!): PermissionDto!
   removePoint(id: String!): Point!
   removeQuestion(id: String!): Question!
@@ -390,11 +377,10 @@ type Mutation {
   removeRequest(id: String!): Request!
   removeRole(id: String!): RoleDto!
   removeSession(id: String!): Session!
-  removeSubscription(id: Int!): UserSubscription!
   removeUser(id: String!): UserDto!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): Badge!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
-  updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): Domain!
+  updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): DomainDto!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): PermissionDto!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): Point!
@@ -447,7 +433,7 @@ type Point {
 type ProfileDto {
   canOffer: String
   city: String
-  coachingDomains: [Domain!]!
+  coachingDomains: [DomainDto!]!
   coachingType: String
   company: String
   country: String
@@ -465,7 +451,7 @@ type ProfileDto {
   sector: String
   selfDescription: String
   updatedAt: DateTime
-  wantedDomain: Domain
+  wantedDomain: DomainDto
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
@@ -503,8 +489,8 @@ type Query {
   badge(id: String!): Badge!
   badges(skip: Int, take: Int): GetBadges!
   canRequest(mentee: String!): Boolean!
-  domain(id: String!): Domain!
-  domains(skip: Int, take: Int): GetDomains!
+  domain(id: String!): DomainDto!
+  domains(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): DomainsPageDto!
   emailExists(email: String!): Boolean!
   evaluation(id: String!): Evaluation!
   evaluations(skip: Int, take: Int): GetEvaluations!
@@ -531,8 +517,8 @@ type Query {
   session(id: String!): Session!
   sessions(mentee: String, mentor: String, skip: Int, take: Int): GetSessions!
   sessionsNotDue(skip: Int, status: String, take: Int): GetSessions!
-  subscribers(id: String!, skip: Int, take: Int): GetSubscribers!
-  subscriptions(id: String!, skip: Int, take: Int): GetSubscriptions!
+  subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SubscriptionsPageDto!
+  subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SubscriptionsPageDto!
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
   users(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
@@ -647,6 +633,11 @@ type Subscription {
 
 input SubscriptionUserInput {
   id: String!
+}
+
+type SubscriptionsPageDto {
+  data: [UserSubscription!]!
+  meta: PageMetaDto!
 }
 
 input UpdateBadgeInput {
@@ -823,11 +814,8 @@ type UserDto {
 }
 
 type UserSubscription {
-  createdAt: DateTime!
-  id: String!
   subscribedTo: UserDto!
   subscriber: UserDto!
-  updatedAt: DateTime!
 }
 
 type UsersPageDto {

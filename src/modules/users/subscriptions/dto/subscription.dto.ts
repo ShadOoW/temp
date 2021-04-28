@@ -1,13 +1,19 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { UserEntity } from '@users/users/entities/user.entity';
 import { UserDto } from '@users/users/dto/user.dto';
 import { AbstractDto } from '@src/shared/abstract.dto';
+import { SubscriptionEntity } from '../entities/subscription.entity';
 
 @ObjectType('UserSubscription')
 export class SubscriptionDto extends AbstractDto {
   @Field(() => UserDto)
-  subscriber: UserEntity;
+  subscriber: UserDto;
 
   @Field(() => UserDto)
-  subscribedTo: UserEntity;
+  subscribedTo: UserDto;
+
+  constructor(subscription: SubscriptionEntity) {
+    super(subscription);
+    this.subscriber = subscription.subscriber;
+    this.subscribedTo = subscription.subscribedTo;
+  }
 }

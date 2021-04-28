@@ -1,5 +1,5 @@
 import './boilerplate.polyfill';
-// import { ServeStaticModule } from '@nestjs/serve-static';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { Global, Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import REDIS_CONFIG from './shared/redis';
@@ -52,9 +52,9 @@ import { EvaluationsModule } from '@education/evaluations/evaluations.module';
       redis: REDIS_CONFIG,
     }),
     RedisModule.register({ url: 'redis://127.0.0.1:6379/0' }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'static'),
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),
     EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,

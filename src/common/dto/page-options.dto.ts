@@ -34,9 +34,9 @@ export class PageOptionsDto {
   @Field(() => Int)
   readonly take: number = 10;
 
-  get skip(): number {
-    return (this.page - 1) * this.take;
-  }
+  // get skip(): number {
+  //   return (this.page - 1) * this.take;
+  // }
 
   @IsString()
   @IsNotEmpty()

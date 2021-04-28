@@ -7,11 +7,10 @@ import { ChatService } from './chat.service';
 import { MessageRepository } from './message.repository';
 import { RoomRepository } from './room.repository';
 import { AuthModule } from '@users/auth/auth.module';
-import { UsersRepository } from '@users/users/users.repository';
 import { ConfigService } from '@shared/services/config.service';
 
 @Module({
-  providers: [ChatGateway, ChatService, UsersRepository, ConfigService],
+  providers: [ChatGateway, ChatService, ConfigService],
   imports: [
     TypeOrmModule.forFeature([MessageRepository, RoomRepository]),
     forwardRef(() => UsersModule),
