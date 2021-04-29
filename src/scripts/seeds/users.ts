@@ -1,21 +1,20 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import * as _ from 'lodash';
 import * as faker from 'faker';
-import { UsersService } from '@users/users/users.service';
 import { UserEntity } from '@users/users/entities/user.entity';
-import { ProfileEntity } from '@users/profiles/entities/profile.entity';
-import { ProfilesService } from '@users/profiles/profiles.service';
-import { RolesService } from '@users/roles/roles.service';
 import { RoleEntity } from '@users/roles/entities/role.entity';
-import { DomainsService } from '@users/domains/domains.service';
 import { DomainEntity } from '@users/domains/entities/domain.entity';
+import * as bcrypt from 'bcrypt';
+import { ProfileEntity } from '@src/modules/users/profiles/entities/profile.entity';
 
-function genUser(username, type, role = null, domains = []) {
+async function genUser(username, type, role = null, domains = []) {
+  const pw = await bcrypt.hash(`${username}123`, 10);
   const user = {
     username,
     email: `${username !== 'admin' ? username : 'adminos'}@email.com`,
-    password: `${username}123`,
+    password: pw,
     provider: 'local',
     isAdmin: role ? false : true,
     active:
@@ -77,64 +76,67 @@ export async function usersSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const userService = new UsersService(
-    connection.getRepository(UserEntity),
-    new ProfilesService(connection.getRepository(ProfileEntity)),
-  );
-  const roleService = new RolesService(connection.getRepository(RoleEntity));
-  const domainService = new DomainsService(
-    connection.getRepository(DomainEntity),
-  );
+  const userService = connection.getRepository(UserEntity);
+  const profileService = connection.getRepository(ProfileEntity);
+  const roleService = connection.getRepository(RoleEntity);
+  const domainService = connection.getRepository(DomainEntity);
 
-  const { roles } = await roleService.findAll();
-  const { domains } = await domainService.findAll();
+  const roles = await roleService.find();
+  const domains = await domainService.find();
 
   if (roles.length && domains.length) {
     const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
     const { id: mentorId } = roles.find((r) => r.name === 'mentor');
     const { id: menteeId } = roles.find((r) => r.name === 'mentee');
     const defaults = [
-      genUser('admin', 'admin'),
-      genUser(
+      await genUser('admin', 'admin'),
+      await genUser(
         'mentee',
         'mentee',
         menteeId,
         domains.slice(domainIndex, domainIndex + 1),
       ),
-      genUser(
+      await genUser(
         'mentor',
         'mentor',
         mentorId,
         domains.slice(domainIndex, domainIndex + 2),
       ),
     ];
-    const mentors = _.range(1, 5).map(() => {
+    const mentors = _.range(1, 3).map(async () => {
       const username = faker.internet.userName();
       const domainIndex = Math.floor(Math.random() * (domains.length - 2) + 2);
 
-      return genUser(
+      return await genUser(
         username,
         'mentor',
         mentorId,
         domains.slice(domainIndex, domainIndex + 2),
       );
     });
-    const mentees = _.range(1, 5).map(() => {
+    const mentees = _.range(1, 3).map(async () => {
       const username = faker.internet.userName();
       const domainIndex = Math.floor(Math.random() * (domains.length - 1) + 1);
-      return genUser(
+      return await genUser(
         username,
         'mentee',
         menteeId,
         domains.slice(domainIndex, domainIndex + 1),
       );
     });
-    const work = [...defaults, ...mentors, ...mentees].map((user, index) =>
-      userService
-        .create(user)
+    const work = [
+      ...defaults,
+      ...(await Promise.all(mentors)),
+      ...(await Promise.all(mentees)),
+    ].map(async (user, index) => {
+      //@ts-ignore
+      const createdProfile = await profileService.save(user.profile);
+      await userService
+        //@ts-ignore
+        .save({ ...user, profile: createdProfile })
         .then((r) => (console.log(`user ${index} done ->`, r.username), r))
-        .catch((e) => console.log(`user ${index} error ->`, e)),
-    );
+        .catch((e) => console.log(`user ${index} error ->`, e));
+    });
 
     await Promise.all(work);
     return await connection.close();

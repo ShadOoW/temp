@@ -15,7 +15,7 @@
     "start:prod": "node dist/main",
     "start:dev:db": "./src/scripts/start-db.sh",
     "webpack": "webpack --config webpack.config.js --progress",
-    "start:dev:db:seed": "ts-node -r tsconfig-paths/register src/seeds/index.ts",
+    "start:dev:db:seed": "ts-node -r tsconfig-paths/register src/scripts/seeds/index.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

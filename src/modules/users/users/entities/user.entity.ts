@@ -7,7 +7,11 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
+  BeforeInsert,
+  BeforeUpdate,
+  AfterLoad,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { Field } from '@nestjs/graphql';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { Request } from '@users/requests/entities/request.entity';

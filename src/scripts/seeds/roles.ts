@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
-import { RolesService } from '@users/roles/roles.service';
 import { RoleEntity } from '@users/roles/entities/role.entity';
-import { PermissionsService } from '@users/permissions/permissions.service';
 import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 
 export async function rolesSeed() {
@@ -12,11 +11,9 @@ export async function rolesSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const permissionService = new PermissionsService(
-    connection.getRepository(PermissionEntity),
-  );
-  const roleService = new RolesService(connection.getRepository(RoleEntity));
-  const { permissions } = await permissionService.findAll();
+  const permissionService = connection.getRepository(PermissionEntity);
+  const roleService = connection.getRepository(RoleEntity);
+  const permissions = await permissionService.find();
   if (permissions.length) {
     const work = [
       {
@@ -45,7 +42,8 @@ export async function rolesSeed() {
       },
     ].map((role, index) =>
       roleService
-        .create(role)
+        //@ts-ignore
+        .save(role)
         .then((r) => (console.log(`role ${index} done ->`, r.name), r))
         .catch(() => console.log(`role ${index} -> error`)),
     );

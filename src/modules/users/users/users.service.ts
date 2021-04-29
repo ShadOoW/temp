@@ -41,9 +41,11 @@ export class UsersService {
         ERROR_MESSAGES.PASSWORD_REQUIRED,
         HttpStatus.BAD_REQUEST,
       );
+    const pw = await bcrypt.hash(password, 10);
     const createdProfile = await this.profileService.create(profile);
     const createdUser = await this.repo.save({
       ...createUserInputs,
+      password: pw,
       profile: createdProfile,
     });
     return createdUser.toDto();
@@ -75,11 +77,10 @@ export class UsersService {
    * @returns  {Array} of users info
    */
   async findByRole(roleId: string): Promise<UserDto[]> {
-    const usersByRole = await this.repo.find({
+    return await this.repo.find({
       relations: ['role', 'role.permissions', 'profile'],
       where: { role: roleId },
     });
-    return usersByRole.toDtos();
   }
 
   /**

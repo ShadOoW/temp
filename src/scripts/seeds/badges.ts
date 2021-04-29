@@ -1,8 +1,6 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
-import { BadgesService } from '@gamification/badges/badges.service';
 import { Badge } from '@gamification/badges/entities/badge.entity';
-import { PointsService } from '@gamification/points/points.service';
 import { Point } from '@gamification/points/entities/point.entity';
 
 export async function badgesSeed() {
@@ -12,9 +10,9 @@ export async function badgesSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const badgeService = new BadgesService(connection.getRepository(Badge));
-  const pointService = new PointsService(connection.getRepository(Point));
-  const { points } = await pointService.findAll({});
+  const badgeService = connection.getRepository(Badge);
+  const pointService = connection.getRepository(Point);
+  const points = await pointService.find();
   if (points.length && points.length > 4) {
     const work = [
       {
@@ -39,7 +37,7 @@ export async function badgesSeed() {
       },
     ].map((badge, index) =>
       badgeService
-        .create(badge)
+        .save(badge)
         .then((r) => (console.log(`badge ${index} done ->`, r.name), r))
         .catch(() => console.log(`badge ${index} -> error`)),
     );

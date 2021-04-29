@@ -12,6 +12,7 @@ import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RolesService } from '@users/roles/roles.service';
 import { RoleEntity } from '@users/roles/entities/role.entity';
+import { Order } from '@src/common/constants/order';
 
 async function genRequest(
   subcriptionService,
@@ -59,7 +60,11 @@ export async function requestsSeed() {
   );
   const roleService = new RolesService(connection.getRepository(RoleEntity));
 
-  const { roles } = await roleService.findAll();
+  const { data: roles } = await roleService.findAll({
+    order: Order.ASC,
+    page: 1,
+    take: 100,
+  });
   const mentees = await userService.findByRole(
     roles.find((r) => r.name === 'mentee').id,
   );

@@ -1,7 +1,7 @@
 import { usersSeed } from './users';
 import { permissionsSeed } from './permissions';
 import { rolesSeed } from './roles';
-import { requestsSeed } from './requests';
+// import { requestsSeed } from './requests';
 import { domainsSeed } from './domains';
 // import { chatSeed } from './chat';
 import { pointsSeed } from './points';
@@ -17,8 +17,8 @@ async function run() {
       await rolesSeed();
     if (process.argv.includes('users') || process.argv.includes('all'))
       await usersSeed();
-    if (process.argv.includes('requests') || process.argv.includes('all'))
-      await requestsSeed();
+    // if (process.argv.includes('requests') || process.argv.includes('all'))
+    //   await requestsSeed();
     // if (process.argv.includes('chat') || process.argv.includes('all'))
     //   await chatSeed();
     if (process.argv.includes('points') || process.argv.includes('all'))

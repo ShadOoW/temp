@@ -1,6 +1,5 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
-import { PointsService } from '@gamification/points/points.service';
 import { Point } from '@gamification/points/entities/point.entity';
 
 export async function pointsSeed() {
@@ -10,7 +9,7 @@ export async function pointsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const pointService = new PointsService(connection.getRepository(Point));
+  const pointService = connection.getRepository(Point);
 
   const work = [
     {
@@ -50,7 +49,7 @@ export async function pointsSeed() {
     },
   ].map((point, index) =>
     pointService
-      .create(point)
+      .save(point)
       .then((r) => (console.log(`point ${index} done ->`, r.action), r))
       .catch(() => console.log(`point ${index} -> error`)),
   );

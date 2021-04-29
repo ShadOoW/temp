@@ -1,6 +1,5 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
-import { DomainsService } from '@users/domains/domains.service';
 import { DomainEntity } from '@users/domains/entities/domain.entity';
 
 export async function domainsSeed() {
@@ -10,9 +9,7 @@ export async function domainsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const domainService = new DomainsService(
-    connection.getRepository(DomainEntity),
-  );
+  const domainService = connection.getRepository(DomainEntity);
 
   const work = [
     // Domain domains
@@ -55,7 +52,7 @@ export async function domainsSeed() {
     },
   ].map((domain, index) =>
     domainService
-      .create(domain)
+      .save(domain)
       .then((r) => (console.log(`domain ${index} done ->`, r.name), r))
       .catch(() => console.log(`domain ${index} -> error`)),
   );

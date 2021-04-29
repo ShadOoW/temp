@@ -10,9 +10,7 @@ export async function permissionsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const permissionService = new PermissionsService(
-    connection.getRepository(PermissionEntity),
-  );
+  const permissionService = connection.getRepository(PermissionEntity);
 
   const work = [
     // Permission permissions
@@ -148,7 +146,7 @@ export async function permissionsSeed() {
     },
   ].map((permission, index) =>
     permissionService
-      .create(permission)
+      .save(permission)
       .then((r) => (console.log(`permission ${index} done ->`, r.name), r))
       .catch(() => console.log(`permission ${index} -> error`)),
   );
