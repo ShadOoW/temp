@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { AbstractDto } from '@src/common/dto/Abstract.dto';
+import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { DomainDto } from '../../domains/dto/domain.dto';
 import { ProfileEntity } from '../entities/profile.entity';
 

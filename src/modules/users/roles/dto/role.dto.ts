@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { AbstractDto } from '@src/common/dto/Abstract.dto';
+import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { RoleEntity } from '../entities/role.entity';
 
 @ObjectType()
