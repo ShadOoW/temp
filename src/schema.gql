@@ -29,11 +29,12 @@ type BadgesPageDto {
   meta: PageMetaDto!
 }
 
-type Balance {
-  createdAt: DateTime!
-  id: String!
+type BalanceDto {
+  createdAt: DateTime
+  id: String
+  points: [PointDto!]!
   score: Int!
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input BalancePointInput {
@@ -344,7 +345,7 @@ type Mutation {
   removeSession(id: String!): SessionDto!
   removeUser(id: String!): UserDto!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): BadgeDto!
-  updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): Balance!
+  updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): BalanceDto!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): DomainDto!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): PermissionDto!

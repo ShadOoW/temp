@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { BalancesService } from './balances.service';
 import { BalancesResolver } from './balances.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Balance } from './entities/balance.entity';
+import { BalanceEntity } from './entities/balance.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Balance])],
+  imports: [TypeOrmModule.forFeature([BalanceEntity])],
   providers: [BalancesResolver, BalancesService],
 })
 export class BalancesModule {}

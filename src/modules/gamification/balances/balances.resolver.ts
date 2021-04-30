@@ -1,13 +1,14 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { BalancesService } from './balances.service';
-import { Balance } from './entities/balance.entity';
+import { BalanceEntity } from './entities/balance.entity';
 import { UpdateBalanceInput } from './dto/update-balance.input';
+import { BalanceDto } from './dto/balance.dto';
 
-@Resolver(() => Balance)
+@Resolver(() => BalanceDto)
 export class BalancesResolver {
   constructor(private readonly balancesService: BalancesService) {}
 
-  @Mutation(() => Balance)
+  @Mutation(() => BalanceDto)
   updateBalance(
     @Args('id', { type: () => String }) id: string,
     @Args('updateBalanceInput') updateBalanceInput: UpdateBalanceInput,

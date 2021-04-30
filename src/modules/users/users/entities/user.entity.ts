@@ -21,7 +21,7 @@ import { SessionEntity } from '@education/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
 import { Event } from '@src/modules/events/events/entities/event.entity';
-import { Balance } from '@gamification/balances/entities/balance.entity';
+import { BalanceEntity } from '@gamification/balances/entities/balance.entity';
 import { QuestionEntity } from '@education/questions/entities/question.entity';
 import { QuizEntity } from '@education/quizzes/entities/quiz.entity';
 import { EvaluationEntity } from '@education/evaluations/entities/evaluation.entity';
@@ -34,6 +34,7 @@ import { RequestDto } from '../../requests/dto/request.dto';
 import { SessionDto } from '@src/modules/education/sessions/dto/session.dto';
 import { QuizDto } from '@src/modules/education/quizzes/dto/quiz.dto';
 import { EvaluationDto } from '@src/modules/education/evaluations/dto/evaluation.dto';
+import { BalanceDto } from '@src/modules/gamification/balances/dto/balance.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -76,10 +77,10 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @JoinColumn()
   profile: ProfileDto;
 
-  @OneToOne(() => Balance)
+  @OneToOne(() => BalanceEntity)
   @JoinColumn()
-  @Field(() => Balance)
-  balance: Balance;
+  @Field(() => BalanceDto)
+  balance: BalanceDto;
 
   @OneToMany(() => Event, (event) => event.to)
   @Field(() => [Event], { nullable: true })
