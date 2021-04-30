@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { Badge } from '@gamification/badges/entities/badge.entity';
-import { Point } from '@gamification/points/entities/point.entity';
+import { PointEntity } from '@gamification/points/entities/point.entity';
 
 export async function badgesSeed() {
   const opt = {
@@ -11,7 +11,7 @@ export async function badgesSeed() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const badgeService = connection.getRepository(Badge);
-  const pointService = connection.getRepository(Point);
+  const pointService = connection.getRepository(PointEntity);
   const points = await pointService.find();
   if (points.length && points.length > 4) {
     const work = [

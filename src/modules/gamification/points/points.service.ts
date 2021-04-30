@@ -1,46 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
 import { CreatePointInput } from './dto/create-point.input';
+import { PointsPageOptionsDto } from './dto/points-page-options.dto';
+import { PointsPageDto } from './dto/points-page.dto';
 import { UpdatePointInput } from './dto/update-point.input';
-import { Point } from './entities/point.entity';
+import { PointEntity } from './entities/point.entity';
 
 @Injectable()
 export class PointsService {
   constructor(
-    @InjectRepository(Point) private readonly repo: Repository<Point>,
+    @InjectRepository(PointEntity)
+    private readonly repo: Repository<PointEntity>,
   ) {}
 
-  create(createPointInput: CreatePointInput) {
-    return this.repo.save(createPointInput);
+  async create(createPointInput: CreatePointInput) {
+    const createdPoint = await this.repo.create(createPointInput);
+    return (await this.repo.save(createdPoint)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [points, totalCount] = await this.repo.findAndCount({
-      where: args,
+  // TODO SKIP & WHERE
+  async findAll(pageOptionsDto: PointsPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [points, pointsCount] = await this.repo.findAndCount({
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { points, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: pointsCount,
+    });
+    return new PointsPageDto(points.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo.findOneOrFail(id);
+    const point = await this.repo.findOneOrFail(id);
+    return point ? point.toDto() : null;
   }
 
-  update(id: string, updatePointInput: UpdatePointInput) {
-    return this.repo.save({ id, ...updatePointInput });
+  async update(id: string, updatePointInput: UpdatePointInput) {
+    const updatedPoint = await this.repo.create({ id, ...updatePointInput });
+    return (await this.repo.save(updatedPoint)).toDto();
   }
 
   async remove(id: string) {
-    const pointToDelete = await this.findOne(id);
+    const pointToDelete = await this.repo.findOneOrFail(id);
     await this.repo.delete(id);
-    return pointToDelete;
+    return pointToDelete.toDto();
   }
 }

@@ -1,7 +1,8 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Point } from '../../points/entities/point.entity';
+import { PointEntity } from '../../points/entities/point.entity';
 import { BaseEntity } from '@shared/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { PointDto } from '../../points/dto/point.dto';
 
 @ObjectType()
 @Entity({ name: 'balances' })
@@ -10,6 +11,6 @@ export class Balance extends BaseEntity {
   @Column({ type: 'int' })
   score: number;
 
-  @OneToMany(() => Point, (point) => point.balance)
-  points: Point[];
+  @OneToMany(() => PointEntity, (point) => point.balance)
+  points: PointDto[];
 }

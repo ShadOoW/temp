@@ -1,6 +1,6 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
-import { Point } from '@gamification/points/entities/point.entity';
+import { PointEntity } from '@gamification/points/entities/point.entity';
 
 export async function pointsSeed() {
   const opt = {
@@ -9,7 +9,7 @@ export async function pointsSeed() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const pointService = connection.getRepository(Point);
+  const pointService = connection.getRepository(PointEntity);
 
   const work = [
     {

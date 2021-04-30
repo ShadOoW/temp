@@ -1,7 +1,8 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Point } from '../../points/entities/point.entity';
+import { PointEntity } from '../../points/entities/point.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '@shared/base.entity';
+import { PointDto } from '../../points/dto/point.dto';
 
 @ObjectType()
 @Entity({ name: 'badges' })
@@ -22,6 +23,6 @@ export class Badge extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   image?: string;
 
-  @OneToMany(() => Point, (point) => point.badge)
-  points: Point[];
+  @OneToMany(() => PointEntity, (point) => point.badge)
+  points: PointDto[];
 }

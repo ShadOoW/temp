@@ -1,31 +1,31 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PointsService } from './points.service';
-import { Point } from './entities/point.entity';
 import { CreatePointInput } from './dto/create-point.input';
 import { UpdatePointInput } from './dto/update-point.input';
-import { GetPoints } from './dto/get-points.dto';
-import { PaginationArgs } from '@shared/pagination.args';
+import { PointDto } from './dto/point.dto';
+import { PointsPageDto } from './dto/points-page.dto';
+import { PointsPageOptionsDto } from './dto/points-page-options.dto';
 
-@Resolver(() => Point)
+@Resolver(() => PointDto)
 export class PointsResolver {
   constructor(private readonly pointsService: PointsService) {}
 
-  @Mutation(() => Point)
+  @Mutation(() => PointDto)
   createPoint(@Args('createPointInput') createPointInput: CreatePointInput) {
     return this.pointsService.create(createPointInput);
   }
 
-  @Query(() => GetPoints, { name: 'points' })
-  findAll(@Args() paginationArgs: PaginationArgs) {
-    return this.pointsService.findAll(paginationArgs);
+  @Query(() => PointsPageDto, { name: 'points' })
+  findAll(@Args() pageOptionsDto: PointsPageOptionsDto) {
+    return this.pointsService.findAll(pageOptionsDto);
   }
 
-  @Query(() => Point, { name: 'point' })
+  @Query(() => PointDto, { name: 'point' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.pointsService.findOne(id);
   }
 
-  @Mutation(() => Point)
+  @Mutation(() => PointDto)
   updatePoint(
     @Args('id', { type: () => String }) id: string,
     @Args('updatePointInput') updatePointInput: UpdatePointInput,
@@ -33,7 +33,7 @@ export class PointsResolver {
     return this.pointsService.update(id, updatePointInput);
   }
 
-  @Mutation(() => Point)
+  @Mutation(() => PointDto)
   removePoint(@Args('id', { type: () => String }) id: string) {
     return this.pointsService.remove(id);
   }
