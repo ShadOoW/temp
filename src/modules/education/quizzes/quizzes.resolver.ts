@@ -1,31 +1,31 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { QuizzesService } from './quizzes.service';
-import { Quiz } from './entities/quiz.entity';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
-import { PaginationArgs } from '@shared/pagination.args';
-import { GetQuizzes } from './dto/get-quizzes.dto';
+import { QuizDto } from './dto/quiz.dto';
+import { QuizzesPageDto } from './dto/quizzes-page.dto';
+import { QuizzesPageOptionsDto } from './dto/quizzes-page-options.dto';
 
-@Resolver(() => Quiz)
+@Resolver(() => QuizDto)
 export class QuizzesResolver {
   constructor(private readonly quizzesService: QuizzesService) {}
 
-  @Mutation(() => Quiz)
+  @Mutation(() => QuizDto)
   createQuiz(@Args('createQuizInput') createQuizInput: CreateQuizInput) {
     return this.quizzesService.create(createQuizInput);
   }
 
-  @Query(() => GetQuizzes, { name: 'quizzes' })
-  findAll(@Args() paginationArgs: PaginationArgs) {
-    return this.quizzesService.findAll(paginationArgs);
+  @Query(() => QuizzesPageDto, { name: 'quizzes' })
+  findAll(@Args() pageOptionsDto: QuizzesPageOptionsDto) {
+    return this.quizzesService.findAll(pageOptionsDto);
   }
 
-  @Query(() => Quiz, { name: 'quiz' })
+  @Query(() => QuizDto, { name: 'quiz' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.quizzesService.findOne(id);
   }
 
-  @Mutation(() => Quiz)
+  @Mutation(() => QuizDto)
   updateQuiz(
     @Args('id', { type: () => String }) id: string,
     @Args('updateQuizInput') updateQuizInput: UpdateQuizInput,
@@ -33,7 +33,7 @@ export class QuizzesResolver {
     return this.quizzesService.update(id, updateQuizInput);
   }
 
-  @Mutation(() => Quiz)
+  @Mutation(() => QuizDto)
   removeQuiz(@Args('id', { type: () => String }) id: string) {
     return this.quizzesService.remove(id);
   }

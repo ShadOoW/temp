@@ -1,64 +1,32 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Evaluation } from '../../evaluations/entities/evaluation.entity';
-import { QuestionEntity } from '../../questions/entities/question.entity';
-import { BaseEntity } from '@shared/base.entity';
+import { Evaluation } from '@education/evaluations/entities/evaluation.entity';
+import { QuestionEntity } from '@education/questions/entities/question.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { QuestionDto } from '../../questions/dto/question.dto';
+import { QuestionDto } from '@education/questions/dto/question.dto';
+import { QuizDto } from '../dto/quiz.dto';
+import { AbstractEntity } from '@src/common/abstract.entity';
 
-@ObjectType()
 @Entity({ name: 'quizzes' })
-export class Quiz extends BaseEntity {
-  @Field(() => Date, { description: 'Date to start the quiz', nullable: true })
+export class QuizEntity extends AbstractEntity<QuizDto> {
   @Column({ type: 'timestamptz', nullable: true })
-  @IsDateString()
-  @IsOptional()
   startAt?: Date;
 
-  @Field(() => Date, { description: 'Date to end the quiz', nullable: true })
   @Column({ type: 'timestamptz', nullable: true })
-  @IsDateString()
-  @IsOptional()
   endAt?: Date;
 
-  @Field(() => Int, {
-    description: 'Duration of the quiz on minutes',
-    nullable: true,
-  })
   @Column({ type: 'int', nullable: true })
-  @IsNumber()
-  @IsOptional()
   duration?: number;
 
-  @Field(() => String, { description: 'Title of the quiz' })
   @Column({ type: 'varchar', length: 300 })
-  @IsString()
   title: string;
 
-  @Field(() => String, {
-    description: 'Description of the quiz',
-    nullable: true,
-  })
   @Column({ type: 'text', nullable: true })
-  @IsString()
-  @IsOptional()
   description?: string;
 
-  @Field(() => String, {
-    description: 'Image of the quiz',
-    nullable: true,
-  })
   @Column({ type: 'varchar', length: 300, nullable: true })
-  @IsString()
-  @IsOptional()
   image?: string;
 
   @OneToMany(() => QuestionEntity, (question) => question.quiz)
-  @Field(() => [QuestionDto], {
-    description: 'Questions of the quiz',
-    nullable: true,
-  })
   questions: QuestionDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.quizzes)
@@ -66,4 +34,6 @@ export class Quiz extends BaseEntity {
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.quiz)
   evaluations: Evaluation;
+
+  dtoClass = QuizDto;
 }

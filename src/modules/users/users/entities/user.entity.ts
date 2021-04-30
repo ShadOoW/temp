@@ -23,7 +23,7 @@ import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
 import { Event } from '@src/modules/events/events/entities/event.entity';
 import { Balance } from '@gamification/balances/entities/balance.entity';
 import { QuestionEntity } from '@education/questions/entities/question.entity';
-import { Quiz } from '@education/quizzes/entities/quiz.entity';
+import { QuizEntity } from '@education/quizzes/entities/quiz.entity';
 import { Evaluation } from '@education/evaluations/entities/evaluation.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { UserDto } from '../dto/user.dto';
@@ -32,6 +32,7 @@ import { ProfileDto } from '../../profiles/dto/profile.dto';
 import { SubscriptionDto } from '../../subscriptions/dto/subscription.dto';
 import { RequestDto } from '../../requests/dto/request.dto';
 import { SessionDto } from '@src/modules/education/sessions/dto/session.dto';
+import { QuizDto } from '@src/modules/education/quizzes/dto/quiz.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -124,8 +125,8 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @OneToMany(() => QuestionEntity, (question) => question.user)
   questions: QuestionEntity[];
 
-  @OneToMany(() => Quiz, (quiz) => quiz.user)
-  quizzes: Quiz[];
+  @OneToMany(() => QuizEntity, (quiz) => quiz.user)
+  quizzes: QuizDto[];
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.user)
   evaluations: Evaluation[];

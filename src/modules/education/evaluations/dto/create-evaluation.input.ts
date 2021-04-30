@@ -1,6 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Quiz } from '../../quizzes/entities/quiz.entity';
+import { QuizEntity } from '../../quizzes/entities/quiz.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 
 @InputType()
@@ -32,7 +32,7 @@ export class CreateEvaluationInput {
 
   @Field(() => String, { description: 'Quiz ID' })
   @IsString()
-  quiz: Quiz;
+  quiz: QuizEntity;
 
   @Field(() => String, { description: 'User ID' })
   @IsString()

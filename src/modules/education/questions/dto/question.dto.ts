@@ -1,9 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { UserEntity } from '@users/users/entities/user.entity';
-import { Quiz } from '../../quizzes/entities/quiz.entity';
+import { QuizEntity } from '../../quizzes/entities/quiz.entity';
 import { PropositionDto } from '../dto/proposition.dto';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { QuestionEntity } from '../entities/question.entity';
+import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @ObjectType()
 export class QuestionDto extends AbstractDto {
@@ -36,7 +37,7 @@ export class QuestionDto extends AbstractDto {
 
   user: UserEntity;
 
-  quiz: Quiz;
+  quiz: QuizDto;
 
   constructor(question: QuestionEntity) {
     super(question);

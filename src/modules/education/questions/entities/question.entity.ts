@@ -1,9 +1,10 @@
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { Quiz } from '../../quizzes/entities/quiz.entity';
+import { QuizEntity } from '../../quizzes/entities/quiz.entity';
 import { PropositionDto } from '../dto/proposition.dto';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { QuestionDto } from '../dto/question.dto';
+import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @Entity({ name: 'questions' })
 export class QuestionEntity extends AbstractEntity<QuestionDto> {
@@ -28,8 +29,8 @@ export class QuestionEntity extends AbstractEntity<QuestionDto> {
   @ManyToOne(() => UserEntity, (user) => user.questions)
   user: UserEntity;
 
-  @ManyToOne(() => Quiz, (quiz) => quiz.questions)
-  quiz: Quiz;
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.questions)
+  quiz: QuizDto;
 
   dtoClass = QuestionDto;
 }

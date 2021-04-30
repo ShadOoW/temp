@@ -1,9 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Quiz } from '../../quizzes/entities/quiz.entity';
+import { QuizEntity } from '../../quizzes/entities/quiz.entity';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @ObjectType()
 @Entity({ name: 'evaluations' })
@@ -40,8 +41,8 @@ export class Evaluation extends BaseEntity {
   @IsString()
   note?: string;
 
-  @ManyToOne(() => Quiz, (quiz) => quiz.evaluations)
-  quiz: Quiz;
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.evaluations)
+  quiz: QuizDto;
 
   @ManyToOne(() => UserEntity, (user) => user.evaluations)
   user: UserEntity;

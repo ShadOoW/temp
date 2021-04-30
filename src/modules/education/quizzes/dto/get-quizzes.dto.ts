@@ -1,10 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Quiz } from '../entities/quiz.entity';
+import { QuizDto } from './quiz.dto';
 
 @ObjectType()
 export class GetQuizzes {
-  @Field(() => [Quiz])
-  quizzes: Quiz[];
+  @Field(() => [QuizDto])
+  quizzes: QuizDto[];
 
   @Field(() => Int)
   totalCount: number;

@@ -49,7 +49,7 @@ export class QuestionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const updatedQuestion = await this.repo.save({
+    const updatedQuestion = await this.repo.create({
       id,
       ...updateQuestionInput,
     });

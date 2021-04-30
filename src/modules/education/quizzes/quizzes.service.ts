@@ -1,40 +1,45 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
 import { CreateQuizInput } from './dto/create-quiz.input';
+import { QuizzesPageOptionsDto } from './dto/quizzes-page-options.dto';
+import { QuizzesPageDto } from './dto/quizzes-page.dto';
 import { UpdateQuizInput } from './dto/update-quiz.input';
-import { Quiz } from './entities/quiz.entity';
+import { QuizEntity } from './entities/quiz.entity';
 
 @Injectable()
 export class QuizzesService {
   constructor(
-    @InjectRepository(Quiz) private readonly repo: Repository<Quiz>,
+    @InjectRepository(QuizEntity) private readonly repo: Repository<QuizEntity>,
   ) {}
-  create(createQuizInput: CreateQuizInput) {
-    return this.repo.save(createQuizInput);
+  async create(createQuizInput: CreateQuizInput) {
+    const createdQuiz = await this.repo.create(createQuizInput);
+    return (await this.repo.save(createdQuiz)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [quizzes, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findAll(pageOptionsDto: QuizzesPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [quizzes, quizzesCount] = await this.repo.findAndCount({
       relations: ['user', 'questions'],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { quizzes, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: quizzesCount,
+    });
+    return new QuizzesPageDto(quizzes.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo.findOneOrFail(id, {
+    const quiz = await this.repo.findOneOrFail(id, {
       relations: ['user', 'questions'],
     });
+    return quiz ? quiz.toDto() : null;
   }
 
   async update(id: string, updateQuizInput: UpdateQuizInput) {
@@ -45,12 +50,13 @@ export class QuizzesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ id, ...updateQuizInput });
+    const updatedQuiz = await this.repo.create({ id, ...updateQuizInput });
+    return (await this.repo.save(updatedQuiz)).toDto();
   }
 
   async remove(id: string) {
-    const quizToDelete = await this.findOne(id);
+    const quizToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return quizToDelete;
+    return quizToDelete.toDto();
   }
 }
