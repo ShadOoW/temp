@@ -50,12 +50,12 @@ export class EventsResolver {
     return this.eventsService.findAll(args);
   }
 
-  @Subscription(() => Event)
+  @Subscription(() => EventDto)
   notification() {
     return this.pubSub.asyncIterator('notification');
   }
 
-  @Subscription(() => Event)
+  @Subscription(() => EventDto)
   activity() {
     return this.pubSub.asyncIterator('activity');
   }

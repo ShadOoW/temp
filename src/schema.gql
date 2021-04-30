@@ -287,42 +287,33 @@ type EvaluationsPageDto {
   meta: PageMetaDto!
 }
 
-type Event {
+type EventDto {
   command: String!
-  createdAt: DateTime!
+  createdAt: DateTime
   from: UserDto!
-  id: String!
+  id: String
   module: String!
   payload: String!
   read: Boolean!
   sourceId: String!
   to: UserDto
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input EventUserInput {
   id: String!
 }
 
-type GetEventDto {
-  command: String!
-  from: UserDto!
-  module: String!
-  payload: String!
-  sourceId: String!
-  to: UserDto
-}
-
-type GetEvents {
-  events: [GetEventDto!]!
-  totalCount: Int!
+type EventsPageDto {
+  data: [EventDto!]!
+  meta: PageMetaDto!
 }
 
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): BadgeDto!
   createDomain(createDomainInput: CreateDomainInput!): DomainDto!
   createEvaluation(createEvaluationInput: CreateEvaluationInput!): EvaluationDto!
-  createEvent(createEventInput: CreateEventInput!): Event!
+  createEvent(createEventInput: CreateEventInput!): EventDto!
   createPermission(createPermissionInput: CreatePermissionInput!): PermissionDto!
   createPoint(createPointInput: CreatePointInput!): PointDto!
   createPrivateRequest(createPrivateRequestInput: CreatePrivateRequestInput!): RequestDto!
@@ -347,7 +338,7 @@ type Mutation {
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): BadgeDto!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): BalanceDto!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): DomainDto!
-  updateEvent(id: String!, updateEventInput: UpdateEventInput!): Event!
+  updateEvent(id: String!, updateEventInput: UpdateEventInput!): EventDto!
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): PermissionDto!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): PointDto!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): ProfileDto!
@@ -468,11 +459,11 @@ type Query {
   emailExists(email: String!): Boolean!
   evaluation(id: String!): EvaluationDto!
   evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
-  events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
+  events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto
   menteeSessions(mentee: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   mentorSessions(mentor: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
-  notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
+  notifications(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   permission(id: String!): PermissionDto!
   permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
   point(id: String!): PointDto!
@@ -621,8 +612,8 @@ type SessionsPageDto {
 }
 
 type Subscription {
-  activity: Event!
-  notification: Event!
+  activity: EventDto!
+  notification: EventDto!
 }
 
 input SubscriptionUserInput {

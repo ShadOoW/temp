@@ -56,7 +56,7 @@ export class UsersService {
    * @returns  {Array} of users info
    */
   async findAll(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -69,6 +69,7 @@ export class UsersService {
         createdAt: order,
       },
       take,
+      skip: (page - 1) * take,
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
