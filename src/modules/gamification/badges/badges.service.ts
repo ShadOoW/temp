@@ -1,45 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
+import { BadgesPageOptionsDto } from './dto/badges-page-options.dto';
+import { BadgesPageDto } from './dto/badges-page.dto';
 import { CreateBadgeInput } from './dto/create-badge.input';
 import { UpdateBadgeInput } from './dto/update-badge.input';
-import { Badge } from './entities/badge.entity';
+import { BadgeEntity } from './entities/badge.entity';
 
 @Injectable()
 export class BadgesService {
   constructor(
-    @InjectRepository(Badge) private readonly repo: Repository<Badge>,
+    @InjectRepository(BadgeEntity)
+    private readonly repo: Repository<BadgeEntity>,
   ) {}
-  create(createBadgeInput: CreateBadgeInput) {
-    return this.repo.save(createBadgeInput);
+  async create(createBadgeInput: CreateBadgeInput) {
+    const createdBadge = await this.repo.create(createBadgeInput);
+    return (await this.repo.save(createdBadge)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [badges, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findAll(pageOptionsDto: BadgesPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [badges, badgesCount] = await this.repo.findAndCount({
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { badges, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: badgesCount,
+    });
+    return new BadgesPageDto(badges.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo.findOneOrFail(id);
+    const badge = await this.repo.findOneOrFail(id);
+    return badge ? badge.toDto() : null;
   }
 
-  update(id: string, updateBadgeInput: UpdateBadgeInput) {
-    return this.repo.save({ id, ...updateBadgeInput });
+  async update(id: string, updateBadgeInput: UpdateBadgeInput) {
+    const updatedBadge = await this.repo.create({ id, ...updateBadgeInput });
+    return (await this.repo.save(updatedBadge)).toDto();
   }
 
   async remove(id: string) {
-    const pointToDelete = await this.findOne(id);
+    const pointToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return pointToDelete;
+    return pointToDelete.toDto();
   }
 }

@@ -84,7 +84,7 @@ export class RequestsService {
   async findAll(
     pageOptionsDto: RequestsPageOptionsDto,
   ): Promise<RequestsPageDto> {
-    const { mentee: from, mentor: to, status } = pageOptionsDto;
+    const { mentee: from, mentor: to, status, order, take } = pageOptionsDto;
     const [requests, requestsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({ from, to, status }),
       relations: [
@@ -96,8 +96,9 @@ export class RequestsService {
         'from.profile.wantedDomain',
       ],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
+      take,
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

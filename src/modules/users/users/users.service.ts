@@ -56,6 +56,7 @@ export class UsersService {
    * @returns  {Array} of users info
    */
   async findAll(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
+    const { order, take } = pageOptionsDto;
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -64,6 +65,10 @@ export class UsersService {
         'profile.coachingDomains',
         'profile.wantedDomain',
       ],
+      order: {
+        createdAt: order,
+      },
+      take,
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

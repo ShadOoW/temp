@@ -1,8 +1,9 @@
-import { Badge } from '../../badges/entities/badge.entity';
+import { BadgeEntity } from '../../badges/entities/badge.entity';
 import { Balance } from '../../balances/entities/balance.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PointDto } from '../dto/point.dto';
 import { AbstractEntity } from '@src/common/abstract.entity';
+import { BadgeDto } from '../../badges/dto/badge.dto';
 
 @Entity({ name: 'points' })
 export class PointEntity extends AbstractEntity<PointDto> {
@@ -24,8 +25,8 @@ export class PointEntity extends AbstractEntity<PointDto> {
   @ManyToOne(() => Balance, (balance) => balance.points)
   balance: Balance;
 
-  @ManyToOne(() => Badge, (badge) => badge.points)
-  badge: Badge;
+  @ManyToOne(() => BadgeEntity, (badge) => badge.points)
+  badge: BadgeDto;
 
   dtoClass = PointDto;
 }
