@@ -2,10 +2,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { SessionsResolver } from './sessions.resolver';
-import { Session } from './entities/session.entity';
+import { SessionEntity } from './entities/session.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Session])],
+  imports: [TypeOrmModule.forFeature([SessionEntity])],
   providers: [SessionsResolver, SessionsService],
 })
 export class SessionsModule {}

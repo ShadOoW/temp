@@ -1,6 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { UserDto } from '@users/users/dto/user.dto';
-import { AbstractDto } from '@src/shared/abstract.dto';
+import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { SubscriptionEntity } from '../entities/subscription.entity';
 
 @ObjectType('UserSubscription')

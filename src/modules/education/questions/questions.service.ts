@@ -4,12 +4,13 @@ import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { Repository } from 'typeorm';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
-import { Question } from './entities/question.entity';
+import { QuestionEntity } from './entities/question.entity';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    @InjectRepository(Question) private readonly repo: Repository<Question>,
+    @InjectRepository(QuestionEntity)
+    private readonly repo: Repository<QuestionEntity>,
   ) {}
   create(createQuestionInput: CreateQuestionInput) {
     return this.repo.save(createQuestionInput);

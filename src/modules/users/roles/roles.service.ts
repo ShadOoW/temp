@@ -22,7 +22,7 @@ export class RolesService {
     if (role) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    const createdRole = await this.repo.create(createRoleInput)
+    const createdRole = await this.repo.create(createRoleInput);
     return (await this.repo.save(createdRole)).toDto();
   }
 
@@ -49,7 +49,8 @@ export class RolesService {
   }
 
   async findOne(id: string) {
-    return (await this.repo.findOne(id)).toDto();
+    const role = await this.repo.findOne(id);
+    return role ? role.toDto() : null;
   }
 
   async update(id: string, updateRoleInput: UpdateRoleInput) {
@@ -60,7 +61,7 @@ export class RolesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const createdRole = await this.repo.create({ id, ...updateRoleInput })
+    const createdRole = await this.repo.create({ id, ...updateRoleInput });
     return (await this.repo.save(createdRole)).toDto();
   }
 

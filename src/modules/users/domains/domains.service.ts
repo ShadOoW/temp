@@ -22,8 +22,8 @@ export class DomainsService {
     if (domain) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    const createdDomain = await this.repo.create(createDomainInput)
-    return (await this.repo.save(createdDomain)).toDto(); 
+    const createdDomain = await this.repo.create(createDomainInput);
+    return (await this.repo.save(createdDomain)).toDto();
   }
 
   async findAll(pageOptionsDto: DomainsPageOptionsDto) {
@@ -36,7 +36,8 @@ export class DomainsService {
   }
 
   async findOne(id: string) {
-    return (await this.repo.findOne(id)).toDto();
+    const domain = await this.repo.findOne(id);
+    return domain ? domain.toDto() : null;
   }
 
   async update(id: string, updateDomainInput: UpdateDomainInput) {
@@ -47,8 +48,8 @@ export class DomainsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const createdDomain = await this.repo.create({ id, ...updateDomainInput })
-    return (await this.repo.save(createdDomain)).toDto(); 
+    const createdDomain = await this.repo.create({ id, ...updateDomainInput });
+    return (await this.repo.save(createdDomain)).toDto();
   }
 
   async remove(id: string) {

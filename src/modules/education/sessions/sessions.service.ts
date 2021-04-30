@@ -73,11 +73,10 @@ export class SessionsService {
   }
 
   async findOne(id: string) {
-    return (
-      await this.repo.findOneOrFail(id, {
-        relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
-      })
-    ).toDto();
+    const domain = await this.repo.findOneOrFail(id, {
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+    });
+    return domain ? domain.toDto() : null;
   }
 
   async update(id: string, updateSessionInput: UpdateSessionInput) {

@@ -110,7 +110,7 @@ export class UsersService {
         'profile.wantedDomain',
       ],
     });
-    return user.toDto();
+    return user ? user.toDto() : null;
   }
 
   /**
@@ -171,7 +171,7 @@ export class UsersService {
         },
       );
     }
-    
+
     const updatedUser = await this.repo.create({ id, ...updateUserInput });
     return (await this.repo.save(updatedUser)).toDto();
   }
@@ -241,6 +241,6 @@ export class UsersService {
     const userByName = await this.repo.findOne({
       where: [{ email }],
     });
-    return userByName.toDto();
+    return userByName ? userByName.toDto() : null;
   }
 }

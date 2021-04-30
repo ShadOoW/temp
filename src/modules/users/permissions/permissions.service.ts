@@ -45,7 +45,8 @@ export class PermissionsService {
   }
 
   async findOne(id: string) {
-    return (await this.repo.findOne(id)).toDto();
+    const permission = await this.repo.findOne(id);
+    return permission ? permission.toDto() : null;
   }
 
   async update(id: string, updatePermissionInput: UpdatePermissionInput) {

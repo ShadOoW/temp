@@ -107,18 +107,17 @@ export class RequestsService {
   }
 
   async findOne(id: string) {
-    return (
-      await this.repo.findOne(id, {
-        relations: [
-          'to',
-          'from',
-          'to.profile',
-          'to.profile.coachingDomains',
-          'from.profile',
-          'from.profile.wantedDomain',
-        ],
-      })
-    ).toDto();
+    const request = await this.repo.findOne(id, {
+      relations: [
+        'to',
+        'from',
+        'to.profile',
+        'to.profile.coachingDomains',
+        'from.profile',
+        'from.profile.wantedDomain',
+      ],
+    });
+    return request ? request.toDto() : null;
   }
 
   async update(id: string, updateRequestInput: UpdateRequestInput) {

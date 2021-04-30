@@ -1,10 +1,11 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Evaluation } from '../../evaluations/entities/evaluation.entity';
-import { Question } from '../../questions/entities/question.entity';
+import { QuestionEntity } from '../../questions/entities/question.entity';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { QuestionDto } from '../../questions/dto/question.dto';
 
 @ObjectType()
 @Entity({ name: 'quizzes' })
@@ -53,12 +54,12 @@ export class Quiz extends BaseEntity {
   @IsOptional()
   image?: string;
 
-  @OneToMany(() => Question, (question) => question.quiz)
-  @Field(() => [Question], {
+  @OneToMany(() => QuestionEntity, (question) => question.quiz)
+  @Field(() => [QuestionDto], {
     description: 'Questions of the quiz',
     nullable: true,
   })
-  questions: Question[];
+  questions: QuestionDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.quizzes)
   user: UserEntity;

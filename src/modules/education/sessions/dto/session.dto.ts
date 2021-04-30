@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Status } from '@shared/interfaces/globalStatus';
 import { UserDto } from '@users/users/dto/user.dto';
-import { AbstractDto } from '@src/shared/abstract.dto';
+import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { SessionEntity } from '../entities/session.entity';
 
 @ObjectType()
