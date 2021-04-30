@@ -496,7 +496,7 @@ type Query {
   requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 10): RequestsPageDto!
   role(id: String!): RoleDto!
   roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): RolesPageDto!
-  rolesByNames(rolesNames: [String!]!): RolesPageDto!
+  rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
   sessions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SessionsPageDto!
   sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 10): SessionsPageDto!

@@ -12,8 +12,9 @@ export class QuestionsService {
     @InjectRepository(QuestionEntity)
     private readonly repo: Repository<QuestionEntity>,
   ) {}
-  create(createQuestionInput: CreateQuestionInput) {
-    return this.repo.save(createQuestionInput);
+  async create(createQuestionInput: CreateQuestionInput) {
+    const createdQuestion = await this.repo.create(createQuestionInput);
+    return (await this.repo.save(createdQuestion)).toDto();
   }
 
   async findAll(args = null) {
@@ -44,12 +45,16 @@ export class QuestionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ id, ...updateQuestionInput });
+    const updatedQuestion = await this.repo.save({
+      id,
+      ...updateQuestionInput,
+    });
+    return (await this.repo.save(updatedQuestion)).toDto();
   }
 
   async remove(id: string) {
-    const questionToDelete = await this.findOne(id);
+    const questionToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
-    return questionToDelete;
+    return questionToDelete.toDto();
   }
 }

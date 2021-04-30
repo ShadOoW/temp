@@ -19,7 +19,7 @@ export class RolesResolver {
   }
 
   @Public()
-  @Query(() => RolesPageDto, { name: 'rolesByNames' })
+  @Query(() => [RoleDto], { name: 'rolesByNames' })
   findByNames(
     @Args('rolesNames', { type: () => [String] }) rolesNames: string[],
   ): Promise<RoleDto[]> {
