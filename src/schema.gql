@@ -489,7 +489,7 @@ type Query {
   profile(id: String!): ProfileDto!
   publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 10): RequestsPageDto!
   question(id: String!): QuestionDto!
-  questions(skip: Int, take: Int): GetQuestions!
+  questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): GetQuestions!
   quiz(id: String!): Quiz!
   quizzes(skip: Int, take: Int): GetQuizzes!
   request(id: String!): RequestsPageDto!

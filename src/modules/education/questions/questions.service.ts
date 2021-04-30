@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
 import { CreateQuestionInput } from './dto/create-question.input';
+import { QuestionsPageOptionsDto } from './dto/questions-page-options.dto';
+import { QuestionsPageDto } from './dto/questions-page.dto';
 import { UpdateQuestionInput } from './dto/update-question.input';
 import { QuestionEntity } from './entities/question.entity';
 
@@ -17,24 +20,25 @@ export class QuestionsService {
     return (await this.repo.save(createdQuestion)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [questions, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findAll(pageOptionsDto: QuestionsPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [questions, questionsCount] = await this.repo.findAndCount({
       relations: ['user'],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { questions, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: questionsCount,
+    });
+    return new QuestionsPageDto(questions.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo.findOneOrFail(id, { relations: ['user'] });
+    const question = await this.repo.findOneOrFail(id, { relations: ['user'] });
+    return question ? question.toDto() : null;
   }
 
   async update(id: string, updateQuestionInput: UpdateQuestionInput) {
