@@ -2,9 +2,9 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
-import { GetQuestions } from './dto/get-questions.dto';
 import { QuestionDto } from './dto/question.dto';
 import { QuestionsPageOptionsDto } from './dto/questions-page-options.dto';
+import { QuestionsPageDto } from './dto/questions-page.dto';
 
 @Resolver(() => QuestionDto)
 export class QuestionsResolver {
@@ -17,7 +17,7 @@ export class QuestionsResolver {
     return this.questionsService.create(createQuestionInput);
   }
 
-  @Query(() => GetQuestions, { name: 'questions' })
+  @Query(() => QuestionsPageDto, { name: 'questions' })
   findAll(@Args() pageOptionsDto: QuestionsPageOptionsDto) {
     return this.questionsService.findAll(pageOptionsDto);
   }
