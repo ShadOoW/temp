@@ -9,30 +9,6 @@ const app = new Vue({
     socket: null,
   },
   methods: {
-    createPublcRoom() {
-      const message = {
-        name: this.name,
-      };
-      this.socket.emit('createNewPublicRoom', message);
-      this.text = '';
-    },
-    joinPublicRoom() {
-      const message = {
-        name: 'room1',
-      };
-      this.socket.emit('joinPublicRoom', message);
-      this.text = '';
-    },
-    sendMessage() {
-      if (this.validateInput()) {
-        const message = {
-          room_name: 'room1',
-          text: this.text,
-        };
-        this.socket.emit('msgToRoomServer', message);
-        this.text = '';
-      }
-    },
     sendMessagePM() {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
@@ -47,7 +23,6 @@ const app = new Vue({
     },
     getRooms() {
       console.log('hii');
-
       this.socket.emit('getRooms', {});
     },
     receivedMessage(message) {
@@ -61,7 +36,6 @@ const app = new Vue({
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     this.socket = io('http://localhost:3000', {
-      // 'query': 'token=' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4ODU2ZmMzLTU4NmItNGFjYS05N2RkLTlkMTNmYzBjNzU4MCIsImlhdCI6MTU4MTYxODI3Nn0.zvHEzdSYrs_VpCCiFA37fBOkafpC1lI-axOhkcfpmxw'
       query: 'token=' + urlParams.get('token'),
     });
 
@@ -71,9 +45,6 @@ const app = new Vue({
       console.log('connected');
       this.getRooms();
     });
-    this.socket.on('msgToClient', (message) => {
-      this.receivedMessage(message);
-    });
 
     this.socket.on('getRooms', (message) => {
       console.log(message);
@@ -81,18 +52,6 @@ const app = new Vue({
     });
 
     this.socket.on('msgPrivateToClient', (message) => {
-      this.receivedMessage(message);
-    });
-
-    this.socket.on('createdNewPublicRoom', (message) => {
-      console.log(message);
-    });
-    this.socket.on('msgToRoomClient', (message) => {
-      console.log(message);
-      this.receivedMessage(message);
-    });
-    this.socket.on('userJoined', (message) => {
-      console.log(message);
       this.receivedMessage(message);
     });
   },
