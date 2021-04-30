@@ -7,11 +7,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  BeforeInsert,
-  BeforeUpdate,
-  AfterLoad,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { Field } from '@nestjs/graphql';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { RequestEntity } from '@users/requests/entities/request.entity';
@@ -20,7 +16,7 @@ import { SubscriptionEntity } from '@users/subscriptions/entities/subscription.e
 import { SessionEntity } from '@education/sessions/entities/session.entity';
 import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
-import { Event } from '@src/modules/events/events/entities/event.entity';
+import { EventEntity } from '@src/modules/events/events/entities/event.entity';
 import { BalanceEntity } from '@gamification/balances/entities/balance.entity';
 import { QuestionEntity } from '@education/questions/entities/question.entity';
 import { QuizEntity } from '@education/quizzes/entities/quiz.entity';
@@ -35,6 +31,7 @@ import { SessionDto } from '@src/modules/education/sessions/dto/session.dto';
 import { QuizDto } from '@src/modules/education/quizzes/dto/quiz.dto';
 import { EvaluationDto } from '@src/modules/education/evaluations/dto/evaluation.dto';
 import { BalanceDto } from '@src/modules/gamification/balances/dto/balance.dto';
+import { EventDto } from '@src/modules/events/events/dto/event.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -82,13 +79,13 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Field(() => BalanceDto)
   balance: BalanceDto;
 
-  @OneToMany(() => Event, (event) => event.to)
-  @Field(() => [Event], { nullable: true })
-  eventsTo?: Event[];
+  @OneToMany(() => EventEntity, (event) => event.to)
+  @Field(() => [EventDto], { nullable: true })
+  eventsTo?: EventDto[];
 
-  @OneToMany(() => Event, (event) => event.from)
-  @Field(() => [Event], { nullable: true })
-  eventsFrom?: Event[];
+  @OneToMany(() => EventEntity, (event) => event.from)
+  @Field(() => [EventDto], { nullable: true })
+  eventsFrom?: EventDto[];
 
   @OneToMany(() => RequestEntity, (request) => request.to)
   @Field(() => [RequestDto])

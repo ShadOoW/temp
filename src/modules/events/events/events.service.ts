@@ -1,38 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UtilsService } from '@shared/providers/utils.service';
+// import { UtilsService } from '@shared/providers/utils.service';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
 import { CreateEventInput } from './dto/create-event.input';
+import { EventsPageOptionsDto } from './dto/events-page-options.dto';
+import { EventsPageDto } from './dto/events-page.dto';
 import { UpdateEventInput } from './dto/update-event.input';
-import { Event } from './entities/event.entity';
+import { EventEntity } from './entities/event.entity';
 
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectRepository(Event) private readonly repo: Repository<Event>,
+    @InjectRepository(EventEntity)
+    private readonly repo: Repository<EventEntity>,
   ) {}
 
-  create(createEventInput: CreateEventInput) {
-    return this.repo.save(createEventInput);
+  async create(createEventInput: CreateEventInput) {
+    const createdEvent = await this.repo.create(createEventInput);
+    return (await this.repo.save(createdEvent)).toDto();
   }
 
-  update(id: string, updateEventInput: UpdateEventInput) {
-    return this.repo.save({ id, ...updateEventInput });
+  async update(id: string, updateEventInput: UpdateEventInput) {
+    const updatedEvent = await this.repo.create({ id, ...updateEventInput });
+    return (await this.repo.save(updatedEvent)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [events, totalCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(args),
+  async findAll(pageOptionsDto: EventsPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [events, eventsCount] = await this.repo.findAndCount({
+      // where: UtilsService.getOptions(args),
       relations: ['to', 'from', 'to.profile', 'from.profile'],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { events, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: eventsCount,
+    });
+    return new EventsPageDto(events.toDtos(), pageMetaDto);
   }
 }

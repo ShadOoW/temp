@@ -8,11 +8,11 @@ import { SubscriptionsService } from '@users/subscriptions/subscriptions.service
 import { CaslModule } from '@users/casl/casl.module';
 import { RequestListener } from './listeners/request.listener';
 import { EventsService } from '@src/modules/events/events/events.service';
-import { Event } from '@src/modules/events/events/entities/event.entity';
+import { EventEntity } from '@src/modules/events/events/entities/event.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RequestEntity, SubscriptionEntity, Event]),
+    TypeOrmModule.forFeature([RequestEntity, SubscriptionEntity, EventEntity]),
     CaslModule,
   ],
   providers: [
