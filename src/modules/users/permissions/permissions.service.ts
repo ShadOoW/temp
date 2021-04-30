@@ -25,14 +25,18 @@ export class PermissionsService {
     if (exists) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    const createdPermission = await this.repo.create(
-      createPermissionInput,
-    );
+    const createdPermission = await this.repo.create(createPermissionInput);
     return (await this.repo.save(createdPermission)).toDto();
   }
-
+  // TODO SKIP & WHERE
   async findAll(pageOptionsDto: PermissionsPageOptionsDto) {
-    const [permissions, permissionsCount] = await this.repo.findAndCount();
+    const { order, take } = pageOptionsDto;
+    const [permissions, permissionsCount] = await this.repo.findAndCount({
+      order: {
+        createdAt: order,
+      },
+      take,
+    });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: permissionsCount,
@@ -52,8 +56,11 @@ export class PermissionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const updatedPermission = await this.repo.create({id, ...updatePermissionInput });
-    return (await this.repo.save(updatedPermission)).toDto()
+    const updatedPermission = await this.repo.create({
+      id,
+      ...updatePermissionInput,
+    });
+    return (await this.repo.save(updatedPermission)).toDto();
   }
 
   async remove(id: string) {

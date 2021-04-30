@@ -1,70 +1,66 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
-import { Session } from './entities/session.entity';
 import { UpdateSessionInput } from './dto/update-session.input';
-import { GetSessionsArgs } from './dto/get-sessions.args';
-import { GetSessions } from './dto/get-sessions.dto';
-import { PaginationArgs } from '@shared/pagination.args';
 import { CreateSessionInput } from './dto/create-session.input copy';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';
+import { SessionsPageDto } from './dto/sessions-page.dto';
+import { SessionDto } from './dto/session.dto';
 
-@Resolver(() => Session)
+@Resolver(() => SessionDto)
 export class SessionsResolver {
   constructor(private readonly sessionsService: SessionsService) {}
 
-  @Mutation(() => Session)
+  @Mutation(() => SessionDto)
   createSession(
     @Args('createSessionInput') createSessionInput: CreateSessionInput,
   ) {
     return this.sessionsService.create(createSessionInput);
   }
 
-  @Query(() => GetSessions, { name: 'sessions' })
-  findAll(@Args() getSessionsArgs: GetSessionsArgs) {
-    return this.sessionsService.findAll(getSessionsArgs);
+  @Query(() => SessionsPageDto, { name: 'sessions' })
+  findAll(@Args() pageOptionsDto: SessionsPageOptionsDto) {
+    return this.sessionsService.findAll(pageOptionsDto);
   }
 
-  @Query(() => GetSessions, { name: 'menteeSessions' })
+  @Query(() => SessionsPageDto, { name: 'menteeSessions' })
   menteeSessions(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args('mentee', { type: () => String }) mentee: string,
-    @Args() paginationArgs: PaginationArgs,
+    @Args() paginationArgs: SessionsPageOptionsDto,
   ) {
-    return this.sessionsService.findAll({ ...paginationArgs, mentee, status });
+    return this.sessionsService.findAll(paginationArgs, mentee, status);
   }
 
-  @Query(() => GetSessions, { name: 'mentorSessions' })
+  @Query(() => SessionsPageDto, { name: 'mentorSessions' })
   mentorSessions(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args('mentor', { type: () => String }) mentor: string,
-    @Args() paginationArgs: PaginationArgs,
+    @Args() paginationArgs: SessionsPageOptionsDto,
   ) {
-    return this.sessionsService.findAll({ ...paginationArgs, mentor, status });
+    return this.sessionsService.findAll(paginationArgs, mentor, status);
   }
 
-  @Query(() => GetSessions, { name: 'sessionsNotDue' })
+  @Query(() => SessionsPageDto, { name: 'sessionsNotDue' })
   sessionsNotDue(
     @Args('status', { type: () => String, nullable: true }) status: string,
-    @Args() paginationArgs: PaginationArgs,
+    @Args() pageOptionsDto: SessionsPageOptionsDto,
     @CurrentUser() user,
   ) {
     if (user.isAdmin)
-      return this.sessionsService.findNotDue({ paginationArgs, status });
+      return this.sessionsService.findNotDue(pageOptionsDto, status);
     else if (user.role === 'mentor')
-      return this.sessionsService.findNotDue({
-        ...paginationArgs,
-        mentor: user.id,
-        status,
-      });
+      return this.sessionsService.findNotDue(pageOptionsDto, status, user.id);
     else
-      return this.sessionsService.findNotDue({
-        ...paginationArgs,
-        mentee: user.id,
+      return this.sessionsService.findNotDue(
+        pageOptionsDto,
         status,
-      });
+        undefined,
+        user.id,
+      );
   }
 
-  @Mutation(() => Session, { name: 'updateSession' })
+  @Mutation(() => SessionDto, { name: 'updateSession' })
   update(
     @Args('id', { type: () => String }) id: string,
     @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
@@ -72,12 +68,12 @@ export class SessionsResolver {
     return this.sessionsService.update(id, updateSessionInput);
   }
 
-  @Query(() => Session, { name: 'session' })
+  @Query(() => SessionDto, { name: 'session' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.sessionsService.findOne(id);
   }
 
-  @Mutation(() => Session)
+  @Mutation(() => SessionDto)
   removeSession(@Args('id', { type: () => String }) id: string) {
     return this.sessionsService.remove(id);
   }

@@ -1,39 +1,30 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Status } from '@shared/interfaces/globalStatus';
-import { UserDto } from '@users/users/dto/user.dto';
+import { SessionDto } from '../dto/session.dto';
+import { AbstractEntity } from '@src/common/abstract.entity';
 
-@ObjectType()
 @Entity({ name: 'sessions' })
-export class Session extends BaseEntity {
+export class SessionEntity extends AbstractEntity<SessionDto> {
   @Column({ type: 'timestamptz' })
-  @Field(() => Date)
   startDate: Date;
 
   @Column({ type: 'varchar', length: 300 })
-  @Field(() => String)
   title: string;
 
   @ManyToOne(() => UserEntity, (user) => user.menteeSessions)
-  @Field(() => UserDto)
-  mentee: UserDto;
+  mentee: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.mentorSessions)
-  @Field(() => UserDto)
   mentor: UserEntity;
 
   @Column({ type: 'text', nullable: true })
-  @Field(() => String)
   description?: string;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean)
   isVideoCall?: boolean;
 
   @Column({ type: 'boolean', default: false })
-  @Field(() => Boolean)
   isFromMentor?: boolean;
 
   @Column({
@@ -42,10 +33,10 @@ export class Session extends BaseEntity {
     enumName: 'sessionEnum',
     default: 'created',
   })
-  @Field(() => String, { nullable: true })
   status?: Status;
 
-  @Field(() => Int)
   @Column({ type: 'int', nullable: true })
   duration?: number;
+
+  dtoClass = SessionDto;
 }
