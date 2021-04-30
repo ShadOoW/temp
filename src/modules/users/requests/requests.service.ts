@@ -31,7 +31,7 @@ export class RequestsService {
     );
   }
 
-  async create(createRequestInput: CreateRequestInput) : Promise<RequestDto>{
+  async create(createRequestInput: CreateRequestInput): Promise<RequestDto> {
     const {
       mentee,
       mentor,
@@ -64,15 +64,14 @@ export class RequestsService {
         );
       }
 
-      const createdRequest = await this.repo
-        .create({
-          from: mentee,
-          to: mentor,
-          title: whyNeedCoaching,
-          description: expectations,
-          excerpt: message,
-        })
-      return (await this.repo.save(createdRequest)).toDto()
+      const createdRequest = await this.repo.create({
+        from: mentee,
+        to: mentor,
+        title: whyNeedCoaching,
+        description: expectations,
+        excerpt: message,
+      });
+      return (await this.repo.save(createdRequest)).toDto();
     } catch (error) {
       console.log(error);
       throw new HttpException(
@@ -153,7 +152,7 @@ export class RequestsService {
         subscribedTo: request.to,
       });
     }
-    return (await this.repo.save(createdRequest)).toDto()
+    return (await this.repo.save(createdRequest)).toDto();
   }
 
   async remove(id: string) {

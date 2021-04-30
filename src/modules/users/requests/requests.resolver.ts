@@ -107,7 +107,9 @@ export class RequestsResolver {
   }
 
   @Mutation(() => RequestDto)
-  removeRequest(@Args('id', { type: () => String }) id: string): Promise<RequestDto> {
+  removeRequest(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<RequestDto> {
     return this.requestsService.remove(id);
   }
 }

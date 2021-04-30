@@ -573,7 +573,7 @@ type RequestDto {
   proposition: Boolean
   status: String
   updatedAt: DateTime
-  whyNeedCoaching: String!
+  whyNeedCoaching: String
 }
 
 type RequestsPageDto {

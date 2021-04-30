@@ -7,26 +7,26 @@ import { RequestEntity } from '../entities/request.entity';
 
 @ObjectType()
 export class RequestDto extends AbstractDto {
-    @Field(() => String)
-    whyNeedCoaching: string;
-  
-    @Field(() => String, { nullable: true })
-    expectations?: string;
-  
-    @Field(() => String, { nullable: true })
-    message?: string;
-  
-    @Field(() => Boolean, { nullable: true })
-    proposition?: boolean;
-  
-    @Field(() => String, { nullable: true })
-    status?: Status;
-  
-    @Field(() => UserDto, { nullable: true })
-    mentor?: UserEntity;
-  
-    @Field(() => UserDto)
-    mentee: UserEntity;
+  @Field(() => String, { nullable: true })
+  whyNeedCoaching: string;
+
+  @Field(() => String, { nullable: true })
+  expectations?: string;
+
+  @Field(() => String, { nullable: true })
+  message?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  proposition?: boolean;
+
+  @Field(() => String, { nullable: true })
+  status?: Status;
+
+  @Field(() => UserDto, { nullable: true })
+  mentor?: UserEntity;
+
+  @Field(() => UserDto)
+  mentee: UserEntity;
 
   constructor(request: RequestEntity) {
     super(request);
