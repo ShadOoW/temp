@@ -43,12 +43,12 @@ export class UsersService {
       );
     const pw = await bcrypt.hash(password, 10);
     const createdProfile = await this.profileService.create(profile);
-    const createdUser = await this.repo.save({
+    const createdUser = await this.repo.create({
       ...createUserInputs,
       password: pw,
       profile: createdProfile,
     });
-    return createdUser.toDto();
+    return (await this.repo.save(createdUser)).toDto();
   }
 
   /**
@@ -171,8 +171,9 @@ export class UsersService {
         },
       );
     }
-    const updatedUser = await this.repo.save({ id, ...updateUserInput });
-    return updatedUser.toDto();
+    
+    const updatedUser = await this.repo.create({ id, ...updateUserInput });
+    return (await this.repo.save(updatedUser)).toDto();
   }
 
   /**

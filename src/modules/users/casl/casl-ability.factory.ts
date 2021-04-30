@@ -11,7 +11,7 @@ import { UserEntity } from '@users/users/entities/user.entity';
 import { PermissionEntity } from '@users/permissions/entities/permission.entity';
 import { RoleEntity } from '@users/roles/entities/role.entity';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
-import { Request } from '@users/requests/entities/request.entity';
+import { RequestEntity } from '@users/requests/entities/request.entity';
 
 type Subjects =
   | InferSubjects<

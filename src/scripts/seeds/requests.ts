@@ -3,7 +3,7 @@ import * as faker from 'faker';
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { RequestsService } from '@users/requests/requests.service';
-import { Request } from '@users/requests/entities/request.entity';
+import { RequestEntity } from '@users/requests/entities/request.entity';
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
 import { SubscriptionEntity } from '@users/subscriptions/entities/subscription.entity';
 import { UsersService } from '@users/users/users.service';
@@ -50,7 +50,7 @@ export async function requestsSeed() {
     connection.getRepository(SubscriptionEntity),
   );
   const requestService = new RequestsService(
-    connection.getRepository(Request),
+    connection.getRepository(RequestEntity),
     subcriptionService,
     null,
   );
@@ -111,7 +111,7 @@ export async function requestsSeed() {
           .create(await request)
           .then(
             (r) => (
-              console.log(`request ${index} done ->`, r.whyNeedCoaching), r
+              console.log(`request ${index} done ->`, r.title), r
             ),
           )
           .catch((e) => console.log(`request ${index} error -> `, e)),

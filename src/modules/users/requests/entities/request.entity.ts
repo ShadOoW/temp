@@ -1,27 +1,21 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { Status } from '@shared/interfaces/globalStatus';
-import { UserDto } from '@users/users/dto/user.dto';
+import { AbstractEntity } from '@src/common/abstract.entity';
+import { RequestDto } from '../dto/request.dto';
 
-@ObjectType()
 @Entity({ name: 'requests' })
-export class Request extends BaseEntity {
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  @Field(() => String)
+export class RequestEntity extends AbstractEntity<RequestDto> {
+  @Column({ type: 'varchar',nullable: true })
   title: string;
 
   @Column({ type: 'text', nullable: true })
-  @Field(() => String)
   excerpt: string;
 
   @Column({ type: 'text', nullable: true })
-  @Field(() => String, { nullable: true })
   description?: string;
 
   @Column({ type: 'boolean', nullable: true, default: false })
-  @Field(() => Boolean, { nullable: true })
   proposition?: boolean;
 
   @Column({
@@ -30,14 +24,14 @@ export class Request extends BaseEntity {
     enumName: 'statusEnum',
     default: 'created',
   })
-  @Field(() => String, { nullable: true })
   status?: Status;
 
   @ManyToOne(() => UserEntity, (user) => user.requestsTo)
-  @Field(() => UserDto, { nullable: true })
   to?: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.requestsFrom)
-  @Field(() => UserDto)
   from: UserEntity;
+
+  dtoClass = RequestDto;
+
 }

@@ -22,7 +22,8 @@ export class RolesService {
     if (role) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return (await this.repo.save(createRoleInput)).toDto();
+    const createdRole = await this.repo.create(createRoleInput)
+    return (await this.repo.save(createdRole)).toDto();
   }
 
   async findByNames(names) {
@@ -59,7 +60,8 @@ export class RolesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return (await this.repo.save({ id, ...updateRoleInput })).toDto();
+    const createdRole = await this.repo.create({ id, ...updateRoleInput })
+    return (await this.repo.save(createdRole)).toDto();
   }
 
   async remove(id: string) {

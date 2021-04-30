@@ -14,7 +14,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Field } from '@nestjs/graphql';
 import { RoleEntity } from '@users/roles/entities/role.entity';
-import { Request } from '@users/requests/entities/request.entity';
+import { RequestEntity } from '@users/requests/entities/request.entity';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { SubscriptionEntity } from '@users/subscriptions/entities/subscription.entity';
 import { Session } from '@education/sessions/entities/session.entity';
@@ -30,6 +30,7 @@ import { UserDto } from '../dto/user.dto';
 import { RoleDto } from '../../roles/dto/role.dto';
 import { ProfileDto } from '../../profiles/dto/profile.dto';
 import { SubscriptionDto } from '../../subscriptions/dto/subscription.dto';
+import { RequestDto } from '../../requests/dto/request.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -85,13 +86,13 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Field(() => [Event], { nullable: true })
   eventsFrom?: Event[];
 
-  @OneToMany(() => Request, (request) => request.to)
-  @Field(() => [Request])
-  requestsTo: Request[];
+  @OneToMany(() => RequestEntity, (request) => request.to)
+  @Field(() => [RequestDto])
+  requestsTo: RequestDto[];
 
-  @OneToMany(() => Request, (request) => request.from)
-  @Field(() => [Request])
-  requestsFrom: Request[];
+  @OneToMany(() => RequestEntity, (request) => request.from)
+  @Field(() => [RequestDto])
+  requestsFrom: RequestDto[];
 
   @OneToMany(
     () => SubscriptionEntity,

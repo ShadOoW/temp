@@ -3,46 +3,27 @@ import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { Injectable } from '@nestjs/common';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
-import { Request } from './entities/request.entity';
+import { RequestEntity } from './entities/request.entity';
 import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UtilsService } from '@shared/providers/utils.service';
+import { RequestDto } from './dto/request.dto';
+import { RequestsPageOptionsDto } from './dto/requests-page-options.dto';
+import { RequestsPageDto } from './dto/requests-page.dto';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 
 @Injectable()
 export class RequestsService {
   constructor(
-    @InjectRepository(Request) private readonly repo: Repository<Request>,
+    @InjectRepository(RequestEntity)
+    private readonly repo: Repository<RequestEntity>,
     private subscriptionService: SubscriptionsService,
     private eventEmitter: EventEmitter2,
   ) {}
 
-  getRequest(requestEntity: Request): any {
-    return {
-      id: requestEntity.id,
-      whyNeedCoaching: requestEntity.title,
-      expectations: requestEntity.description,
-      message: requestEntity.excerpt,
-      proposition: requestEntity.proposition,
-      mentee: {
-        id: requestEntity.from?.id,
-        email: requestEntity.from?.email,
-        username: requestEntity.from?.username,
-        profile: requestEntity.from?.profile,
-      },
-      mentor: {
-        id: requestEntity.to?.id,
-        email: requestEntity.to?.email,
-        username: requestEntity.to?.username,
-        profile: requestEntity.to?.profile,
-      },
-      status: requestEntity.status,
-      createdAt: requestEntity.createdAt,
-    };
-  }
-
-  async canRequest(mentee: string) {
+  async canRequest(mentee: string): Promise<boolean> {
     return (
       (await this.repo.count({
         where: { from: mentee, status: Not('refused') },
@@ -50,8 +31,15 @@ export class RequestsService {
     );
   }
 
-  async create(createRequestInput: CreateRequestInput) {
-    const { mentee, mentor, proposition } = createRequestInput;
+  async create(createRequestInput: CreateRequestInput) : Promise<RequestDto>{
+    const {
+      mentee,
+      mentor,
+      proposition,
+      whyNeedCoaching,
+      message,
+      expectations,
+    } = createRequestInput;
     try {
       const publicRequest = await this.repo.findOne({
         where: { from: mentee, to: null, status: 'created' },
@@ -76,35 +64,30 @@ export class RequestsService {
         );
       }
 
-      return this.repo
-        .save({
-          ...createRequestInput,
-          from: createRequestInput.mentee,
-          to: createRequestInput.mentor,
-          title: createRequestInput.whyNeedCoaching,
-          excerpt: createRequestInput.message,
-          description: createRequestInput.expectations,
+      const createdRequest = await this.repo
+        .create({
+          from: mentee,
+          to: mentor,
+          title: whyNeedCoaching,
+          description: expectations,
+          excerpt: message,
         })
-        .then((request) => {
-          // this.eventEmitter.emit('request.created', request);
-          return this.getRequest(request);
-        });
+      return (await this.repo.save(createdRequest)).toDto()
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         ERROR_MESSAGES.CANNOT_CREATE,
         HttpStatus.BAD_REQUEST,
       );
     }
   }
-
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.mentee;
-    delete args.mentor;
-    delete args.skip;
-    const [requests, totalCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(args),
+  // TODO add skip order page ...
+  async findAll(
+    pageOptionsDto: RequestsPageOptionsDto,
+  ): Promise<RequestsPageDto> {
+    const { mentee: from, mentor: to, status } = pageOptionsDto;
+    const [requests, requestsCount] = await this.repo.findAndCount({
+      where: UtilsService.getOptions({ from, to, status }),
       relations: [
         'to',
         'from',
@@ -116,18 +99,17 @@ export class RequestsService {
       order: {
         createdAt: 'DESC',
       },
-      skip,
-      take,
     });
-    return {
-      requests: requests.map((req) => this.getRequest(req)),
-      totalCount,
-    };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: requestsCount,
+    });
+    return new RequestsPageDto(requests.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo
-      .findOne(id, {
+    return (
+      await this.repo.findOne(id, {
         relations: [
           'to',
           'from',
@@ -137,7 +119,7 @@ export class RequestsService {
           'from.profile.wantedDomain',
         ],
       })
-      .then((request) => this.getRequest(request));
+    ).toDto();
   }
 
   async update(id: string, updateRequestInput: UpdateRequestInput) {
@@ -155,7 +137,7 @@ export class RequestsService {
         HttpStatus.NOT_MODIFIED,
       );
     }
-    const updatedRequest = await this.repo.save({
+    const createdRequest = await this.repo.create({
       id,
       ...updateRequestInput,
       from: updateRequestInput.mentee,
@@ -171,15 +153,14 @@ export class RequestsService {
         subscribedTo: request.to,
       });
     }
-
-    return updatedRequest;
+    return (await this.repo.save(createdRequest)).toDto()
   }
 
   async remove(id: string) {
     const requestToDelete = await this.repo.findOne(id);
     if (requestToDelete) {
       await this.repo.delete(id);
-      return requestToDelete;
+      return requestToDelete.toDto();
     }
   }
 }

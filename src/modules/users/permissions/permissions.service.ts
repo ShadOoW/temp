@@ -25,7 +25,10 @@ export class PermissionsService {
     if (exists) {
       throw new HttpException(ERROR_MESSAGES.EXISTED, HttpStatus.BAD_REQUEST);
     }
-    return (await this.repo.save(createPermissionInput)).toDto();
+    const createdPermission = await this.repo.create(
+      createPermissionInput,
+    );
+    return (await this.repo.save(createdPermission)).toDto();
   }
 
   async findAll(pageOptionsDto: PermissionsPageOptionsDto) {
@@ -49,7 +52,8 @@ export class PermissionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.repo.save({ id, ...updatePermissionInput });
+    const updatedPermission = await this.repo.create({id, ...updatePermissionInput });
+    return (await this.repo.save(updatedPermission)).toDto()
   }
 
   async remove(id: string) {
