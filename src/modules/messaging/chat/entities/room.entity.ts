@@ -3,7 +3,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { MessageEntity } from './message.entity';
-import { RoomDto } from '../dto/Room.dto';
+import { RoomDto } from '../dto/room.dto';
 
 @Entity({ name: 'rooms' })
 export class RoomEntity extends BaseEntity {

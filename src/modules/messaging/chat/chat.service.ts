@@ -7,10 +7,10 @@ import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './entities/room.entity';
-import { RoomDto } from './dto/Room.dto';
-import { CreateRoomDto } from './dto/createRoom.dto';
-import { CreatePrivateRoomDto } from './dto/createPrivateRoom.dto';
-import { CreateMessageDto } from './dto/createMessage.dto';
+import { RoomDto } from './dto/room.dto';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { CreatePrivateRoomDto } from './dto/create-private-room.dto';
+import { CreateMessageDto } from './dto/create-message.dto';
 import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @Injectable()

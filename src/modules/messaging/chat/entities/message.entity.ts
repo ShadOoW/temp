@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '@shared/base.entity';
-import { MessageDto } from '../dto/Message.dto';
+import { MessageDto } from '../dto/message.dto';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './room.entity';
 
