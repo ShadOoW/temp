@@ -28,11 +28,11 @@ export class PageOptionsDto {
 
   @Type(() => Number)
   @IsInt()
-  @Min(10)
+  @Min(2)
   @Max(50)
   @IsOptional()
   @Field(() => Int)
-  readonly take: number = 10;
+  readonly take: number = 2;
 
   // get skip(): number {
   //   return (this.page - 1) * this.take;

@@ -1,27 +1,27 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { EvaluationsService } from './evaluations.service';
-import { Evaluation } from './entities/evaluation.entity';
 import { CreateEvaluationInput } from './dto/create-evaluation.input';
-import { GetEvaluations } from './dto/get-evaluations.dto';
-import { PaginationArgs } from '@shared/pagination.args';
+import { EvaluationDto } from './dto/evaluation.dto';
+import { EvaluationsPageOptionsDto } from './dto/evaluations-page-options.dto';
+import { EvaluationsPageDto } from './dto/evaluations-page.dto';
 
-@Resolver(() => Evaluation)
+@Resolver(() => EvaluationDto)
 export class EvaluationsResolver {
   constructor(private readonly evaluationsService: EvaluationsService) {}
 
-  @Mutation(() => Evaluation)
+  @Mutation(() => EvaluationDto)
   createEvaluation(
     @Args('createEvaluationInput') createEvaluationInput: CreateEvaluationInput,
   ) {
     return this.evaluationsService.create(createEvaluationInput);
   }
 
-  @Query(() => GetEvaluations, { name: 'evaluations' })
-  findAll(@Args() paginationArgs: PaginationArgs) {
-    return this.evaluationsService.findAll(paginationArgs);
+  @Query(() => EvaluationsPageDto, { name: 'evaluations' })
+  findAll(@Args() pageOptionsDto: EvaluationsPageOptionsDto) {
+    return this.evaluationsService.findAll(pageOptionsDto);
   }
 
-  @Query(() => Evaluation, { name: 'evaluation' })
+  @Query(() => EvaluationDto, { name: 'evaluation' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.evaluationsService.findOne(id);
   }

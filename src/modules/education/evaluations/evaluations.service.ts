@@ -1,16 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { Repository } from 'typeorm';
 import { CreateEvaluationInput } from './dto/create-evaluation.input';
-import { Evaluation } from './entities/evaluation.entity';
+import { EvaluationsPageOptionsDto } from './dto/evaluations-page-options.dto';
+import { EvaluationsPageDto } from './dto/evaluations-page.dto';
+import { EvaluationEntity } from './entities/evaluation.entity';
 
 @Injectable()
 export class EvaluationsService {
   constructor(
-    @InjectRepository(Evaluation) private readonly repo: Repository<Evaluation>,
+    @InjectRepository(EvaluationEntity)
+    private readonly repo: Repository<EvaluationEntity>,
   ) {}
-  create(createEvaluationInput: CreateEvaluationInput) {
+  async create(createEvaluationInput: CreateEvaluationInput) {
     const { quiz, user } = createEvaluationInput;
     const exist = this.repo.findOne({ where: { quiz, user } });
     if (exist)
@@ -18,26 +22,30 @@ export class EvaluationsService {
         ERROR_MESSAGES.CANNOT_CREATE,
         HttpStatus.BAD_REQUEST,
       );
-    return this.repo.save(createEvaluationInput);
+    const createdEvaluation = await this.repo.create(createEvaluationInput);
+    return (await this.repo.save(createdEvaluation)).toDto();
   }
 
-  async findAll(args = null) {
-    const { take, skip } = args;
-    delete args.take;
-    delete args.skip;
-    const [evaluations, totalCount] = await this.repo.findAndCount({
-      where: args,
+  async findAll(pageOptionsDto: EvaluationsPageOptionsDto) {
+    const { order, take } = pageOptionsDto;
+    const [evaluations, evaluationsCount] = await this.repo.findAndCount({
       relations: ['user', 'quiz'],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
-      skip,
       take,
     });
-    return { evaluations, totalCount };
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: evaluationsCount,
+    });
+    return new EvaluationsPageDto(evaluations.toDtos(), pageMetaDto);
   }
 
   async findOne(id: string) {
-    return await this.repo.findOneOrFail(id, { relations: ['user', 'quiz'] });
+    const evaluation = await this.repo.findOneOrFail(id, {
+      relations: ['user', 'quiz'],
+    });
+    return evaluation.toDto();
   }
 }

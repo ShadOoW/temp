@@ -258,9 +258,9 @@ type DomainsPageDto {
   meta: PageMetaDto!
 }
 
-type Evaluation {
-  createdAt: DateTime!
-  id: String!
+type EvaluationDto {
+  createdAt: DateTime
+  id: String
 
   """User note"""
   note: String
@@ -273,7 +273,12 @@ type Evaluation {
 
   """Time spent on quiz"""
   timeSpent: Int
-  updatedAt: DateTime!
+  updatedAt: DateTime
+}
+
+type EvaluationsPageDto {
+  data: [EvaluationDto!]!
+  meta: PageMetaDto!
 }
 
 type Event {
@@ -295,11 +300,6 @@ input EventUserInput {
 
 type GetBadges {
   badges: [Badge!]!
-  totalCount: Int!
-}
-
-type GetEvaluations {
-  evaluations: [Evaluation!]!
   totalCount: Int!
 }
 
@@ -325,7 +325,7 @@ type GetPoints {
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): Badge!
   createDomain(createDomainInput: CreateDomainInput!): DomainDto!
-  createEvaluation(createEvaluationInput: CreateEvaluationInput!): Evaluation!
+  createEvaluation(createEvaluationInput: CreateEvaluationInput!): EvaluationDto!
   createEvent(createEventInput: CreateEventInput!): Event!
   createPermission(createPermissionInput: CreatePermissionInput!): PermissionDto!
   createPoint(createPointInput: CreatePointInput!): Point!
@@ -463,39 +463,39 @@ type Query {
   badges(skip: Int, take: Int): GetBadges!
   canRequest(mentee: String!): Boolean!
   domain(id: String!): DomainDto!
-  domains(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): DomainsPageDto!
+  domains(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): DomainsPageDto!
   emailExists(email: String!): Boolean!
-  evaluation(id: String!): Evaluation!
-  evaluations(skip: Int, take: Int): GetEvaluations!
+  evaluation(id: String!): EvaluationDto!
+  evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
   events(command: String, from: String, module: String, skip: Int, take: Int): GetEvents!
-  menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 10): RequestsPageDto
-  menteeSessions(mentee: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 10): SessionsPageDto!
-  mentorSessions(mentor: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 10): SessionsPageDto!
+  menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto
+  menteeSessions(mentee: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
+  mentorSessions(mentor: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   notifications(command: String, from: String, id: String!, module: String, skip: Int, take: Int): GetEvents!
   permission(id: String!): PermissionDto!
-  permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): PermissionsPageDto!
+  permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
   point(id: String!): Point!
   points(skip: Int, take: Int): GetPoints!
   profile(id: String!): ProfileDto!
-  publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 10): RequestsPageDto!
+  publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   question(id: String!): QuestionDto!
-  questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): QuestionsPageDto!
+  questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuestionsPageDto!
   quiz(id: String!): QuizDto!
-  quizzes(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): QuizzesPageDto!
+  quizzes(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
   request(id: String!): RequestsPageDto!
-  requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 10): RequestsPageDto!
+  requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   role(id: String!): RoleDto!
-  roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): RolesPageDto!
+  roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): RolesPageDto!
   rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
-  sessions(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SessionsPageDto!
-  sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 10): SessionsPageDto!
-  subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SubscriptionsPageDto!
-  subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): SubscriptionsPageDto!
+  sessions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SessionsPageDto!
+  sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
+  subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
+  subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
-  users(order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
-  usersByRole(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 10): UsersPageDto!
+  users(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
+  usersByRole(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
 }
 
 type QuestionDto {
