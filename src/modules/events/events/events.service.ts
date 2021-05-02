@@ -28,15 +28,10 @@ export class EventsService {
   }
   // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [events, eventsCount] = await this.repo.findAndCount({
-      // where: UtilsService.getOptions(pageOptionsDto),
+      where: UtilsService.getOptions(pageOptionsDto),
       relations: ['to', 'from', 'to.profile', 'from.profile'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

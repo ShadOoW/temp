@@ -20,15 +20,13 @@ export class SubscriptionsService {
   }
 
   async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [subscribers, subscribersCount] = await this.repo.findAndCount({
-      where: { subscribedTo: pageOptionsDto.id },
+      where: UtilsService.getOptions({
+        ...pageOptionsDto,
+        subscribedTo: pageOptionsDto.id,
+      }),
       relations: ['subscriber', 'subscriber.profile'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

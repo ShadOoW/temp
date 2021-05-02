@@ -23,13 +23,9 @@ export class PointsService {
 
   // TODO SKIP & WHERE
   async findAll(pageOptionsDto: PointsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [points, pointsCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      where: UtilsService.getOptions(pageOptionsDto),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

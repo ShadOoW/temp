@@ -30,18 +30,13 @@ export class SessionsService {
     mentor?: string,
     mentee?: string,
   ) {
-    const { order, take, page } = pageOptionsDto;
     const [sessions, sessionsCount] = await this.repo.findAndCount({
       where: {
         ...UtilsService.getOptions({ mentee, mentor, status }),
         startDate: MoreThanOrEqual(new Date()),
       },
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
@@ -57,15 +52,15 @@ export class SessionsService {
     mentor?: string,
     mentee?: string,
   ) {
-    const { order, take, page } = pageOptionsDto;
     const [sessions, sessionsCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions({ mentee, mentor, status }),
+      where: UtilsService.getOptions({
+        ...pageOptionsDto,
+        mentee,
+        mentor,
+        status,
+      }),
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

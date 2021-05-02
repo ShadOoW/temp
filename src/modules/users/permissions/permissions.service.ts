@@ -31,13 +31,9 @@ export class PermissionsService {
   }
   // TODO SKIP & WHERE
   async findAll(pageOptionsDto: PermissionsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [permissions, permissionsCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      where: UtilsService.getOptions(pageOptionsDto),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

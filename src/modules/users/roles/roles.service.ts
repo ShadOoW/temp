@@ -36,14 +36,10 @@ export class RolesService {
   }
 
   async findAll(pageOptionsDto: RolesPageOptionsDto): Promise<RolesPageDto> {
-    const { order, take, page } = pageOptionsDto;
     const [roles, rolesCount] = await this.repo.findAndCount({
+      where: UtilsService.getOptions(pageOptionsDto),
       relations: ['permissions'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

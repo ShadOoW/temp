@@ -1,8 +1,17 @@
-import { Entity, Column, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { ProfileDto } from '../dto/profile.dto';
 import { DomainDto } from '../../domains/dto/domain.dto';
 import { DomainEntity } from '../../domains/entities/domain.entity';
+import { UserEntity } from '../../users/entities/user.entity';
+import { UserDto } from '../../users/dto/user.dto';
 
 @Entity({ name: 'profiles' })
 export class ProfileEntity extends AbstractEntity<ProfileDto> {
@@ -69,6 +78,9 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
 
   @Column({ type: 'text', nullable: true })
   selfDescription?: string;
+
+  @OneToOne(() => UserEntity, (user) => user.profile)
+  user: UserDto;
 
   dtoClass = ProfileDto;
 }

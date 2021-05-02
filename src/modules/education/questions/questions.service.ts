@@ -22,14 +22,10 @@ export class QuestionsService {
   }
 
   async findAll(pageOptionsDto: QuestionsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [questions, questionsCount] = await this.repo.findAndCount({
+      where: UtilsService.getOptions(pageOptionsDto),
       relations: ['user'],
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

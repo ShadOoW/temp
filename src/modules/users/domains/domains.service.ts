@@ -28,13 +28,9 @@ export class DomainsService {
   }
 
   async findAll(pageOptionsDto: DomainsPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [domains, domainsCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      where: UtilsService.getOptions(pageOptionsDto),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

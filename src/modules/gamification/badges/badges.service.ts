@@ -21,13 +21,9 @@ export class BadgesService {
   }
 
   async findAll(pageOptionsDto: BadgesPageOptionsDto) {
-    const { order, take, page } = pageOptionsDto;
     const [badges, badgesCount] = await this.repo.findAndCount({
-      order: {
-        createdAt: order,
-      },
-      take,
-      skip: UtilsService.skip(page, take),
+      where: UtilsService.getOptions(pageOptionsDto),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

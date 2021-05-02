@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { PageOptionsDto } from '@src/common/dto/page-options.dto';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { RedisService } from 'nestjs-redis';
@@ -81,13 +82,28 @@ export class UtilsService {
   }
 
   static getOptions(args) {
+    const whereArgs = {};
     Object.keys(args).map((key) => {
-      if (args[key] === undefined) delete args[key];
+      if (
+        args[key] !== undefined &&
+        key !== 'order' &&
+        key !== 'take' &&
+        key !== 'page' &&
+        key !== 'q'
+      )
+        whereArgs[key] = args[key];
     });
-    return args;
+    return whereArgs;
   }
 
-  static skip(p: number, t: number): number {
-    return (p - 1) * t;
+  static pagination(args: PageOptionsDto) {
+    const { order, take, page } = args;
+    return {
+      order: {
+        createdAt: order,
+      },
+      take,
+      skip: (page - 1) * take,
+    };
   }
 }

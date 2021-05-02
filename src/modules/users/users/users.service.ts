@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Like, Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../auth/dto/login.dto';
@@ -21,11 +21,12 @@ import { UsersPageDto } from './dto/users-page.dto';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UserDto } from './dto/user.dto';
 import { UtilsService } from '@src/providers/utils.service';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity) private readonly repo: Repository<UserEntity>,
+    @InjectRepository(UserRepository) private readonly repo: UserRepository,
     private profileService: ProfilesService,
     private emailService: EmailsService = null,
   ) {}
@@ -57,7 +58,19 @@ export class UsersService {
    * @returns  {Array} of users info
    */
   async findAll(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
-    const { order, take, page } = pageOptionsDto;
+    // const search = pageOptionsDto.q
+    //   ? { profile: { firstName: Like(`%${pageOptionsDto.q}%`) } }
+    //   : {};
+    // const user = await this.repo
+    //   .createQueryBuilder('users')
+    //   .leftJoinAndSelect('users.profile', 'profile')
+    //   .andWhere('profile.firstName like :firstName', {
+    //     firstName: '%a%',
+    //   })
+    //   .getManyAndCount();
+
+    // console.log(user);
+
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -66,11 +79,13 @@ export class UsersService {
         'profile.coachingDomains',
         'profile.wantedDomain',
       ],
-      order: {
-        createdAt: order,
+      where: {
+        ...UtilsService.getOptions(pageOptionsDto),
+        // profile: {
+        //   firstName: 'Harrison',
+        // },
       },
-      take,
-      skip: UtilsService.skip(page, take),
+      ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
@@ -147,6 +162,7 @@ export class UsersService {
       .then((user) => user);
     return userWithRooms.toDto();
   }
+
   /**
    * Updates user
    * @param {string} id of user
