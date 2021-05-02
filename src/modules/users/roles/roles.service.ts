@@ -9,6 +9,7 @@ import { RoleEntity } from './entities/role.entity';
 import { RoleDto } from './dto/role.dto';
 import { RolesPageDto } from './dto/roles-page.dto';
 import { RolesPageOptionsDto } from './dto/roles-page-options.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class RolesService {
@@ -35,11 +36,14 @@ export class RolesService {
   }
 
   async findAll(pageOptionsDto: RolesPageOptionsDto): Promise<RolesPageDto> {
+    const { order, take, page } = pageOptionsDto;
     const [roles, rolesCount] = await this.repo.findAndCount({
       relations: ['permissions'],
       order: {
-        createdAt: 'DESC',
+        createdAt: order,
       },
+      take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

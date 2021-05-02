@@ -20,6 +20,7 @@ import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UsersPageDto } from './dto/users-page.dto';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UserDto } from './dto/user.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class UsersService {
@@ -69,7 +70,7 @@ export class UsersService {
         createdAt: order,
       },
       take,
-      skip: (page - 1) * take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

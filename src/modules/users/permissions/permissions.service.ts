@@ -9,6 +9,7 @@ import { PermissionEntity } from './entities/permission.entity';
 import { PermissionDto } from './dto/permission.dto';
 import { PermissionsPageDto } from './dto/permissions-page.dto';
 import { PermissionsPageOptionsDto } from './dto/permissions-page-options.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class PermissionsService {
@@ -30,12 +31,13 @@ export class PermissionsService {
   }
   // TODO SKIP & WHERE
   async findAll(pageOptionsDto: PermissionsPageOptionsDto) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [permissions, permissionsCount] = await this.repo.findAndCount({
       order: {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 import { Repository } from 'typeorm';
 import { BadgesPageOptionsDto } from './dto/badges-page-options.dto';
 import { BadgesPageDto } from './dto/badges-page.dto';
@@ -20,12 +21,13 @@ export class BadgesService {
   }
 
   async findAll(pageOptionsDto: BadgesPageOptionsDto) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [badges, badgesCount] = await this.repo.findAndCount({
       order: {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

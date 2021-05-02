@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 import { Repository } from 'typeorm';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { QuestionsPageOptionsDto } from './dto/questions-page-options.dto';
@@ -21,13 +22,14 @@ export class QuestionsService {
   }
 
   async findAll(pageOptionsDto: QuestionsPageOptionsDto) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [questions, questionsCount] = await this.repo.findAndCount({
       relations: ['user'],
       order: {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

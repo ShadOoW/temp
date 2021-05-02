@@ -8,6 +8,7 @@ import { UpdateDomainInput } from './dto/update-domain.input';
 import { DomainEntity } from './entities/domain.entity';
 import { DomainsPageOptionsDto } from './dto/domains-page-options.dto';
 import { DomainsPageDto } from './dto/domains-page.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class DomainsService {
@@ -27,7 +28,14 @@ export class DomainsService {
   }
 
   async findAll(pageOptionsDto: DomainsPageOptionsDto) {
-    const [domains, domainsCount] = await this.repo.findAndCount();
+    const { order, take, page } = pageOptionsDto;
+    const [domains, domainsCount] = await this.repo.findAndCount({
+      order: {
+        createdAt: order,
+      },
+      take,
+      skip: UtilsService.skip(page, take),
+    });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: domainsCount,

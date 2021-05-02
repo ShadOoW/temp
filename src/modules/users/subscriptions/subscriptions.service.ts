@@ -6,6 +6,7 @@ import { SubscriptionEntity } from './entities/subscription.entity';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
 import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class SubscriptionsService {
@@ -19,9 +20,15 @@ export class SubscriptionsService {
   }
 
   async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
+    const { order, take, page } = pageOptionsDto;
     const [subscribers, subscribersCount] = await this.repo.findAndCount({
       where: { subscribedTo: pageOptionsDto.id },
       relations: ['subscriber', 'subscriber.profile'],
+      order: {
+        createdAt: order,
+      },
+      take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

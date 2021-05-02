@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 import { Repository } from 'typeorm';
 import { CreatePointInput } from './dto/create-point.input';
 import { PointsPageOptionsDto } from './dto/points-page-options.dto';
@@ -22,12 +23,13 @@ export class PointsService {
 
   // TODO SKIP & WHERE
   async findAll(pageOptionsDto: PointsPageOptionsDto) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [points, pointsCount] = await this.repo.findAndCount({
       order: {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

@@ -8,11 +8,11 @@ import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { UtilsService } from '@shared/providers/utils.service';
 import { RequestDto } from './dto/request.dto';
 import { RequestsPageOptionsDto } from './dto/requests-page-options.dto';
 import { RequestsPageDto } from './dto/requests-page.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class RequestsService {
@@ -84,7 +84,14 @@ export class RequestsService {
   async findAll(
     pageOptionsDto: RequestsPageOptionsDto,
   ): Promise<RequestsPageDto> {
-    const { mentee: from, mentor: to, status, order, take } = pageOptionsDto;
+    const {
+      mentee: from,
+      mentor: to,
+      status,
+      order,
+      take,
+      page,
+    } = pageOptionsDto;
     const [requests, requestsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({ from, to, status }),
       relations: [
@@ -99,6 +106,7 @@ export class RequestsService {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

@@ -5,7 +5,7 @@ import { UpdateSessionInput } from './dto/update-session.input';
 import { SessionEntity } from './entities/session.entity';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { CreateSessionInput } from './dto/create-session.input copy';
-import { UtilsService } from '@shared/providers/utils.service';
+import { UtilsService } from '@src/providers/utils.service';
 import { SessionDto } from './dto/session.dto';
 import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
@@ -23,14 +23,14 @@ export class SessionsService {
     return (await this.repo.save(createdSession)).toDto();
   }
 
-  // TODO SKIP & WHERE & PAGE OPTIONS
+  // TODO WHERE & PAGE OPTIONS
   async findNotDue(
     pageOptionsDto: SessionsPageOptionsDto,
     status?: string,
     mentor?: string,
     mentee?: string,
   ) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [sessions, sessionsCount] = await this.repo.findAndCount({
       where: {
         ...UtilsService.getOptions({ mentee, mentor, status }),
@@ -41,6 +41,7 @@ export class SessionsService {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
@@ -49,14 +50,14 @@ export class SessionsService {
     return new SessionsPageDto(sessions.toDtos(), pageMetaDto);
   }
 
-  // TODO SKIP & WHERE & PAGE OPTIONS
+  // TODO WHERE & PAGE OPTIONS
   async findAll(
     pageOptionsDto: SessionsPageOptionsDto,
     status?: string,
     mentor?: string,
     mentee?: string,
   ) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [sessions, sessionsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({ mentee, mentor, status }),
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
@@ -64,6 +65,7 @@ export class SessionsService {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

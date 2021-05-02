@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { UtilsService } from '@shared/providers/utils.service';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
 import { Repository } from 'typeorm';
 import { CreateEventInput } from './dto/create-event.input';
 import { EventsPageOptionsDto } from './dto/events-page-options.dto';
@@ -27,7 +28,7 @@ export class EventsService {
   }
   // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
-    const { order, take } = pageOptionsDto;
+    const { order, take, page } = pageOptionsDto;
     const [events, eventsCount] = await this.repo.findAndCount({
       // where: UtilsService.getOptions(pageOptionsDto),
       relations: ['to', 'from', 'to.profile', 'from.profile'],
@@ -35,6 +36,7 @@ export class EventsService {
         createdAt: order,
       },
       take,
+      skip: UtilsService.skip(page, take),
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
