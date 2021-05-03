@@ -82,6 +82,7 @@ export class ProfileDto extends AbstractDto {
     this.yearsOfExperience = profile.yearsOfExperience;
     this.domainExpertise = profile.domainExpertise;
     this.coachingDomains = profile.coachingDomains;
+    this.coachingType = profile.coachingType;
     this.canOffer = profile.canOffer;
     this.professionalBg = profile.professionalBg;
     this.hoursPerMonth = profile.hoursPerMonth;
