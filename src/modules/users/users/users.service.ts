@@ -180,12 +180,9 @@ export class UsersService {
    */
   async update(id: string, updateUserInput: UpdateUserInput): Promise<UserDto> {
     const { active } = updateUserInput;
-    const user = await this.repo.findOne(
-      { id },
-      {
-        relations: ['profile'],
-      },
-    );
+    const user = await this.repo.findOne(id, {
+      relations: ['profile'],
+    });
     if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
