@@ -43,7 +43,7 @@ export class UsersResolver {
     @Args() pageOptionsDto: UsersPageOptionsDto,
     @Args('id', { type: () => String }) id: string,
   ) {
-    return this.usersService.findByRole(id);
+    return this.usersService.findByRole(id, pageOptionsDto);
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))

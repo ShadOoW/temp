@@ -98,11 +98,20 @@ export class UsersService {
    * Finds all users by RoleID related with (user role & role permissions)
    * @returns  {Array} of users info
    */
-  async findByRole(roleId: string): Promise<UserDto[]> {
-    return await this.repo.find({
+  async findByRole(
+    roleId: string,
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<UsersPageDto> {
+    const [users, usersCount] = await this.repo.findAndCount({
       relations: ['role', 'role.permissions', 'profile'],
       where: { role: roleId },
+      ...UtilsService.pagination(pageOptionsDto),
     });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: usersCount,
+    });
+    return new UsersPageDto(users.toDtos(), pageMetaDto);
   }
 
   /**
