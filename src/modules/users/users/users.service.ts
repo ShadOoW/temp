@@ -50,7 +50,8 @@ export class UsersService {
       password: pw,
       profile: createdProfile,
     });
-    return (await this.repo.save(createdUser)).toDto();
+    const savedUser = await this.repo.save(createdUser);
+    return await this.findOne(savedUser.id);
   }
 
   /**
@@ -103,7 +104,13 @@ export class UsersService {
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<UsersPageDto> {
     const [users, usersCount] = await this.repo.findAndCount({
-      relations: ['role', 'role.permissions', 'profile'],
+      relations: [
+        'role',
+        'role.permissions',
+        'profile',
+        'profile.coachingDomains',
+        'profile.wantedDomain',
+      ],
       where: { role: roleId },
       ...UtilsService.pagination(pageOptionsDto),
     });
