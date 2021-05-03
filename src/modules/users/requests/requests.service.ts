@@ -84,11 +84,14 @@ export class RequestsService {
   async findAll(
     pageOptionsDto: RequestsPageOptionsDto,
   ): Promise<RequestsPageDto> {
+    const { mentee: from, mentor: to } = pageOptionsDto;
+    delete pageOptionsDto.mentee;
+    delete pageOptionsDto.mentor;
     const [requests, requestsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({
         ...pageOptionsDto,
-        from: pageOptionsDto.mentee,
-        to: pageOptionsDto.mentee,
+        from,
+        to,
       }),
       relations: [
         'to',
