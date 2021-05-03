@@ -40,7 +40,7 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   @Field(() => String, { nullable: true })
   coachingType?: string;
 
-  @Field(() => [CreateProfileDomainInput])
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
   coachingDomains?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })

@@ -681,7 +681,7 @@ input UpdatePointInput {
 input UpdateProfileInput {
   canOffer: String
   city: String
-  coachingDomains: [CreateProfileDomainInput!]!
+  coachingDomains: [CreateProfileDomainInput!]
   coachingType: String
   company: String
   country: String
