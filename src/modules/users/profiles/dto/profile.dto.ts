@@ -71,7 +71,7 @@ export class ProfileDto extends AbstractDto {
   constructor(profile: ProfileEntity) {
     super(profile);
     this.firstName = profile.firstName;
-    this.firstName = profile.firstName;
+    this.lastName = profile.lastName;
     this.picture = profile.picture;
     this.phoneNumber = profile.phoneNumber;
     this.city = profile.city;
