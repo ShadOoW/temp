@@ -31,13 +31,13 @@ export class UsersResolver {
     return await this.usersService.create(createUserInput);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UsersPageDto, { name: 'users' })
   findAll(@Args() pageOptionsDto: UsersPageOptionsDto) {
     return this.usersService.findAll(pageOptionsDto);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UsersPageDto, { name: 'usersByRole' })
   findByRole(
     @Args() pageOptionsDto: UsersPageOptionsDto,
@@ -46,21 +46,21 @@ export class UsersResolver {
     return this.usersService.findByRole(id, pageOptionsDto);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UserDto, { name: 'userRequests' })
   findUserRequests(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findUserRequests(id);
   }
 
-  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UserDto, { name: 'user' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findOne(id);
   }
 
-  @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Update, UserEntity),
-  )
+  // @CheckPolicies((ability: AppAbility) =>
+  //   ability.can(Actions.Update, UserEntity),
+  // )
   @Mutation(() => UserDto)
   updateUser(
     @Args('id', { type: () => String }) id: string,
@@ -69,9 +69,9 @@ export class UsersResolver {
     return this.usersService.update(id, updateUserInput);
   }
 
-  @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Delete, UserEntity),
-  )
+  // @CheckPolicies((ability: AppAbility) =>
+  //   ability.can(Actions.Delete, UserEntity),
+  // )
   @Mutation(() => UserDto)
   removeUser(@Args('id', { type: () => String }) id: string) {
     return this.usersService.remove(id);
