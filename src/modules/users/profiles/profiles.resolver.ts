@@ -20,18 +20,18 @@ export class ProfilesResolver {
     private caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Read, ProfileEntity),
-  )
+  // @CheckPolicies((ability: AppAbility) =>
+  //   ability.can(Actions.Read, ProfileEntity),
+  // )
   @Query(() => ProfileDto, { name: 'profile' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.profilesService.findOne(id);
   }
 
   @Mutation(() => ProfileDto)
-  @CheckPolicies((ability: AppAbility) =>
-    ability.can(Actions.Update, ProfileEntity),
-  )
+  // @CheckPolicies((ability: AppAbility) =>
+  //   ability.can(Actions.Update, ProfileEntity),
+  // )
   updateProfile(
     @Args('id', { type: () => String }) id: string,
     @Args('updateProfileInput') updateProfileInput: UpdateProfileInput,
