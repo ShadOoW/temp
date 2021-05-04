@@ -488,8 +488,8 @@ type Query {
   subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
-  users(active: Boolean, isAdmin: Boolean, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
-  usersByRole(active: Boolean, id: String!, isAdmin: Boolean, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
+  users(active: Boolean = null, isAdmin: Boolean, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
+  usersByRole(active: Boolean = null, id: String!, isAdmin: Boolean, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): UsersPageDto!
 }
 
 type QuestionDto {

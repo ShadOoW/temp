@@ -86,6 +86,7 @@ export class UtilsService {
     Object.keys(args).map((key) => {
       if (
         args[key] !== undefined &&
+        args[key] !== null &&
         key !== 'order' &&
         key !== 'take' &&
         key !== 'page' &&
