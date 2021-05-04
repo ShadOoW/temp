@@ -70,6 +70,7 @@ export class RequestsService {
         title: whyNeedCoaching,
         description: expectations,
         excerpt: message,
+        proposition,
       });
       return (await this.repo.save(createdRequest)).toDto();
     } catch (error) {
