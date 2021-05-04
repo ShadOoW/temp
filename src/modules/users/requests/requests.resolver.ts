@@ -61,7 +61,7 @@ export class RequestsResolver {
     return this.requestsService.findAll(args);
   }
 
-  @Query(() => RequestsPageDto, { name: 'menteePublicRequest', nullable: true })
+  @Query(() => RequestDto, { name: 'menteePublicRequest', nullable: true })
   async findUserPublic(
     @Args('mentee', { type: () => String }) mentee: string,
     @Args() args: RequestsPageOptionsDto,
