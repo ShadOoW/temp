@@ -14,7 +14,14 @@ AWS.config.update({
 
 @Processor('email')
 export class EmailProcessor {
-  emailTemplatesDir = join(process.cwd(), 'src', 'emails', './templates');
+  emailTemplatesDir = join(
+    process.cwd(),
+    'src',
+    'modules',
+    'users',
+    'emails',
+    './templates',
+  );
 
   private async renderTemplate(template: string, data: unknown) {
     return await renderFile(join(this.emailTemplatesDir, template), data);
@@ -26,6 +33,7 @@ export class EmailProcessor {
     const { data } = job;
     const { type, to, subject, params } = data;
     const html = await this.renderTemplate(`${type}.ejs`, params);
+
     try {
       const email = {
         Destination: {
