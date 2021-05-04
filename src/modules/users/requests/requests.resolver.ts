@@ -93,7 +93,7 @@ export class RequestsResolver {
     });
   }
 
-  @Query(() => RequestsPageDto, { name: 'request' })
+  @Query(() => RequestDto, { name: 'request' })
   findOne(@Args('id', { type: () => String }) id: string): Promise<RequestDto> {
     return this.requestsService.findOne(id);
   }

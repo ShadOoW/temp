@@ -111,7 +111,7 @@ export class RequestsService {
   }
 
   async findOne(id: string) {
-    const request = await this.repo.findOne(id, {
+    const request = await this.repo.findOneOrFail(id, {
       relations: [
         'to',
         'from',

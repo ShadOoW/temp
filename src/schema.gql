@@ -476,7 +476,7 @@ type Query {
   questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuestionsPageDto!
   quiz(id: String!): QuizDto!
   quizzes(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
-  request(id: String!): RequestsPageDto!
+  request(id: String!): RequestDto!
   requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   role(id: String!): RoleDto!
   roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): RolesPageDto!
