@@ -1,6 +1,7 @@
 export interface EmailParams {
-  firstName: string;
+  firstName?: string;
   lastName?: string;
   createdAt?: string;
   active?: boolean;
+  link?: string;
 }

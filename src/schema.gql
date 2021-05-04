@@ -325,6 +325,7 @@ type Mutation {
   createSession(createSessionInput: CreateSessionInput!): SessionDto!
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): UserDto!
+  forgetPassword(email: String!): Boolean!
   removeBadge(id: String!): BadgeDto!
   removeDomain(id: String!): DomainDto!
   removePermission(id: String!): PermissionDto!
@@ -335,6 +336,7 @@ type Mutation {
   removeRole(id: String!): RoleDto!
   removeSession(id: String!): SessionDto!
   removeUser(id: String!): UserDto!
+  resetPassword(password: String!): Boolean!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): BadgeDto!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): BalanceDto!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): DomainDto!

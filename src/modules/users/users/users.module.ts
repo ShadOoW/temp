@@ -10,14 +10,19 @@ import { EmailsService } from '@users/emails/emails.service';
 import { UserRepository } from './user.repository';
 // import { ChatModule } from '../chat/chat.module';
 // import { AuthModule } from '../auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserRepository, ProfileEntity]),
     ProfilesModule,
     CaslModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
+    }),
   ],
-  exports: [UsersService, TypeOrmModule],
+  exports: [UsersService, TypeOrmModule, JwtModule],
   providers: [UsersResolver, UsersService, ProfilesService, EmailsService],
 })
 export class UsersModule {}

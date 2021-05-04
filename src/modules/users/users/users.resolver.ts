@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
@@ -12,16 +12,63 @@ import { Public } from '@shared/public.decorator';
 import { UserDto } from './dto/user.dto';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UsersPageDto } from './dto/users-page.dto';
+import { JwtService } from '@nestjs/jwt';
+import { EmailsService } from '../emails/emails.service';
+import {
+  RESET_PASSWORD_SUBJECT,
+  RESET_PASSWORD_TEMPLATE,
+} from '@shared/emails';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
 
 @Resolver(() => UserDto)
 @UseGuards(PoliciesGuard)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private jwtService: JwtService,
+    private emailService: EmailsService,
+  ) {}
 
   @Public()
   @Query(() => Boolean, { name: 'emailExists' })
   async emailExists(@Args('email', { type: () => String }) email: string) {
     return !!(await this.usersService.findByUserName({ email }));
+  }
+
+  @Public()
+  @Mutation(() => Boolean, { name: 'forgetPassword' })
+  async forgetPassword(@Args('email', { type: () => String }) email: string) {
+    const existUser = await this.usersService.findByUserName({ email });
+    if (existUser) {
+      const payload = {
+        email: existUser.email,
+        sub: existUser.id,
+      };
+      this.emailService.sendMail(
+        RESET_PASSWORD_TEMPLATE,
+        email,
+        RESET_PASSWORD_SUBJECT,
+        {
+          link: `${process.env.HOST}/?token=${this.jwtService.sign(payload)}`,
+        },
+      );
+      return true;
+    } else {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Args('password', { type: () => String }) password: string,
+    @CurrentUser() user,
+  ): Promise<boolean> {
+    if (user.id)
+      return await this.usersService.updatePassword(user.id, password);
   }
 
   @Mutation(() => UserDto)

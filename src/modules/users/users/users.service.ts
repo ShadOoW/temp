@@ -28,7 +28,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UserRepository) private readonly repo: UserRepository,
     private profileService: ProfilesService,
-    private emailService: EmailsService = null,
+    private emailService: EmailsService,
   ) {}
 
   /**
@@ -212,6 +212,26 @@ export class UsersService {
     return (await this.repo.save(updatedUser)).toDto();
   }
 
+  /**
+   * Updates user Password
+   * @param {string} id of user
+   * @param {string} password
+   */
+  async updatePassword(id: string, password: string) {
+    const user = await this.repo.findOne(id, {
+      relations: ['profile'],
+    });
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const pw = await bcrypt.hash(password, 10);
+    const updatedUser = await this.repo.create({ id, password: pw });
+    await this.repo.save(updatedUser);
+    return true;
+  }
   /**
    * Removes user
    * @param {string} id of user
