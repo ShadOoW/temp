@@ -17,13 +17,13 @@ export class SubscriptionsService {
 
   async create(createSubscriptionInput: CreateSubscriptionInput) {
     const createdSubscription = await this.repo.create(createSubscriptionInput);
+    console.log(createdSubscription);
     return (await this.repo.save(createdSubscription)).toDto();
   }
 
   async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
     const [subscribers, subscribersCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({
-        ...pageOptionsDto,
         subscribedTo: pageOptionsDto.id,
       }),
       relations: ['subscriber', 'subscriber.profile'],
