@@ -1,6 +1,6 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { PageOptionsDto } from '@src/common/dto/page-options.dto';
-import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @ArgsType()
 export class UsersPageOptionsDto extends PageOptionsDto {
@@ -14,5 +14,5 @@ export class UsersPageOptionsDto extends PageOptionsDto {
   @IsNotEmpty()
   @IsOptional()
   @Field(() => Boolean, { nullable: true })
-  readonly isAdmin?: boolean;
+  readonly isAdmin?: boolean = null;
 }

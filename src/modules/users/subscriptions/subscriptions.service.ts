@@ -16,7 +16,8 @@ export class SubscriptionsService {
   ) {}
 
   async create(createSubscriptionInput: CreateSubscriptionInput) {
-    return (await this.repo.save(createSubscriptionInput)).toDto();
+    const createdSubscription = await this.repo.create(createSubscriptionInput);
+    return (await this.repo.save(createdSubscription)).toDto();
   }
 
   async findSubscribers(pageOptionsDto: SubscriptionsPageOptionsDto) {
