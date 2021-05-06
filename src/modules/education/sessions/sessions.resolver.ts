@@ -37,7 +37,7 @@ export class SessionsResolver {
         user.id,
       );
   }
-
+  // TODO optimaze
   @Query(() => SessionsPageDto, { name: 'sessionsNotDue' })
   sessionsNotDue(
     @Args('status', { type: () => String, nullable: true }) status: string,
@@ -46,7 +46,7 @@ export class SessionsResolver {
   ) {
     if (user.isAdmin)
       return this.sessionsService.findNotDue(pageOptionsDto, status);
-    else if (user.role === 'mentor')
+    else if (user.role?.name === 'mentor')
       return this.sessionsService.findNotDue(pageOptionsDto, status, user.id);
     else
       return this.sessionsService.findNotDue(

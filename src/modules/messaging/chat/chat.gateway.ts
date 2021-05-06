@@ -159,7 +159,7 @@ export class ChatGateway
     });
     const pubrooms: RoomEntity[] = await this.roomRepository.find({
       where: { isPrivate: false },
-      relations: ['members', 'messages'],
+      relations: ['members'],
     });
     pvrooms.forEach((value) => {
       if (value.isPrivate) {
