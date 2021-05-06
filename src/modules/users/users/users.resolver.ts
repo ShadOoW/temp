@@ -50,9 +50,9 @@ export class UsersResolver {
         email,
         RESET_PASSWORD_SUBJECT,
         {
-          link: `${process.env.HOST}/resetPassword?token=${this.jwtService.sign(
-            payload,
-          )}`,
+          link: `${
+            process.env.HOST
+          }/auth/reset-password?token=${this.jwtService.sign(payload)}`,
         },
       );
       return true;
