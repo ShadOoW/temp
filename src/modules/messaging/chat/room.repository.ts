@@ -48,17 +48,20 @@ export class RoomRepository extends Repository<RoomEntity> {
 
   async checkPrivateRoomExists(sender, receiver): Promise<RoomEntity> {
     return await this.findOne({
-      name: this.generatePrivateRoomName(sender, receiver),
+      where: [
+        { name: this.generatePrivateRoomName(sender, receiver) },
+        { name: this.generatePrivateRoomName(receiver, sender) },
+      ],
     });
   }
 
   generatePrivateRoomName(sender, receiver): string {
-    if (sender.email.localeCompare(receiver.email) === -1) {
+    if (sender.id.localeCompare(receiver.id) === -1) {
       // firstUsername is "<" (before) secondUsername
-      return sender.email + '-' + receiver.email;
-    } else if (sender.email.localeCompare(receiver.email) === 1) {
+      return sender.id + '/' + receiver.id;
+    } else if (sender.id.localeCompare(receiver.id) === 1) {
       // firstUsername is ">" (after) secondUsername
-      return receiver.email + '-' + sender.email;
+      return receiver.id + '/' + sender.id;
     } else {
       return 'falsesss';
       // ids are equal, should throw an error

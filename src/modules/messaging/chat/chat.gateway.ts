@@ -215,7 +215,6 @@ export class ChatGateway
       name: client.request.user.email,
       text: payload.text,
     };
-    console.log(`client =====> :${client.id}`);
 
     const receiverSocketId: string = await this.redisService
       .getClient()

@@ -36,7 +36,7 @@ export class SessionDto extends AbstractDto {
   constructor(session: SessionEntity) {
     super(session);
     this.startDate = session.startDate;
-    this.title = session.description;
+    this.title = session.title;
     this.mentee = session.mentee;
     this.mentor = session.mentor;
     this.description = session.description;
