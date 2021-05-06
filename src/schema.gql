@@ -463,8 +463,6 @@ type Query {
   evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
   events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
-  menteeSessions(mentee: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
-  mentorSessions(mentor: String!, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   notifications(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   permission(id: String!): PermissionDto!
   permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
@@ -482,7 +480,7 @@ type Query {
   roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): RolesPageDto!
   rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
-  sessions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SessionsPageDto!
+  sessions(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
   subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!

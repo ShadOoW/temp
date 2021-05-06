@@ -24,9 +24,10 @@ export class SessionsResolver {
     @Args() pageOptionsDto: SessionsPageOptionsDto,
     @CurrentUser() user,
   ) {
+    console.log(user.role, user.id);
     if (user.isAdmin)
       return this.sessionsService.findAll(pageOptionsDto, status);
-    else if (user.role === 'mentor')
+    else if (user.role?.name === 'mentor')
       return this.sessionsService.findAll(pageOptionsDto, status, user.id);
     else
       return this.sessionsService.findAll(

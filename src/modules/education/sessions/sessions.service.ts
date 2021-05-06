@@ -52,6 +52,14 @@ export class SessionsService {
     mentor?: string,
     mentee?: string,
   ) {
+    console.log(
+      UtilsService.getOptions({
+        ...pageOptionsDto,
+        mentee,
+        mentor,
+        status,
+      }),
+    );
     const [sessions, sessionsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({
         ...pageOptionsDto,

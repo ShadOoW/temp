@@ -35,6 +35,9 @@ const app = new Vue({
   created() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    console.log(urlParams.get('token'));
+    console.log(urlParams.get('receiver'));
+
     this.socket = io('http://localhost:3000', {
       query: 'token=' + urlParams.get('token'),
     });
