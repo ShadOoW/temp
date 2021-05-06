@@ -100,7 +100,7 @@ export class SessionsService {
   }
 
   async remove(id: string) {
-    const sessionToDelete = await this.findOne(id);
+    const sessionToDelete = await this.repo.findOneOrFail(id);
     await this.repo.delete(id);
     return sessionToDelete.toDto();
   }
