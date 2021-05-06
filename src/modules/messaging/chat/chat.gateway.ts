@@ -215,10 +215,11 @@ export class ChatGateway
       name: client.request.user.email,
       text: payload.text,
     };
-    console.log(`payload.receiver =====> :${client.id}`);
+    console.log(`client =====> :${client.id}`);
+
     const receiverSocketId: string = await this.redisService
       .getClient()
-      .get(`users:${client.id}`);
+      .get(`users:${payload.receiver}`);
     console.log(`receiverSocketId:${receiverSocketId}`);
 
     // join two clients to room

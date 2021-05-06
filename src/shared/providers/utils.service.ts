@@ -77,7 +77,7 @@ export class UtilsService {
   ) {
     await redisService
       .getClient()
-      .set(`users:${userId}`, socketId, 'NX', 'EX', 30);
+      .set(`users:${userId}`, socketId, 'NX', 'EX', 3600);
   }
 
   static getOptions(args) {
