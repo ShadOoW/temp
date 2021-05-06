@@ -17,7 +17,6 @@ export class SubscriptionsService {
 
   async create(createSubscriptionInput: CreateSubscriptionInput) {
     const createdSubscription = await this.repo.create(createSubscriptionInput);
-    console.log(createdSubscription);
     return (await this.repo.save(createdSubscription)).toDto();
   }
 

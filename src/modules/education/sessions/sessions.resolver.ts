@@ -19,26 +19,22 @@ export class SessionsResolver {
   }
 
   @Query(() => SessionsPageDto, { name: 'sessions' })
-  findAll(@Args() pageOptionsDto: SessionsPageOptionsDto) {
-    return this.sessionsService.findAll(pageOptionsDto);
-  }
-
-  @Query(() => SessionsPageDto, { name: 'menteeSessions' })
-  menteeSessions(
+  findAll(
     @Args('status', { type: () => String, nullable: true }) status: string,
-    @Args('mentee', { type: () => String }) mentee: string,
-    @Args() paginationArgs: SessionsPageOptionsDto,
+    @Args() pageOptionsDto: SessionsPageOptionsDto,
+    @CurrentUser() user,
   ) {
-    return this.sessionsService.findAll(paginationArgs, mentee, status);
-  }
-
-  @Query(() => SessionsPageDto, { name: 'mentorSessions' })
-  mentorSessions(
-    @Args('status', { type: () => String, nullable: true }) status: string,
-    @Args('mentor', { type: () => String }) mentor: string,
-    @Args() paginationArgs: SessionsPageOptionsDto,
-  ) {
-    return this.sessionsService.findAll(paginationArgs, mentor, status);
+    if (user.isAdmin)
+      return this.sessionsService.findAll(pageOptionsDto, status);
+    else if (user.role === 'mentor')
+      return this.sessionsService.findAll(pageOptionsDto, status, user.id);
+    else
+      return this.sessionsService.findAll(
+        pageOptionsDto,
+        status,
+        undefined,
+        user.id,
+      );
   }
 
   @Query(() => SessionsPageDto, { name: 'sessionsNotDue' })
