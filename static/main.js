@@ -35,11 +35,11 @@ const app = new Vue({
   created() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    console.log(urlParams.get('token'));
-    console.log(urlParams.get('receiver'));
+    const token = urlParams.get('token');
+    const receiver = urlParams.get('receiver');
 
     this.socket = io('http://localhost:3000', {
-      query: 'token=' + urlParams.get('token'),
+      query: 'token=' + token,
     });
 
     this.socket.on('connect', (message) => {
@@ -49,9 +49,12 @@ const app = new Vue({
       this.getRooms();
     });
 
-    this.socket.on('getRooms', (message) => {
-      console.log(message);
-      this.rooms = [...message];
+    this.socket.on('getRooms', (rooms) => {
+      console.log(rooms);
+      this.rooms = rooms.map(
+        (r) => r.members.filter((m) => m.id === receiver)[0],
+      );
+      console.log(this.rooms);
     });
 
     this.socket.on('msgPrivateToClient', (message) => {

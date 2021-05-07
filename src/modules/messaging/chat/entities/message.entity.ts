@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { BaseEntity } from '@shared/base.entity';
 import { MessageDto } from '../dto/message.dto';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './room.entity';
+import { AbstractEntity } from '@src/common/abstract.entity';
 
 @Entity({ name: 'messages' })
-export class MessageEntity extends BaseEntity {
+export class MessageEntity extends AbstractEntity<MessageDto> {
   @Column({ nullable: true })
   text: string;
 

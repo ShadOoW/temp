@@ -1,12 +1,12 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
-import { BaseEntity } from '@shared/base.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { MessageEntity } from './message.entity';
 import { RoomDto } from '../dto/room.dto';
+import { AbstractEntity } from '@src/common/abstract.entity';
 
 @Entity({ name: 'rooms' })
-export class RoomEntity extends BaseEntity {
+export class RoomEntity extends AbstractEntity<RoomDto> {
   @Column({ nullable: false })
   name: string;
 

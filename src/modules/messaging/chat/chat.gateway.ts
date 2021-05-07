@@ -153,21 +153,21 @@ export class ChatGateway
 
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket) {
-    const pvrooms: RoomEntity[] = await this.roomRepository.find({
+    const pvrooms = await this.roomRepository.find({
       where: { isPrivate: true },
-      relations: ['members', 'messages'],
+      relations: ['members', 'members.profile'],
     });
-    const pubrooms: RoomEntity[] = await this.roomRepository.find({
-      where: { isPrivate: false },
-      relations: ['members'],
-    });
-    pvrooms.forEach((value) => {
-      if (value.isPrivate) {
-        value.name = value.members[0].email;
-      }
-    });
+    // const pubrooms: RoomEntity[] = await this.roomRepository.find({
+    //   where: { isPrivate: false },
+    //   relations: ['members'],
+    // });
+    // pvrooms.forEach((value) => {
+    //   if (value.isPrivate) {
+    //     value.name = value.members[0].email;
+    //   }
+    // });
     // console.log(rooms);
-    client.emit('getRooms', [...pvrooms, ...pubrooms]);
+    client.emit('getRooms', await pvrooms.toDtos());
   }
 
   @SubscribeMessage('msgToRoomServer')

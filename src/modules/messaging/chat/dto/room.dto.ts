@@ -1,22 +1,29 @@
-import { MessageEntity } from '../entities/message.entity';
 import { RoomEntity } from '../entities/room.entity';
-import { UserEntity } from '@users/users/entities/user.entity';
 import { AbstractDto } from '@shared/abstract.dto';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 export class RoomDto extends AbstractDto {
   name: string;
 
   isPrivate: boolean;
 
-  members: UserEntity[];
+  members: any[];
 
-  messages: MessageEntity[];
+  // messages: MessageEntity[];
 
   constructor(room: RoomEntity) {
     super(room);
     this.name = room.name;
     this.isPrivate = room.isPrivate;
-    this.members = room.members;
-    this.messages = room.messages;
+    this.members = room.members.map((member) => ({
+      id: member.id,
+      email: member.email,
+      username: member.status,
+      status: member.status,
+      firstName: member.profile?.firstName,
+      lastName: member.profile?.lastName,
+      picture: member.profile?.picture,
+    }));
+    // this.messages = room.messages;
   }
 }
