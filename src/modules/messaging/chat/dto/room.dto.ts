@@ -8,13 +8,14 @@ export class RoomDto extends AbstractDto {
   isPrivate: boolean;
 
   members: any[];
-
+  message: any;
   // messages: MessageEntity[];
 
   constructor(room: RoomEntity) {
     super(room);
     this.name = room.name;
     this.isPrivate = room.isPrivate;
+    this.message = room.messages[0];
     this.members = room.members.map((member) => ({
       id: member.id,
       email: member.email,

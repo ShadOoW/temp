@@ -58,6 +58,7 @@ const app = new Vue({
     });
 
     this.socket.on('msgPrivateToClient', (message) => {
+      console.log(message);
       this.receivedMessage(message);
     });
   },

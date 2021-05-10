@@ -12,6 +12,11 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { CreatePrivateRoomDto } from './dto/create-private-room.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UserDto } from '@src/modules/users/users/dto/user.dto';
+import { MessagesPageOptionsDto } from './dto/messages-page-options.dto';
+import { UtilsService } from '@src/providers/utils.service';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { MessagesPageDto } from './dto/messages-page.dto';
+import { MessageDto } from './dto/message.dto';
 
 @Injectable()
 export class ChatService {
@@ -46,13 +51,20 @@ export class ChatService {
     if (!room) {
       room = await this.roomRepository.createPrivateRoom(sender, receiver);
     }
-    return this.messageRepository.save({
+    const createdMsg = await this.messageRepository.save({
       text: msg,
       room: room,
       sender: sender,
     });
+    return createdMsg;
   }
 
+  async findCreatedMsg(id) {
+    const findCreatedMsg = await this.messageRepository.findOne(id, {
+      relations: ['sender', 'sender.profile'],
+    });
+    return findCreatedMsg.toDto();
+  }
   /*
    * check if user is joined the room before, if yes then save the message in room.
    */
@@ -91,5 +103,20 @@ export class ChatService {
 
   async joinRoom(room: RoomEntity, user: UserEntity): Promise<boolean> {
     return await this.roomRepository.join(room, user);
+  }
+
+  async findAll(pageOptionsDto: MessagesPageOptionsDto) {
+    const [messages, messagesCount] = await this.messageRepository.findAndCount(
+      {
+        where: { room: pageOptionsDto.room },
+        relations: ['sender', 'sender.profile'],
+        ...UtilsService.pagination(pageOptionsDto),
+      },
+    );
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: messagesCount,
+    });
+    return new MessagesPageDto(messages.toDtos(), pageMetaDto);
   }
 }

@@ -309,6 +309,19 @@ type EventsPageDto {
   meta: PageMetaDto!
 }
 
+type MessageDto {
+  createdAt: DateTime
+  id: String
+  sender: UserDto!
+  text: String!
+  updatedAt: DateTime
+}
+
+type MessagesPageDto {
+  data: [MessageDto!]!
+  meta: PageMetaDto!
+}
+
 type Mutation {
   createBadge(createBadgeInput: CreateBadgeInput!): BadgeDto!
   createDomain(createDomainInput: CreateDomainInput!): DomainDto!
@@ -463,6 +476,7 @@ type Query {
   evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
   events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
+  messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
   notifications(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   permission(id: String!): PermissionDto!
   permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!

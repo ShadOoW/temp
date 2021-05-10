@@ -8,9 +8,10 @@ import { MessageRepository } from './message.repository';
 import { RoomRepository } from './room.repository';
 import { AuthModule } from '@users/auth/auth.module';
 import { ConfigService } from '@shared/services/config.service';
+import { MessagesResolver } from './messages.resolver';
 
 @Module({
-  providers: [ChatGateway, ChatService, ConfigService],
+  providers: [MessagesResolver, ChatGateway, ChatService, ConfigService],
   imports: [
     TypeOrmModule.forFeature([MessageRepository, RoomRepository]),
     forwardRef(() => UsersModule),

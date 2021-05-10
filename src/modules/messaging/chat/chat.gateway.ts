@@ -32,6 +32,8 @@ import { UtilsService } from '@shared/providers/utils.service';
 import { AuthService } from '@users/auth/auth.service';
 import { RoomEntity } from './entities/room.entity';
 import { JoinRoomDto } from './dto/join-room.dto';
+import { UserEntity } from '@src/modules/users/users/entities/user.entity';
+import { MessageEntity } from './entities/message.entity';
 
 // import {JwtGuard} from "../auth/wsjwt.guard";
 @UsePipes(ValidationPipe)
@@ -103,7 +105,6 @@ export class ChatGateway
 
   @SubscribeMessage('createNewPublicRoom')
   async handleCreatePublicRoom(client: Socket, payload: CreateRoomDto) {
-    console.log('createNewPublicRoom');
     const exists: RoomEntity = await this.roomRepository.findOne({
       where: { name: payload.name },
     });
@@ -153,27 +154,20 @@ export class ChatGateway
 
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket) {
-    const pvrooms = await this.roomRepository.find({
-      where: { isPrivate: true },
-      relations: ['members', 'members.profile'],
-    });
-    // const pubrooms: RoomEntity[] = await this.roomRepository.find({
-    //   where: { isPrivate: false },
-    //   relations: ['members'],
-    // });
-    // pvrooms.forEach((value) => {
-    //   if (value.isPrivate) {
-    //     value.name = value.members[0].email;
-    //   }
-    // });
-    // console.log(rooms);
+    const pvrooms = await this.roomRepository
+      .createQueryBuilder('rooms')
+      .innerJoinAndSelect('rooms.messages', 'messages')
+      .orderBy('messages.createdAt', 'DESC')
+      .limit(1)
+      .innerJoinAndSelect('rooms.members', 'members')
+      .innerJoinAndSelect('members.profile', 'profile')
+      .limit(2)
+      .getMany();
     client.emit('getRooms', await pvrooms.toDtos());
   }
 
   @SubscribeMessage('msgToRoomServer')
   async handleRoomMessage(client: Socket, payload: CreateMessageDto) {
-    console.log('STEP3 => msgToRoomServer', 'payload', payload);
-
     const room = await this.roomRepository.findOne({
       where: { name: payload.room_name, isPrivate: false },
       relations: ['members'],
@@ -199,6 +193,7 @@ export class ChatGateway
 
   @SubscribeMessage('msgPrivateToServer')
   async handlePrivateMessage(client: Socket, payload: CreatePrivateMessageDto) {
+    console.log(payload);
     const receiver = await this.usersService.findOne(payload.receiver);
     //
     if (!receiver) {
@@ -211,24 +206,22 @@ export class ChatGateway
       payload.text,
     );
 
-    const answerPayload = {
-      name: client.request.user.email,
-      text: payload.text,
-    };
+    const answerPayload = await this._chatService.findCreatedMsg(
+      createdMessage.id,
+    );
 
     const receiverSocketId: string = await this.redisService
       .getClient()
       .get(`users:${payload.receiver}`);
-    console.log(`receiverSocketId:${receiverSocketId}`);
 
     // join two clients to room
     const receiverSocketObject = this.server.clients().sockets[
       receiverSocketId
     ];
-
-    receiverSocketObject.join(createdMessage.room.name);
-    client.join(createdMessage.room.name);
-
+    if (receiverSocketObject) {
+      receiverSocketObject.join(createdMessage.room.name);
+      client.join(createdMessage.room.name);
+    }
     // if receiver is online
     if (receiverSocketId) {
       this.server

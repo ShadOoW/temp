@@ -39,7 +39,6 @@ export class RoomRepository extends Repository<RoomEntity> {
   async createPrivateRoom(sender, receiver): Promise<RoomEntity> {
     const nroom = new RoomEntity();
     nroom.members = [sender, receiver];
-    console.log('sender', sender, 'receiver', receiver);
     nroom.isPrivate = true;
     nroom.name = this.generatePrivateRoomName(sender, receiver);
     await this.save(nroom);
