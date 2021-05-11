@@ -26,8 +26,10 @@ export class EventsService {
     const updatedEvent = await this.repo.create({ id, ...updateEventInput });
     return (await this.repo.save(updatedEvent)).toDto();
   }
+
   // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
+    // console.log(UtilsService.getOptions(pageOptionsDto));
     const [events, eventsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
       relations: ['to', 'from', 'to.profile', 'from.profile'],

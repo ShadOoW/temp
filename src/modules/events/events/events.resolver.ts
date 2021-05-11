@@ -8,6 +8,7 @@ import { UpdateEventInput } from './dto/update-event.input';
 import { EventDto } from './dto/event.dto';
 import { EventsPageDto } from './dto/events-page.dto';
 import { EventsPageOptionsDto } from './dto/events-page-options.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => EventDto)
 export class EventsResolver {
@@ -29,20 +30,14 @@ export class EventsResolver {
     return this.eventsService.update(id, updateEventInput);
   }
 
-  @Query(() => EventsPageDto, { name: 'notifications' })
-  activities(
-    @Args('id', { type: () => String }) id: string,
-    @Args() args: EventsPageOptionsDto,
-  ) {
-    return this.eventsService.findAll({ ...args, from: id });
+  @Query(() => EventsPageDto, { name: 'activities' })
+  activities(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
+    return this.eventsService.findAll({ ...args, from: user.id });
   }
 
   @Query(() => EventsPageDto, { name: 'notifications' })
-  notifications(
-    @Args('id', { type: () => String }) id: string,
-    @Args() args: EventsPageOptionsDto,
-  ) {
-    return this.eventsService.findAll({ ...args, to: id });
+  notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
+    return this.eventsService.findAll({ ...args, to: user.id });
   }
 
   @Query(() => EventsPageDto, { name: 'events' })
