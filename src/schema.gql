@@ -288,14 +288,14 @@ type EvaluationsPageDto {
 }
 
 type EventDto {
-  command: String!
+  command: String
   createdAt: DateTime
-  from: UserDto!
+  from: UserDto
   id: String
-  module: String!
-  payload: String!
-  read: Boolean!
-  sourceId: String!
+  module: String
+  payload: String
+  read: Boolean
+  sourceId: String
   to: UserDto
   updatedAt: DateTime
 }

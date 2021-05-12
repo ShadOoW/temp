@@ -6,25 +6,25 @@ import { EventEntity } from '../entities/event.entity';
 
 @ObjectType()
 export class EventDto extends AbstractDto {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   module: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   command: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   sourceId: string;
 
-  @Field(() => UserDto)
+  @Field(() => UserDto, { nullable: true })
   from?: UserEntity;
 
   @Field(() => UserDto, { nullable: true })
   to?: UserEntity;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   payload?: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   read?: boolean;
 
   constructor(event: EventEntity) {

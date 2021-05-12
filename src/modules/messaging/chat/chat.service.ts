@@ -65,6 +65,7 @@ export class ChatService {
     });
     return findCreatedMsg.toDto();
   }
+
   /*
    * check if user is joined the room before, if yes then save the message in room.
    */

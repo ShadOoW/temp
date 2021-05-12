@@ -1,6 +1,5 @@
 import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { EventsService } from './events.service';
-import { EventEntity } from './entities/event.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { PubSub } from 'graphql-subscriptions';
 import { Inject } from '@nestjs/common';

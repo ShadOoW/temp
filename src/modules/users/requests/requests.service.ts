@@ -156,7 +156,8 @@ export class RequestsService {
         subscribedTo: request.to,
       });
     }
-    return (await this.repo.save(createdRequest)).toDto();
+    await this.repo.save(createdRequest);
+    return this.findOne(id);
   }
 
   async remove(id: string) {

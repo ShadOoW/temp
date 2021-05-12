@@ -154,13 +154,17 @@ export class ChatGateway
 
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket) {
+    const memberId = client.request.user.id;
     const pvrooms = await this.roomRepository
       .createQueryBuilder('rooms')
-      .innerJoinAndSelect('rooms.messages', 'messages')
-      .orderBy('messages.createdAt', 'DESC')
-      .limit(1)
       .innerJoinAndSelect('rooms.members', 'members')
-      .innerJoinAndSelect('members.profile', 'profile')
+      .innerJoinAndSelect('rooms.messages', 'messages')
+      .innerJoinAndSelect('messages.sender', 'sender')
+      .where('sender.id = :memberId', { memberId })
+      .orderBy('messages.createdAt', 'DESC')
+      // .limit(1)
+      // .innerJoinAndSelect('members.profile', 'profile')
+      // .setParameter('userId', memeberId)
       .limit(2)
       .getMany();
     client.emit('getRooms', await pvrooms.toDtos());

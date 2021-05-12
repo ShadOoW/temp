@@ -1,5 +1,3 @@
-import { Inject, UseGuards } from '@nestjs/common';
-// import { PoliciesGuard } from '@src/guards/check-policies.guard';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { RequestsService } from './requests.service';
 import {
@@ -8,17 +6,17 @@ import {
   CreateRequestInput,
 } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
-import { PubSub } from 'graphql-subscriptions';
 import { RequestsPageDto } from './dto/requests-page.dto';
 import { RequestsPageOptionsDto } from './dto/requests-page-options.dto';
 import { RequestDto } from './dto/request.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 // @UseGuards(PoliciesGuard)
 @Resolver(() => RequestDto)
 export class RequestsResolver {
   constructor(
     private readonly requestsService: RequestsService,
-    @Inject('PUB_SUB') private pubSub: PubSub,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   @Mutation(() => RequestDto)
@@ -26,6 +24,7 @@ export class RequestsResolver {
     @Args('createRequestInput') createRequestInput: CreateRequestInput,
   ) {
     return this.requestsService.create(createRequestInput).then((event) => {
+      this.eventEmitter.emit('request.created', event);
       return event;
     });
   }
@@ -38,6 +37,7 @@ export class RequestsResolver {
     return this.requestsService
       .create(createPrivateRequestInput)
       .then((event) => {
+        this.eventEmitter.emit('request.created', event);
         return event;
       });
   }
@@ -50,8 +50,7 @@ export class RequestsResolver {
     return this.requestsService
       .create(createPublicRequestInput)
       .then((event) => {
-        // this.pubSub.publish('notification', { notification: event });
-        // this.pubSub.publish('activity', { activity: event });
+        this.eventEmitter.emit('request.created', event);
         return event;
       });
   }
@@ -103,7 +102,10 @@ export class RequestsResolver {
     @Args('id', { type: () => String }) id: string,
     @Args('updateRequestInput') updateRequestInput: UpdateRequestInput,
   ): Promise<RequestDto> {
-    return this.requestsService.update(id, updateRequestInput);
+    return this.requestsService.update(id, updateRequestInput).then((event) => {
+      this.eventEmitter.emit('request.updated', event);
+      return event;
+    });
   }
 
   @Mutation(() => RequestDto)
