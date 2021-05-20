@@ -82,7 +82,13 @@ export class SessionsResolver {
   }
 
   @Mutation(() => SessionDto)
-  removeSession(@Args('id', { type: () => String }) id: string) {
-    return this.sessionsService.remove(id);
+  removeSession(
+    @Args('id', { type: () => String }) id: string,
+    @CurrentUser() user,
+  ) {
+    return this.sessionsService.remove(id).then((event) => {
+      this.eventEmitter.emit('session.deleted', { ...event, userId: user.id });
+      return event;
+    });
   }
 }

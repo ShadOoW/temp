@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { EventDto } from '../dto/event.dto';
+import { EventPayloadDto } from '../dto/event-payload.dto';
 
 @Entity({ name: 'events' })
 export class EventEntity extends AbstractEntity<EventDto> {
@@ -21,7 +22,7 @@ export class EventEntity extends AbstractEntity<EventDto> {
   to?: UserEntity;
 
   @Column({ type: 'json', nullable: true })
-  payload?: string;
+  payload?: EventPayloadDto;
 
   @Column({ type: 'boolean', default: false })
   read?: boolean;

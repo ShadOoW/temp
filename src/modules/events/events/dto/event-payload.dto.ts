@@ -20,9 +20,9 @@ export class EventPayloadDto {
   @Field(() => Boolean, { nullable: true })
   isVideoCall?: boolean;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => String, { nullable: true })
   startDate: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => String, { nullable: true })
   createdAt: Date;
 }

@@ -20,7 +20,8 @@ export class SessionsService {
 
   async create(createSessionInput: CreateSessionInput): Promise<SessionDto> {
     const createdSession = await this.repo.create(createSessionInput);
-    return (await this.repo.save(createdSession)).toDto();
+    const savedSession = await this.repo.save(createdSession);
+    return this.findOne(savedSession.id);
   }
 
   // TODO WHERE & PAGE OPTIONS
@@ -88,12 +89,15 @@ export class SessionsService {
       id,
       ...updateSessionInput,
     });
-    return (await this.repo.save(createdSession)).toDto();
+    await this.repo.save(createdSession);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    const sessionToDelete = await this.repo.findOneOrFail(id);
-    await this.repo.delete(id);
-    return sessionToDelete.toDto();
+    const sessionToDelete = await this.findOne(id);
+    if (sessionToDelete) {
+      await this.repo.delete(id);
+      return sessionToDelete;
+    }
   }
 }

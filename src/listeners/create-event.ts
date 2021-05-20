@@ -15,7 +15,6 @@ export class CreateEvents {
   async request(request, command: string) {
     let from = request.mentee.id;
     let to = request.mentor.id;
-    console.log('======>', request);
     if (request.userId === request.mentor.id) {
       from = request.mentor.id;
       to = request.mentee.id;
@@ -43,11 +42,11 @@ export class CreateEvents {
   }
 
   async session(session, command: string) {
-    let from = session.mentee;
-    let to = session.mentor;
+    let from = session.mentee.id;
+    let to = session.mentor.id;
     if (session.userId === session.mentor.id) {
-      from = session.mentor;
-      to = session.mentee;
+      from = session.mentor.id;
+      to = session.mentee.id;
     }
     const sessionCreatedEvent = new CreateEventInput(
       'session',

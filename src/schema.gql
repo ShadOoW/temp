@@ -301,13 +301,13 @@ type EventDto {
 }
 
 type EventPayloadDto {
-  createdAt: DateTime
+  createdAt: String
   desciption: String
   isFromMentor: Boolean
   isVideoCall: Boolean
   name: String
   proposition: Boolean
-  startDate: DateTime
+  startDate: String
   status: String
 }
 

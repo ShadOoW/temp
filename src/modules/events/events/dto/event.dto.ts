@@ -23,7 +23,7 @@ export class EventDto extends AbstractDto {
   to?: UserEntity;
 
   @Field(() => EventPayloadDto, { nullable: true })
-  payload?: string;
+  payload?: EventPayloadDto;
 
   @Field(() => Boolean, { nullable: true })
   read?: boolean;
