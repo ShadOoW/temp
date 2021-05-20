@@ -72,9 +72,9 @@ export class RequestsService {
         excerpt: message,
         proposition,
       });
-      return (await this.repo.save(createdRequest)).toDto();
+      const savedRequest = await this.repo.save(createdRequest);
+      return this.findOne(savedRequest.id);
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         ERROR_MESSAGES.CANNOT_CREATE,
         HttpStatus.BAD_REQUEST,
@@ -115,7 +115,9 @@ export class RequestsService {
     const request = await this.repo.findOneOrFail(id, {
       relations: [
         'to',
+        'to.role',
         'from',
+        'from.role',
         'to.profile',
         'to.profile.coachingDomains',
         'from.profile',
@@ -161,10 +163,10 @@ export class RequestsService {
   }
 
   async remove(id: string) {
-    const requestToDelete = await this.repo.findOne(id);
+    const requestToDelete = await this.findOne(id);
     if (requestToDelete) {
       await this.repo.delete(id);
-      return requestToDelete.toDto();
+      return requestToDelete;
     }
   }
 }

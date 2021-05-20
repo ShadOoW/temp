@@ -3,6 +3,7 @@ import { UserEntity } from '@users/users/entities/user.entity';
 import { UserDto } from '@users/users/dto/user.dto';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { EventEntity } from '../entities/event.entity';
+import { EventPayloadDto } from './event-payload.dto';
 
 @ObjectType()
 export class EventDto extends AbstractDto {
@@ -21,7 +22,7 @@ export class EventDto extends AbstractDto {
   @Field(() => UserDto, { nullable: true })
   to?: UserEntity;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => EventPayloadDto, { nullable: true })
   payload?: string;
 
   @Field(() => Boolean, { nullable: true })
@@ -31,6 +32,7 @@ export class EventDto extends AbstractDto {
     super(event);
     this.module = event.module;
     this.command = event.command;
+    this.sourceId = event.sourceId;
     this.from = event.from;
     this.to = event.to;
     this.payload = event.payload;

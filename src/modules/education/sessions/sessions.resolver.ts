@@ -6,16 +6,24 @@ import { User as CurrentUser } from '@src/decorators/user.decorator';
 import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';
 import { SessionsPageDto } from './dto/sessions-page.dto';
 import { SessionDto } from './dto/session.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Resolver(() => SessionDto)
 export class SessionsResolver {
-  constructor(private readonly sessionsService: SessionsService) {}
+  constructor(
+    private readonly sessionsService: SessionsService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Mutation(() => SessionDto)
   createSession(
     @Args('createSessionInput') createSessionInput: CreateSessionInput,
+    @CurrentUser() user,
   ) {
-    return this.sessionsService.create(createSessionInput);
+    return this.sessionsService.create(createSessionInput).then((event) => {
+      this.eventEmitter.emit('session.created', { ...event, userId: user.id });
+      return event;
+    });
   }
 
   @Query(() => SessionsPageDto, { name: 'sessions' })
@@ -60,8 +68,12 @@ export class SessionsResolver {
   update(
     @Args('id', { type: () => String }) id: string,
     @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
+    @CurrentUser() user,
   ) {
-    return this.sessionsService.update(id, updateSessionInput);
+    return this.sessionsService.update(id, updateSessionInput).then((event) => {
+      this.eventEmitter.emit('session.updated', { ...event, userId: user.id });
+      return event;
+    });
   }
 
   @Query(() => SessionDto, { name: 'session' })

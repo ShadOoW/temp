@@ -293,11 +293,22 @@ type EventDto {
   from: UserDto
   id: String
   module: String
-  payload: String
+  payload: EventPayloadDto
   read: Boolean
   sourceId: String
   to: UserDto
   updatedAt: DateTime
+}
+
+type EventPayloadDto {
+  createdAt: DateTime
+  desciption: String
+  isFromMentor: Boolean
+  isVideoCall: Boolean
+  name: String
+  proposition: Boolean
+  startDate: DateTime
+  status: String
 }
 
 input EventUserInput {

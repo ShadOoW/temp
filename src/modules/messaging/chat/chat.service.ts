@@ -7,7 +7,7 @@ import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { RoomEntity } from './entities/room.entity';
-import { RoomDto } from './dto/room.dto';
+// import { RoomDto } from './dto/room.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { CreatePrivateRoomDto } from './dto/create-private-room.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -16,7 +16,7 @@ import { MessagesPageOptionsDto } from './dto/messages-page-options.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { MessagesPageDto } from './dto/messages-page.dto';
-import { MessageDto } from './dto/message.dto';
+// import { MessageDto } from './dto/message.dto';
 
 @Injectable()
 export class ChatService {
