@@ -2,8 +2,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
-import { UserEntity } from './entities/user.entity';
-import { createQueryBuilder, Like, Repository } from 'typeorm';
+// import { UserEntity } from './entities/user.entity';
+// import { createQueryBuilder, Like, Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../auth/dto/login.dto';
@@ -13,6 +13,8 @@ import { EmailsService } from '@users/emails/emails.service';
 import {
   ACTIVE_USER_SUBJECT,
   ACTIVE_USER_TEMPLATE,
+  CREATE_USER_SUBJECT,
+  CREATE_USER_TEMPLATE,
   // CREATE_USER_SUBJECT,
   // CREATE_USER_TEMPLATE,
 } from '@shared/emails';
@@ -51,6 +53,15 @@ export class UsersService {
       profile: createdProfile,
     });
     const savedUser = await this.repo.save(createdUser);
+    this.emailService.sendMail(
+      CREATE_USER_TEMPLATE,
+      savedUser.email,
+      CREATE_USER_SUBJECT,
+      {
+        firstName: createdProfile?.firstName,
+        lastName: createdProfile?.lastName,
+      },
+    );
     return await this.findOne(savedUser.id);
   }
 
