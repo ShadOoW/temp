@@ -70,7 +70,6 @@ export class UsersService {
     //   })
     //   .getManyAndCount();
 
-
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -171,7 +170,7 @@ export class UsersService {
    */
   async findUserRooms(id: string): Promise<UserDto> {
     const userWithRooms = await this.repo
-      .findOneOrFail(id, {
+      .findOne(id, {
         relations: ['rooms'],
       })
       .then((user) => user);
