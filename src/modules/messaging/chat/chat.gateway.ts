@@ -155,10 +155,9 @@ export class ChatGateway
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket) {
     const memberId = client.request.user.id;
-    // console.log(memberId);
     const userRooms = await this.roomRepository
       .createQueryBuilder('rooms')
-      .innerJoinAndSelect('rooms.members', 'members')
+      .leftJoinAndSelect('rooms.members', 'members')
       .select('rooms.id', 'id')
       .where('members.id = :memberId', { memberId })
       .getRawMany();
@@ -167,12 +166,12 @@ export class ChatGateway
       .innerJoinAndSelect('rooms.members', 'members')
       .innerJoinAndSelect('members.profile', 'profile')
       .innerJoinAndSelect('rooms.messages', 'messages')
+      // .limit(2)
       .where('rooms.id IN (:...userRooms)', {
         userRooms: userRooms.map((r) => r.id),
       })
       .orderBy('rooms.createdAt', 'DESC')
       .orderBy('messages.createdAt', 'DESC')
-      .limit(2)
       .getMany();
     console.log(pvrooms);
     client.emit('getRooms', await pvrooms.toDtos());

@@ -36,7 +36,6 @@ export class EventsService {
 
   // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
-    // console.log(UtilsService.getOptions(pageOptionsDto));
     const [events, eventsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
       relations: ['to', 'from', 'to.profile', 'from.profile'],

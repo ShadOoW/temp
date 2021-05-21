@@ -54,7 +54,6 @@ export class EventsResolver {
 
   @Subscription(() => EventDto, {
     filter: (payload, variables) => {
-      console.log('payload', payload, 'variables', variables);
       return payload.activity.from.id === variables.id;
     },
   })

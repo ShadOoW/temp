@@ -4,4 +4,5 @@ export enum Status {
   accepted = 'accepted',
   refused = 'refused',
   activated = 'activated',
+  done = 'done',
 }

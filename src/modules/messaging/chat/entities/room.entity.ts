@@ -14,7 +14,7 @@ export class RoomEntity extends AbstractEntity<RoomDto> {
   // @ManyToOne(type => User,)
   // owner: User;
 
-  @ManyToMany(() => UserEntity, (user) => user.rooms, { cascade: true })
+  @ManyToMany(() => UserEntity, (user) => user.rooms)
   @JoinTable()
   members?: UserEntity[];
 

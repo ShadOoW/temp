@@ -70,7 +70,6 @@ export class UsersService {
     //   })
     //   .getManyAndCount();
 
-    // console.log(user);
 
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
