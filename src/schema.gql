@@ -638,8 +638,8 @@ type SessionsPageDto {
 }
 
 type Subscription {
-  activity: EventDto!
-  notification: EventDto!
+  activity(id: String!): EventDto!
+  notification(id: String!): EventDto!
 }
 
 input SubscriptionUserInput {

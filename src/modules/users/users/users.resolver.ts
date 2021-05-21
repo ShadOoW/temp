@@ -67,10 +67,9 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   async resetPassword(
     @Args('password', { type: () => String }) password: string,
-    @CurrentUser() user,
+    @CurrentUser() userId,
   ): Promise<boolean> {
-    if (user.id)
-      return await this.usersService.updatePassword(user.id, password);
+    if (userId) return await this.usersService.updatePassword(userId, password);
   }
 
   @Mutation(() => UserDto)

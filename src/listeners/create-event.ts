@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SessionDto } from '@education/sessions/dto/session.dto';
+// import { SessionDto } from '@education/sessions/dto/session.dto';
 import { CreateEventInput } from '@src/modules/events/events/dto/create-event.input';
 import { EventsService } from '@src/modules/events/events/events.service';
 // import { RequestDto } from '@users/requests/dto/request.dto';
@@ -35,9 +35,10 @@ export class CreateEvents {
     );
     return await this.eventsService
       .create(requestCreatedEvent)
-      .then((event) => {
-        this.pubSub.publish('notification', { notification: event });
-        this.pubSub.publish('activity', { activity: event });
+      .then(async (event) => {
+        const createdEvent = await this.eventsService.findOne(event.id);
+        this.pubSub.publish('notification', { notification: createdEvent });
+        this.pubSub.publish('activity', { activity: createdEvent });
       });
   }
 
@@ -66,9 +67,10 @@ export class CreateEvents {
     );
     return await this.eventsService
       .create(sessionCreatedEvent)
-      .then((event) => {
-        this.pubSub.publish('notification', { notification: event });
-        this.pubSub.publish('activity', { activity: event });
+      .then(async (event) => {
+        const createdEvent = await this.eventsService.findOne(event.id);
+        this.pubSub.publish('notification', { notification: createdEvent });
+        this.pubSub.publish('activity', { activity: createdEvent });
       });
   }
 
@@ -87,9 +89,10 @@ export class CreateEvents {
     );
     return await this.eventsService
       .create(messageCreatedEvent)
-      .then((event) => {
-        this.pubSub.publish('notification', { notification: event });
-        this.pubSub.publish('activity', { activity: event });
+      .then(async (event) => {
+        const createdEvent = await this.eventsService.findOne(event.id);
+        this.pubSub.publish('notification', { notification: createdEvent });
+        this.pubSub.publish('activity', { activity: createdEvent });
       });
   }
 }

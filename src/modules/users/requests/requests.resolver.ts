@@ -23,10 +23,10 @@ export class RequestsResolver {
   @Mutation(() => RequestDto)
   createRequest(
     @Args('createRequestInput') createRequestInput: CreateRequestInput,
-    @CurrentUser() user,
+    @CurrentUser() userId,
   ) {
     return this.requestsService.create(createRequestInput).then((event) => {
-      this.eventEmitter.emit('request.created', { ...event, userId: user.id });
+      this.eventEmitter.emit('request.created', { ...event, userId });
       return event;
     });
   }
@@ -35,14 +35,14 @@ export class RequestsResolver {
   createPrivateRequest(
     @Args('createPrivateRequestInput')
     createPrivateRequestInput: CreatePrivateRequestInput,
-    @CurrentUser() user,
+    @CurrentUser() userId,
   ) {
     return this.requestsService
       .create(createPrivateRequestInput)
       .then((event) => {
         this.eventEmitter.emit('request.created', {
           ...event,
-          userId: user.id,
+          userId,
         });
         return event;
       });
@@ -102,10 +102,10 @@ export class RequestsResolver {
   updateRequest(
     @Args('id', { type: () => String }) id: string,
     @Args('updateRequestInput') updateRequestInput: UpdateRequestInput,
-    @CurrentUser() user,
+    @CurrentUser() userId,
   ): Promise<RequestDto> {
     return this.requestsService.update(id, updateRequestInput).then((event) => {
-      this.eventEmitter.emit('request.updated', { ...event, userId: user.id });
+      this.eventEmitter.emit('request.updated', { ...event, userId });
       return event;
     });
   }
@@ -113,10 +113,10 @@ export class RequestsResolver {
   @Mutation(() => RequestDto)
   removeRequest(
     @Args('id', { type: () => String }) id: string,
-    @CurrentUser() user,
+    @CurrentUser() userId,
   ): Promise<RequestDto> {
     return this.requestsService.remove(id).then((event) => {
-      this.eventEmitter.emit('request.deleted', { ...event, userId: user.id });
+      this.eventEmitter.emit('request.deleted', { ...event, userId });
       return event;
     });
   }

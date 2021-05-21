@@ -27,6 +27,13 @@ export class EventsService {
     return (await this.repo.save(updatedEvent)).toDto();
   }
 
+  async findOne(id: string) {
+    const event = await this.repo.findOne(id, {
+      relations: ['to', 'from', 'to.profile', 'from.profile'],
+    });
+    return event.toDto();
+  }
+
   // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
     // console.log(UtilsService.getOptions(pageOptionsDto));

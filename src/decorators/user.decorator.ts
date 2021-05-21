@@ -8,5 +8,5 @@ export const User = createParamDecorator((data, context: ExecutionContext) => {
     context.getType() === 'http'
       ? context.switchToHttp().getRequest()
       : ctx.getContext().req;
-  return req.user;
+  return req.user.id;
 });

@@ -8,6 +8,7 @@ import { EventDto } from './dto/event.dto';
 import { EventsPageDto } from './dto/events-page.dto';
 import { EventsPageOptionsDto } from './dto/events-page-options.dto';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @Resolver(() => EventDto)
 export class EventsResolver {
@@ -30,13 +31,13 @@ export class EventsResolver {
   }
 
   @Query(() => EventsPageDto, { name: 'activities' })
-  activities(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
-    return this.eventsService.findAll({ ...args, from: user.id });
+  activities(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
+    return this.eventsService.findAll({ ...args, from: userId });
   }
 
   @Query(() => EventsPageDto, { name: 'notifications' })
-  notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
-    return this.eventsService.findAll({ ...args, to: user.id });
+  notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
+    return this.eventsService.findAll({ ...args, to: userId });
   }
 
   @Query(() => EventsPageDto, { name: 'events' })
@@ -44,13 +45,20 @@ export class EventsResolver {
     return this.eventsService.findAll(args);
   }
 
-  @Subscription(() => EventDto)
-  notification() {
+  @Subscription(() => EventDto, {
+    filter: (payload, variables) => payload.notification.to.id === variables.id,
+  })
+  notification(@Args('id') @CurrentUser() id: string) {
     return this.pubSub.asyncIterator('notification');
   }
 
-  @Subscription(() => EventDto)
-  activity() {
+  @Subscription(() => EventDto, {
+    filter: (payload, variables) => {
+      console.log('payload', payload, 'variables', variables);
+      return payload.activity.from.id === variables.id;
+    },
+  })
+  activity(@Args('id') @CurrentUser() id: string) {
     return this.pubSub.asyncIterator('activity');
   }
 }
