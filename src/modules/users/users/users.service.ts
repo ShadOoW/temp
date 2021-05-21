@@ -174,7 +174,7 @@ export class UsersService {
         relations: ['rooms'],
       })
       .then((user) => user);
-    return userWithRooms.toDto();
+    return userWithRooms ? userWithRooms.toDto() : null;
   }
 
   /**
