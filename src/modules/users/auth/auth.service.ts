@@ -71,8 +71,8 @@ export class AuthService {
     }
     const user = await this.usersService.findUserRooms(userId);
     if (!user) {
-      throw new UnauthorizedException();
-      // return false;
+      // throw new UnauthorizedException();
+      return;
     }
 
     // set user on client request for another handlers to get authenticated user.
