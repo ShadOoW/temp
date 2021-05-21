@@ -169,11 +169,9 @@ export class UsersService {
    * @returns  {object} user infos
    */
   async findUserRooms(id: string): Promise<UserDto> {
-    const userWithRooms = await this.repo
-      .findOne(id, {
-        relations: ['rooms'],
-      })
-      .then((user) => user);
+    const userWithRooms = await this.repo.findOne(id, {
+      relations: ['rooms'],
+    });
     return userWithRooms ? userWithRooms.toDto() : null;
   }
 
