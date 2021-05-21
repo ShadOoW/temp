@@ -71,10 +71,21 @@ export class SessionsService {
   }
 
   async findOne(id: string) {
-    const domain = await this.repo.findOneOrFail(id, {
+    const session = await this.repo.findOneOrFail(id, {
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
     });
-    return domain ? domain.toDto() : null;
+    return session ? session.toDto() : null;
+  }
+
+  async findActivated(id: string) {
+    const session = await this.repo.find({
+      where: [
+        { mentee: id, status: 'activated' },
+        { mentor: id, status: 'activated' },
+      ],
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+    });
+    return session ? session.toDtos() : null;
   }
 
   async update(id: string, updateSessionInput: UpdateSessionInput) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { EventsService } from './events.service';
 import { CreateEventInput } from './dto/create-event.input';
@@ -8,7 +9,6 @@ import { EventDto } from './dto/event.dto';
 import { EventsPageDto } from './dto/events-page.dto';
 import { EventsPageOptionsDto } from './dto/events-page-options.dto';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
-import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @Resolver(() => EventDto)
 export class EventsResolver {
@@ -48,7 +48,7 @@ export class EventsResolver {
   @Subscription(() => EventDto, {
     filter: (payload, variables) => payload.notification.to.id === variables.id,
   })
-  notification(@Args('id') @CurrentUser() id: string) {
+  notification(@Args('id') id: string) {
     return this.pubSub.asyncIterator('notification');
   }
 
@@ -58,7 +58,7 @@ export class EventsResolver {
       return payload.activity.from.id === variables.id;
     },
   })
-  activity(@Args('id') @CurrentUser() id: string) {
+  activity(@Args('id') id: string) {
     return this.pubSub.asyncIterator('activity');
   }
 }

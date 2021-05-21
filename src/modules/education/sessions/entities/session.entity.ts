@@ -29,7 +29,7 @@ export class SessionEntity extends AbstractEntity<SessionDto> {
 
   @Column({
     type: 'enum',
-    enum: ['created', 'updated', 'accepted', 'refused'],
+    enum: ['created', 'updated', 'accepted', 'refused', 'activated'],
     enumName: 'sessionEnum',
     default: 'created',
   })

@@ -477,6 +477,7 @@ input PropositionInput {
 }
 
 type Query {
+  activatedSessions: [SessionDto!]!
   activities(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   badge(id: String!): BadgeDto!
   badges(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): BadgesPageDto!

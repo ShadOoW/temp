@@ -47,6 +47,7 @@ export class SessionsResolver {
         userId,
       );
   }
+
   // TODO optimaze
   @Query(() => SessionsPageDto, { name: 'sessionsNotDue' })
   async sessionsNotDue(
@@ -78,6 +79,11 @@ export class SessionsResolver {
       this.eventEmitter.emit('session.updated', { ...event, userId });
       return event;
     });
+  }
+
+  @Query(() => [SessionDto], { name: 'activatedSessions' })
+  findActivated(@CurrentUser() userId) {
+    return this.sessionsService.findActivated(userId);
   }
 
   @Query(() => SessionDto, { name: 'session' })
