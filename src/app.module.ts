@@ -52,10 +52,10 @@ import { EvaluationsModule } from '@education/evaluations/evaluations.module';
       redis: REDIS_CONFIG,
     }),
     RedisModule.register({ url: 'redis://127.0.0.1:6379/0' }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
-      exclude: ['/api*'],
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'static'),
+    //   exclude: ['/api*', '/graphql'],
+    // }),
     EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
