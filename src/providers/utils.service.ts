@@ -3,6 +3,7 @@ import { PageOptionsDto } from '@src/common/dto/page-options.dto';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { RedisService } from 'nestjs-redis';
+import { In } from 'typeorm';
 
 export class UtilsService {
   /**
@@ -91,8 +92,10 @@ export class UtilsService {
         key !== 'take' &&
         key !== 'page' &&
         key !== 'q'
-      )
-        whereArgs[key] = args[key];
+      ) {
+        if (_.isArray(args[key])) whereArgs[key] = In(args[key]);
+        else whereArgs[key] = args[key];
+      }
     });
     return whereArgs;
   }

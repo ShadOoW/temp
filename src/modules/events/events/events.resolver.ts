@@ -37,7 +37,23 @@ export class EventsResolver {
 
   @Query(() => EventsPageDto, { name: 'notifications' })
   notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
-    return this.eventsService.findAll({ ...args, to: userId });
+    return this.eventsService.findAll({
+      ...args,
+      to: userId,
+      module: ['session', 'request'],
+    });
+  }
+
+  @Query(() => EventsPageDto, { name: 'messagesNotifications' })
+  messagesNotifications(
+    @Args() args: EventsPageOptionsDto,
+    @CurrentUser() userId,
+  ) {
+    return this.eventsService.findAll({
+      ...args,
+      to: userId,
+      module: ['message'],
+    });
   }
 
   @Query(() => EventsPageDto, { name: 'events' })
@@ -50,6 +66,14 @@ export class EventsResolver {
   })
   notification(@Args('id') id: string) {
     return this.pubSub.asyncIterator('notification');
+  }
+
+  @Subscription(() => EventDto, {
+    filter: (payload, variables) =>
+      payload.messageNotification.to.id === variables.id,
+  })
+  messageNotification(@Args('id') id: string) {
+    return this.pubSub.asyncIterator('messageNotification');
   }
 
   @Subscription(() => EventDto, {

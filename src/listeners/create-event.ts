@@ -77,6 +77,7 @@ export class CreateEvents {
   async message(message, command: string) {
     const from = message.sender;
     const to = message.receiver;
+    console.log(message);
     const messageCreatedEvent = new CreateEventInput(
       'message',
       command,
@@ -91,7 +92,9 @@ export class CreateEvents {
       .create(messageCreatedEvent)
       .then(async (event) => {
         const createdEvent = await this.eventsService.findOne(event.id);
-        this.pubSub.publish('notification', { notification: createdEvent });
+        this.pubSub.publish('messageNotification', {
+          messageNotification: createdEvent,
+        });
         this.pubSub.publish('activity', { activity: createdEvent });
       });
   }
