@@ -1,6 +1,7 @@
 export const ERROR_MESSAGES = {
   UNAUTHORIZE: 'Unauthorized access',
   INVALID_CREDENTIALS: 'Invalid credentials',
+  NOT_ACTIVE: 'Compte not activated',
   EXISTED: 'Already exists',
   NOT_EXISTED: 'Not exists',
   PRODUCT_NOT_FOUND: 'Product not found',

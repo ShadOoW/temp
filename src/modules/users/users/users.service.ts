@@ -281,8 +281,8 @@ export class UsersService {
     });
     if (!user) {
       throw new HttpException(
-        ERROR_MESSAGES.INVALID_CREDENTIALS,
-        HttpStatus.UNAUTHORIZED,
+        ERROR_MESSAGES.NOT_ACTIVE,
+        HttpStatus.NOT_ACCEPTABLE,
       );
     }
 
