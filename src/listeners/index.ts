@@ -37,4 +37,9 @@ export class Listeners {
   async handleSessionDeletedEvent(session: SessionDto) {
     await this.createEvent.session(session, 'deleted');
   }
+  /// Message Events
+  @OnEvent('message.created')
+  async handleMessageCreatedEvent(message) {
+    await this.createEvent.message(message, 'created');
+  }
 }

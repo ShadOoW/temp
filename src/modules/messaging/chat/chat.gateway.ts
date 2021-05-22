@@ -34,6 +34,7 @@ import { RoomEntity } from './entities/room.entity';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { UserEntity } from '@src/modules/users/users/entities/user.entity';
 import { MessageEntity } from './entities/message.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 // import {JwtGuard} from "../auth/wsjwt.guard";
 @UsePipes(ValidationPipe)
@@ -50,6 +51,7 @@ export class ChatGateway
     private _chatService: ChatService,
     private readonly redisService: RedisService,
     private authService: AuthService,
+    private eventEmitter: EventEmitter2,
     // @InjectRepository(UserRepository)
     // public readonly userRepository: UserRepository,
     @InjectRepository(RoomRepository)
@@ -214,7 +216,11 @@ export class ChatGateway
       receiver,
       payload.text,
     );
-
+    this.eventEmitter.emit('message.created', {
+      ...createdMessage,
+      receiver,
+      userId: createdMessage.sender.id,
+    });
     const answerPayload = await this._chatService.findCreatedMsg(
       createdMessage.id,
     );

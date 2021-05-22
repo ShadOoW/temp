@@ -69,7 +69,6 @@ export class AuthService {
       throw new UnauthorizedException();
       // return false;
     }
-    console.log(userId);
     const user = await this.usersService.findUserRooms(userId);
     if (!user) {
       throw new UnauthorizedException();
