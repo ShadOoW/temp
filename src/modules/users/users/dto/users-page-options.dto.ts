@@ -10,6 +10,12 @@ export class UsersPageOptionsDto extends PageOptionsDto {
   @Field(() => Boolean, { nullable: true })
   readonly active?: boolean = null;
 
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  readonly status?: string = null;
+
   @IsBoolean()
   @IsNotEmpty()
   @IsOptional()
