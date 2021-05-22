@@ -24,6 +24,7 @@ import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UserDto } from './dto/user.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { UserRepository } from './user.repository';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -70,17 +71,6 @@ export class UsersService {
    * @returns  {Array} of users info
    */
   async findAll(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
-    // const search = pageOptionsDto.q
-    //   ? { profile: { firstName: Like(`%${pageOptionsDto.q}%`) } }
-    //   : {};
-    // const user = await this.repo
-    //   .createQueryBuilder('users')
-    //   .leftJoinAndSelect('users.profile', 'profile')
-    //   .andWhere('profile.firstName like :firstName', {
-    //     firstName: '%a%',
-    //   })
-    //   .getManyAndCount();
-
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -91,12 +81,34 @@ export class UsersService {
       ],
       where: {
         ...UtilsService.getOptions(pageOptionsDto),
-        // profile: {
-        //   firstName: 'Harrison',
-        // },
+        active: true,
       },
       ...UtilsService.pagination(pageOptionsDto),
     });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: usersCount,
+    });
+    return new UsersPageDto(users.toDtos(), pageMetaDto);
+  }
+
+  async findByDomain(
+    pageOptionsDto: UsersPageOptionsDto,
+    domain: string,
+  ): Promise<UsersPageDto> {
+    const [users, usersCount] = await this.repo
+      .createQueryBuilder('users')
+      .innerJoinAndSelect('users.role', 'role')
+      .innerJoinAndSelect('role.permissions', 'permissions')
+      .innerJoinAndSelect('users.profile', 'profile')
+      .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
+      .where('coachingDomains.name = :domain', { domain })
+      .andWhere('users.active = :active', { active: true })
+      .andWhere('role.name = :role', { role: 'mentor' })
+      .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
+      .take(pageOptionsDto.take)
+      .getManyAndCount();
+
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: usersCount,

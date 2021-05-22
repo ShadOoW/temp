@@ -85,6 +85,14 @@ export class UsersResolver {
     return this.usersService.findAll(pageOptionsDto);
   }
 
+  @Query(() => UsersPageDto, { name: 'findByDomain' })
+  findByDomain(
+    @Args() pageOptionsDto: UsersPageOptionsDto,
+    @Args('domain', { type: () => String }) domain: string,
+  ) {
+    return this.usersService.findByDomain(pageOptionsDto, domain);
+  }
+
   // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UsersPageDto, { name: 'usersByRole' })
   findByRole(

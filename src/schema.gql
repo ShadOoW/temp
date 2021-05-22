@@ -488,6 +488,7 @@ type Query {
   evaluation(id: String!): EvaluationDto!
   evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
   events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
+  findByDomain(active: Boolean = null, domain: String!, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
   messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
   messagesNotifications(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
