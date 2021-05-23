@@ -77,6 +77,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
+        'profile.domainExpertise',
         'profile.wantedDomain',
       ],
       where: {
@@ -102,6 +103,7 @@ export class UsersService {
       .innerJoinAndSelect('role.permissions', 'permissions')
       .innerJoinAndSelect('users.profile', 'profile')
       .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
+      .innerJoinAndSelect('profile.domainExpertise', 'domainExpertise')
       .where('coachingDomains.name = :domain', { domain })
       .andWhere('users.active = :active', { active: true })
       .andWhere('role.name = :role', { role: 'mentor' })
@@ -130,6 +132,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
+        'profile.domainExpertise',
         'profile.wantedDomain',
       ],
       where: { role: roleId },
@@ -166,6 +169,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
+        'profile.domainExpertise',
         'profile.wantedDomain',
       ],
     });
@@ -193,11 +197,11 @@ export class UsersService {
    */
   async findUserRooms(id: string): Promise<UserDto> {
     const userWithRooms = await this.repo
-      .findOneOrFail(id, {
+      .findOne(id, {
         relations: ['rooms'],
       })
       .then((user) => user);
-    return userWithRooms.toDto();
+    return userWithRooms ? userWithRooms.toDto() : null;
   }
 
   /**
@@ -288,6 +292,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
+        'profile.domainExpertise',
         'profile.wantedDomain',
       ],
     });

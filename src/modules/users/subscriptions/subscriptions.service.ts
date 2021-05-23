@@ -47,4 +47,10 @@ export class SubscriptionsService {
     });
     return new SubscriptionsPageDto(subscriptions.toDtos(), pageMetaDto);
   }
+
+  async usersCount(id) {
+    return await this.repo.count({
+      where: { subscribedTo: id },
+    });
+  }
 }

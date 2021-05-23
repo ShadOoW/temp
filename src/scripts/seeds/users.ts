@@ -35,7 +35,6 @@ async function genUser(username, type, role = null, domains = []) {
     website: faker.internet.url(),
     linkedin: `www.linkedin.com/${username}`,
     country: 'Maroc',
-    domainExpertise: 'Domain A',
     yearsOfExperience: Math.floor(Math.random() * 11),
   };
   switch (type) {
@@ -47,9 +46,10 @@ async function genUser(username, type, role = null, domains = []) {
           ...m2mProfile,
           coachingType: 'Type A',
           coachingDomains: domains,
+          domainExpertise: domains,
           canOffer: faker.lorem.paragraph(),
           professionalBg: faker.lorem.paragraph(),
-          hoursPerMonth: Math.floor(Math.random() * 20),
+          hoursPerMonth: Math.floor(Math.random() * 20).toString(),
         },
       };
     case 'mentee':

@@ -132,9 +132,9 @@ input CreateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: String
+  domainExpertise: [CreateProfileDomainInput!]
   firstName: String
-  hoursPerMonth: Int
+  hoursPerMonth: String
   lastName: String
   linkedin: String
   phoneNumber: String
@@ -430,9 +430,9 @@ type ProfileDto {
   country: String
   createdAt: DateTime
   currentPost: String
-  domainExpertise: String
+  domainExpertise: [DomainDto!]
   firstName: String
-  hoursPerMonth: Int
+  hoursPerMonth: String
   id: String
   lastName: String
   linkedin: String
@@ -491,6 +491,7 @@ type Query {
   events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   findByDomain(active: Boolean = null, domain: String!, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
+  menteesCount: Int!
   messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
   messagesNotifications(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
   notifications(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
@@ -510,6 +511,7 @@ type Query {
   roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): RolesPageDto!
   rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
+  sessionCalcs: SessionsCalcsDto!
   sessions(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
@@ -636,6 +638,11 @@ type SessionDto {
   updatedAt: DateTime
 }
 
+type SessionsCalcsDto {
+  count: Int!
+  durationTotal: Int!
+}
+
 type SessionsPageDto {
   data: [SessionDto!]!
   meta: PageMetaDto!
@@ -717,9 +724,9 @@ input UpdateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: String
+  domainExpertise: [CreateProfileDomainInput!]
   firstName: String
-  hoursPerMonth: Int
+  hoursPerMonth: String
   lastName: String
   linkedin: String
   phoneNumber: String

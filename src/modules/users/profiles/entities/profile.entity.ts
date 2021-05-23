@@ -45,8 +45,9 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'int', nullable: true })
   yearsOfExperience?: number;
 
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  domainExpertise?: string;
+  @ManyToMany(() => DomainEntity, { nullable: true })
+  @JoinTable()
+  domainExpertise?: DomainDto[];
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   coachingType?: string;
@@ -61,8 +62,8 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'text', nullable: true })
   professionalBg?: string;
 
-  @Column({ type: 'int', nullable: true })
-  hoursPerMonth?: number;
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  hoursPerMonth?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   currentPost?: string;

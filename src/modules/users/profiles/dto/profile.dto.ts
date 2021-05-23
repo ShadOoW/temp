@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { DomainDto } from '../../domains/dto/domain.dto';
 import { ProfileEntity } from '../entities/profile.entity';
+import { CreateProfileDomainInput } from './profile.inputs';
 
 @ObjectType()
 export class ProfileDto extends AbstractDto {
@@ -35,8 +36,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => String, { nullable: true })
-  domainExpertise?: string;
+  @Field(() => [DomainDto], { nullable: true })
+  domainExpertise?: DomainDto[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;
@@ -50,8 +51,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   professionalBg?: string;
 
-  @Field(() => Int, { nullable: true })
-  hoursPerMonth?: number;
+  @Field(() => String, { nullable: true })
+  hoursPerMonth?: string;
 
   @Field(() => String, { nullable: true })
   currentPost?: string;

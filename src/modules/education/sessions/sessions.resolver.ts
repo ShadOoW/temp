@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { UpdateSessionInput } from './dto/update-session.input';
 import { CreateSessionInput } from './dto/create-session.input copy';
@@ -8,6 +8,7 @@ import { SessionsPageDto } from './dto/sessions-page.dto';
 import { SessionDto } from './dto/session.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UsersService } from '@users/users/users.service';
+import { SessionsCalcsDto } from './dto/sessions-calcs.dto';
 
 @Resolver(() => SessionDto)
 export class SessionsResolver {
@@ -79,6 +80,11 @@ export class SessionsResolver {
       this.eventEmitter.emit('session.updated', { ...event, userId });
       return event;
     });
+  }
+
+  @Query(() => SessionsCalcsDto, { name: 'sessionCalcs' })
+  sessionCalcs(@CurrentUser() userId) {
+    return this.sessionsService.sessionCalcs(userId);
   }
 
   @Query(() => [SessionDto], { name: 'activatedSessions' })

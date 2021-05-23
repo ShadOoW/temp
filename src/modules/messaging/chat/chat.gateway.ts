@@ -153,27 +153,29 @@ export class ChatGateway
 
   @SubscribeMessage('getRooms')
   async handleGetRooms(@ConnectedSocket() client: Socket) {
-    const memberId = client.request.user.id;
-    const userRooms = await this.roomRepository
-      .createQueryBuilder('rooms')
-      .leftJoinAndSelect('rooms.members', 'members')
-      .select('rooms.id', 'id')
-      .where('members.id = :memberId', { memberId })
-      .getRawMany();
-    if (userRooms.length > 0) {
-      const pvrooms = await this.roomRepository
+    if (client.request.user) {
+      const memberId = client.request.user.id;
+      const userRooms = await this.roomRepository
         .createQueryBuilder('rooms')
-        .innerJoinAndSelect('rooms.members', 'members')
-        .innerJoinAndSelect('members.profile', 'profile')
-        .innerJoinAndSelect('rooms.messages', 'messages')
-        // .limit(2)
-        .where('rooms.id IN (:...userRooms)', {
-          userRooms: userRooms.map((r) => r.id),
-        })
-        .orderBy('rooms.createdAt', 'DESC')
-        .orderBy('messages.createdAt', 'DESC')
-        .getMany();
-      client.emit('getRooms', await pvrooms.toDtos());
+        .leftJoinAndSelect('rooms.members', 'members')
+        .select('rooms.id', 'id')
+        .where('members.id = :memberId', { memberId })
+        .getRawMany();
+      if (userRooms.length > 0) {
+        const pvrooms = await this.roomRepository
+          .createQueryBuilder('rooms')
+          .innerJoinAndSelect('rooms.members', 'members')
+          .innerJoinAndSelect('members.profile', 'profile')
+          .innerJoinAndSelect('rooms.messages', 'messages')
+          // .limit(2)
+          .where('rooms.id IN (:...userRooms)', {
+            userRooms: userRooms.map((r) => r.id),
+          })
+          .orderBy('rooms.createdAt', 'DESC')
+          .orderBy('messages.createdAt', 'DESC')
+          .getMany();
+        client.emit('getRooms', await pvrooms.toDtos());
+      }
     }
   }
 
@@ -248,22 +250,28 @@ export class ChatGateway
   }
 
   async handleDisconnect(client: Socket) {
-    await this.redisService.getClient().del(`users:${client.request.user.id}`);
-    this.logger.log(`Client disconnected: ${client.id}`);
+    if (client.request?.user) {
+      await this.redisService
+        .getClient()
+        .del(`users:${client.request.user.id}`);
+      this.logger.log(`Client disconnected: ${client.id}`);
+    }
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
     const user = await this.authService.loginSocket(client);
     // set on redis=> key: user.id,  value: socketId
-    await UtilsService.setUserIdAndSocketIdOnRedis(
-      this.redisService,
-      client.request.user.id,
-      client.id,
-    );
-    // join to all user's room, so can get sent messages immediately
-    this.roomRepository.initJoin(user, client);
+    if (user) {
+      await UtilsService.setUserIdAndSocketIdOnRedis(
+        this.redisService,
+        client.request.user.id,
+        client.id,
+      );
+      // join to all user's room, so can get sent messages immediately
+      this.roomRepository.initJoin(user, client);
 
-    this.logger.log(`Client connected: ${client.id}`);
+      this.logger.log(`Client connected: ${client.id}`);
+    }
   }
 
   @SubscribeMessage('createRoom')

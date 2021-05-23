@@ -23,6 +23,20 @@ export class SessionsService {
     const savedSession = await this.repo.save(createdSession);
     return this.findOne(savedSession.id);
   }
+  // TODO WHERE & PAGE OPTIONS
+  async sessionCalcs(id) {
+    const { count, sum } = await this.repo
+      .createQueryBuilder('sessions')
+      .innerJoinAndSelect('sessions.mentor', 'mentor')
+      .innerJoinAndSelect('sessions.mentee', 'mentee')
+      .where('sessions.status = :status', { status: 'done' })
+      .andWhere('mentor.id = :id', { id })
+      .orWhere('mentee.id = :id', { id })
+      .select('SUM(sessions.duration)', 'sum')
+      .select(['COUNT(sessions.id)', 'SUM(sessions.duration)'])
+      .getRawOne();
+    return { count: parseInt(count), durationTotal: parseInt(sum) };
+  }
 
   // TODO WHERE & PAGE OPTIONS
   async findNotDue(

@@ -5,6 +5,7 @@ import { GetSubscriptions, GetSubscribers } from './dto/get-subscriptions.dto';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
 import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => SubscriptionDto)
 export class SubscriptionsResolver {
@@ -35,5 +36,10 @@ export class SubscriptionsResolver {
     @Args() pageOptionsDto: SubscriptionsPageOptionsDto,
   ) {
     return this.subscriptionsService.findSubscribers({ id, ...pageOptionsDto });
+  }
+
+  @Query(() => Int, { name: 'menteesCount' })
+  usersCount(@CurrentUser() userId) {
+    return this.subscriptionsService.usersCount(userId);
   }
 }

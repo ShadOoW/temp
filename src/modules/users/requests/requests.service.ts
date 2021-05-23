@@ -97,6 +97,7 @@ export class RequestsService {
       .innerJoinAndSelect('from.profile', 'profile')
       .innerJoinAndSelect('to.profile.coachingDomains', 'coachingDomains')
       .innerJoinAndSelect('from.profile.wantedDomain', 'wantedDomain')
+      .innerJoinAndSelect('from.profile.domainExpertise', 'domainExpertise')
       .where('coachingDomains.name = :domain', { domain })
       .andWhere('to.id = :to', { to })
       .andWhere('from.id = :from', { from })
@@ -152,6 +153,7 @@ export class RequestsService {
         'from',
         'to.profile',
         'to.profile.coachingDomains',
+        'to.profile.domainExpertise',
         'from.profile',
         'from.profile.wantedDomain',
       ],
@@ -173,6 +175,7 @@ export class RequestsService {
         'from.role',
         'to.profile',
         'to.profile.coachingDomains',
+        'to.profile.domainExpertise',
         'from.profile',
         'from.profile.wantedDomain',
       ],

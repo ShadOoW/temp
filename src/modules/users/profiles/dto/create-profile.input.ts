@@ -33,8 +33,8 @@ export class CreateProfileInput {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => String, { nullable: true })
-  domainExpertise?: string;
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
+  domainExpertise?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;
@@ -48,8 +48,8 @@ export class CreateProfileInput {
   @Field(() => String, { nullable: true })
   professionalBg?: string;
 
-  @Field(() => Int, { nullable: true })
-  hoursPerMonth?: number;
+  @Field(() => String, { nullable: true })
+  hoursPerMonth?: string;
 
   @Field(() => String, { nullable: true })
   currentPost?: string;
