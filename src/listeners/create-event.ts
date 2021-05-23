@@ -77,7 +77,6 @@ export class CreateEvents {
   async message(message, command: string) {
     const from = message.sender;
     const to = message.receiver;
-    console.log(message);
     const messageCreatedEvent = new CreateEventInput(
       'message',
       command,

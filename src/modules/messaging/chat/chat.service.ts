@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessageRepository } from './message.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { UserRepository } from '../user/user.repository';
 // import { CreateMessageDto } from './dto/createMessage.dto';
 import { RoomRepository } from './room.repository';
 import { MessageEntity } from './entities/message.entity';
@@ -23,8 +22,6 @@ export class ChatService {
   constructor(
     @InjectRepository(MessageRepository)
     public readonly messageRepository: MessageRepository,
-    // @InjectRepository(UserRepository)
-    // public readonly userRepository: UserRepository,
     @InjectRepository(RoomRepository)
     public readonly roomRepository: RoomRepository,
   ) {}

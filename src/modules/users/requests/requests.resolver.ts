@@ -58,7 +58,7 @@ export class RequestsResolver {
 
   @Query(() => RequestsPageDto, { name: 'requests' })
   findAll(@Args() args: RequestsPageOptionsDto): Promise<RequestsPageDto> {
-    return this.requestsService.findAll(args);
+    return this.requestsService.getRequests(args);
   }
 
   @Query(() => RequestDto, { name: 'menteePublicRequest', nullable: true })
@@ -66,12 +66,9 @@ export class RequestsResolver {
     @Args('mentee', { type: () => String }) mentee: string,
     @Args() args: RequestsPageOptionsDto,
   ): Promise<RequestDto> {
-    const menteePublicRequest = await this.requestsService.findAll({
+    const menteePublicRequest = await this.requestsService.findPublicRequests({
       ...args,
       mentee,
-      mentor: null,
-      status: 'created',
-      proposition: false,
     });
     return menteePublicRequest.data[0];
   }
@@ -85,12 +82,7 @@ export class RequestsResolver {
 
   @Query(() => RequestsPageDto, { name: 'publicRequests' })
   findPublic(@Args() args: RequestsPageOptionsDto): Promise<RequestsPageDto> {
-    return this.requestsService.findAll({
-      ...args,
-      mentor: null,
-      status: 'created',
-      proposition: false,
-    });
+    return this.requestsService.findPublicRequests(args);
   }
 
   @Query(() => RequestDto, { name: 'request' })

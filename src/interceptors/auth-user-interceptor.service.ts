@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { UserEntity } from '@users/users/entities/user.entity';
-import { AuthService } from '@users/auth/auth.service';
+// import { AuthService } from '@users/auth/auth.service';
 
 @Injectable()
 export class AuthUserInterceptor implements NestInterceptor {

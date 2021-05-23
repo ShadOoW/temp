@@ -81,19 +81,72 @@ export class RequestsService {
       );
     }
   }
-  // TODO add skip order page ...
-  async findAll(
+
+  async findByDomain(
     pageOptionsDto: RequestsPageOptionsDto,
+    domain: string,
   ): Promise<RequestsPageDto> {
     const { mentee: from, mentor: to } = pageOptionsDto;
     delete pageOptionsDto.mentee;
     delete pageOptionsDto.mentor;
-    const [requests, requestsCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions({
+    const [requests, requestsCount] = await this.repo
+      .createQueryBuilder('requests')
+      .innerJoinAndSelect('requests.to', 'to')
+      .innerJoinAndSelect('requests.from', 'from')
+      .innerJoinAndSelect('to.profile', 'profile')
+      .innerJoinAndSelect('from.profile', 'profile')
+      .innerJoinAndSelect('to.profile.coachingDomains', 'coachingDomains')
+      .innerJoinAndSelect('from.profile.wantedDomain', 'wantedDomain')
+      .where('coachingDomains.name = :domain', { domain })
+      .andWhere('to.id = :to', { to })
+      .andWhere('from.id = :from', { from })
+      .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
+      .take(pageOptionsDto.take)
+      .getManyAndCount();
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: requestsCount,
+    });
+    return new RequestsPageDto(requests.toDtos(), pageMetaDto);
+  }
+
+  async findPublicRequests(pageOptionsDto): Promise<RequestsPageDto> {
+    const { mentee: from } = pageOptionsDto;
+    delete pageOptionsDto.mentee;
+    const condition = {
+      ...UtilsService.getOptions({
+        ...pageOptionsDto,
+        from,
+        status: 'created',
+        proposition: false,
+      }),
+      to: null,
+    };
+    return this.findAll(condition, pageOptionsDto);
+  }
+
+  async getRequests(pageOptionsDto): Promise<RequestsPageDto> {
+    const { mentee: from, mentor: to } = pageOptionsDto;
+    delete pageOptionsDto.mentee;
+    delete pageOptionsDto.mentor;
+    const condition = {
+      ...UtilsService.getOptions({
         ...pageOptionsDto,
         from,
         to,
       }),
+    };
+    return this.findAll(condition, pageOptionsDto);
+  }
+
+  // TODO add skip order page ...
+  async findAll(
+    condition,
+    pageOptionsDto: RequestsPageOptionsDto,
+  ): Promise<RequestsPageDto> {
+    const [requests, requestsCount] = await this.repo.findAndCount({
+      where: condition,
       relations: [
         'to',
         'from',

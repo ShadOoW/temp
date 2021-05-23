@@ -26,7 +26,6 @@ import { RedisService } from 'nestjs-redis';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { CreatePrivateMessageDto } from './dto/create-private-message.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { UserRepository } from '../user/user.repository';
 import { RoomRepository } from './room.repository';
 import { UtilsService } from '@shared/providers/utils.service';
 import { AuthService } from '@users/auth/auth.service';
@@ -52,8 +51,6 @@ export class ChatGateway
     private readonly redisService: RedisService,
     private authService: AuthService,
     private eventEmitter: EventEmitter2,
-    // @InjectRepository(UserRepository)
-    // public readonly userRepository: UserRepository,
     @InjectRepository(RoomRepository)
     public readonly roomRepository: RoomRepository,
   ) {}
@@ -163,20 +160,21 @@ export class ChatGateway
       .select('rooms.id', 'id')
       .where('members.id = :memberId', { memberId })
       .getRawMany();
-    const pvrooms = await this.roomRepository
-      .createQueryBuilder('rooms')
-      .innerJoinAndSelect('rooms.members', 'members')
-      .innerJoinAndSelect('members.profile', 'profile')
-      .innerJoinAndSelect('rooms.messages', 'messages')
-      // .limit(2)
-      .where('rooms.id IN (:...userRooms)', {
-        userRooms: userRooms.map((r) => r.id),
-      })
-      .orderBy('rooms.createdAt', 'DESC')
-      .orderBy('messages.createdAt', 'DESC')
-      .getMany();
-    console.log(pvrooms);
-    client.emit('getRooms', await pvrooms.toDtos());
+    if (userRooms.length > 0) {
+      const pvrooms = await this.roomRepository
+        .createQueryBuilder('rooms')
+        .innerJoinAndSelect('rooms.members', 'members')
+        .innerJoinAndSelect('members.profile', 'profile')
+        .innerJoinAndSelect('rooms.messages', 'messages')
+        // .limit(2)
+        .where('rooms.id IN (:...userRooms)', {
+          userRooms: userRooms.map((r) => r.id),
+        })
+        .orderBy('rooms.createdAt', 'DESC')
+        .orderBy('messages.createdAt', 'DESC')
+        .getMany();
+      client.emit('getRooms', await pvrooms.toDtos());
+    }
   }
 
   @SubscribeMessage('msgToRoomServer')

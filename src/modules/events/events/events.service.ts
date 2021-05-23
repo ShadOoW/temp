@@ -35,6 +35,23 @@ export class EventsService {
   }
 
   // TODO WHERE and SKIP
+  async findM2mActivities(pageOptionsDto: EventsPageOptionsDto) {
+    const [events, eventsCount] = await this.repo.findAndCount({
+      where: [
+        { to: pageOptionsDto.to, from: pageOptionsDto.from },
+        { from: pageOptionsDto.to, to: pageOptionsDto.from },
+      ],
+      relations: ['to', 'from', 'to.profile', 'from.profile'],
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: eventsCount,
+    });
+    return new EventsPageDto(events.toDtos(), pageMetaDto);
+  }
+
+  // TODO WHERE and SKIP
   async findAll(pageOptionsDto: EventsPageOptionsDto) {
     const [events, eventsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),

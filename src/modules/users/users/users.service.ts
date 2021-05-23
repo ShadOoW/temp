@@ -23,13 +23,13 @@ import { UsersPageDto } from './dto/users-page.dto';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UserDto } from './dto/user.dto';
 import { UtilsService } from '@src/providers/utils.service';
-import { UserRepository } from './user.repository';
-import { Like } from 'typeorm';
+import { UserEntity } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserRepository) private readonly repo: UserRepository,
+    @InjectRepository(UserEntity) private readonly repo: Repository<UserEntity>,
     private profileService: ProfilesService,
     private emailService: EmailsService,
   ) {}

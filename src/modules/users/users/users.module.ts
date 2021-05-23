@@ -7,14 +7,14 @@ import { ProfilesService } from '@users/profiles/profiles.service';
 import { ProfileEntity } from '@users/profiles/entities/profile.entity';
 import { CaslModule } from '@users/casl/casl.module';
 import { EmailsService } from '@users/emails/emails.service';
-import { UserRepository } from './user.repository';
 // import { ChatModule } from '../chat/chat.module';
 // import { AuthModule } from '../auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UserEntity } from './entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserRepository, ProfileEntity]),
+    TypeOrmModule.forFeature([UserEntity, ProfileEntity]),
     ProfilesModule,
     CaslModule,
     JwtModule.register({

@@ -35,6 +35,11 @@ export class EventsResolver {
     return this.eventsService.findAll({ ...args, from: userId });
   }
 
+  @Query(() => EventsPageDto, { name: 'activitiesM2m' })
+  activitiesM2m(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
+    return this.eventsService.findM2mActivities({ ...args, from: userId });
+  }
+
   @Query(() => EventsPageDto, { name: 'notifications' })
   notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
     return this.eventsService.findAll({
