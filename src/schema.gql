@@ -132,7 +132,7 @@ input CreateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: [CreateProfileDomainInput!]
+  domainExpertise: [String!]
   firstName: String
   hoursPerMonth: String
   lastName: String
@@ -430,7 +430,7 @@ type ProfileDto {
   country: String
   createdAt: DateTime
   currentPost: String
-  domainExpertise: [DomainDto!]
+  domainExpertise: [String!]
   firstName: String
   hoursPerMonth: String
   id: String
@@ -727,7 +727,7 @@ input UpdateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: [CreateProfileDomainInput!]
+  domainExpertise: [String!]
   firstName: String
   hoursPerMonth: String
   lastName: String

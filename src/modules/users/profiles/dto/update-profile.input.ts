@@ -34,8 +34,8 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => [CreateProfileDomainInput], { nullable: true })
-  domainExpertise?: CreateProfileDomainInput[];
+  @Field(() => [String], { nullable: true })
+  domainExpertise?: string[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;

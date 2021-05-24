@@ -45,9 +45,8 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'int', nullable: true })
   yearsOfExperience?: number;
 
-  @ManyToMany(() => DomainEntity, { nullable: true })
-  @JoinTable()
-  domainExpertise?: DomainDto[];
+  @Column({ type: 'varchar', length: 300, nullable: true, array: true })
+  domainExpertise?: string[];
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   coachingType?: string;

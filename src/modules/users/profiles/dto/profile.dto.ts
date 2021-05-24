@@ -36,8 +36,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => [DomainDto], { nullable: true })
-  domainExpertise?: DomainDto[];
+  @Field(() => [String], { nullable: true })
+  domainExpertise?: string[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;

@@ -46,7 +46,7 @@ async function genUser(username, type, role = null, domains = []) {
           ...m2mProfile,
           coachingType: 'Type A',
           coachingDomains: domains,
-          domainExpertise: domains,
+          domainExpertise: ['domain A', 'domain B'],
           canOffer: faker.lorem.paragraph(),
           professionalBg: faker.lorem.paragraph(),
           hoursPerMonth: Math.floor(Math.random() * 20).toString(),

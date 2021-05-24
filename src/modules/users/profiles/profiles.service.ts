@@ -19,7 +19,7 @@ export class ProfilesService {
 
   async findOne(id: string) {
     const profile = await this.repo.findOne(id, {
-      relations: ['coachingDomains', 'wantedDomain', 'domainExpertise'],
+      relations: ['coachingDomains', 'wantedDomain'],
     });
     return profile ? profile.toDto() : null;
   }
@@ -34,7 +34,7 @@ export class ProfilesService {
     }
     await this.repo.save({ id, ...updateProfileInput });
     const updatedProfile = await this.repo.findOne(id, {
-      relations: ['coachingDomains', 'wantedDomain', 'domainExpertise'],
+      relations: ['coachingDomains', 'wantedDomain'],
     });
     return updatedProfile ? updatedProfile.toDto() : null;
   }
