@@ -4,7 +4,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateSessionInput } from './dto/update-session.input';
 import { SessionEntity } from './entities/session.entity';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
-import { CreateSessionInput } from './dto/create-session.input copy';
+import { CreateSessionInput } from './dto/create-session.input';
 import { UtilsService } from '@src/providers/utils.service';
 import { SessionDto } from './dto/session.dto';
 import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';

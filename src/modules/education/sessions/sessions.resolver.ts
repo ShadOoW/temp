@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SessionsService } from './sessions.service';
 import { UpdateSessionInput } from './dto/update-session.input';
-import { CreateSessionInput } from './dto/create-session.input copy';
+import { CreateSessionInput } from './dto/create-session.input';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
 import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';
 import { SessionsPageDto } from './dto/sessions-page.dto';

@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { InputType, Field, Int } from '@nestjs/graphql';
 import { UserEntity } from '@users/users/entities/user.entity';
+import { Status } from '@src/shared/interfaces/globalStatus';
 
 @InputType()
 export class CreateSessionInput {
@@ -37,6 +38,11 @@ export class CreateSessionInput {
   @IsOptional()
   @Field(() => Boolean, { nullable: true })
   isFromMentor?: boolean;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  status?: Status;
 
   @Field(() => String)
   mentee: UserEntity;

@@ -226,6 +226,7 @@ input CreateSessionInput {
   mentee: String!
   mentor: String!
   startDate: String!
+  status: String
   title: String!
 }
 
