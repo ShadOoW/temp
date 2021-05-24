@@ -31,6 +31,7 @@ import { BalancesModule } from '@gamification/balances/balances.module';
 import { QuestionsModule } from '@education/questions/questions.module';
 import { QuizzesModule } from '@education/quizzes/quizzes.module';
 import { EvaluationsModule } from '@education/evaluations/evaluations.module';
+import { ObjectifModule } from '@education/objectifs/objectifs.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -66,6 +67,7 @@ import { EvaluationsModule } from '@education/evaluations/evaluations.module';
     ProfilesModule,
     SubscriptionsModule,
     SessionsModule,
+    ObjectifModule,
     DomainsModule,
     EmailsModule,
     ChatModule,

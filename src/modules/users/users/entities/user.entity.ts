@@ -27,11 +27,13 @@ import { RoleDto } from '../../roles/dto/role.dto';
 import { ProfileDto } from '../../profiles/dto/profile.dto';
 import { SubscriptionDto } from '../../subscriptions/dto/subscription.dto';
 import { RequestDto } from '../../requests/dto/request.dto';
-import { SessionDto } from '@src/modules/education/sessions/dto/session.dto';
-import { QuizDto } from '@src/modules/education/quizzes/dto/quiz.dto';
-import { EvaluationDto } from '@src/modules/education/evaluations/dto/evaluation.dto';
+import { SessionDto } from '@education/sessions/dto/session.dto';
+import { QuizDto } from '@education/quizzes/dto/quiz.dto';
+import { EvaluationDto } from '@education/evaluations/dto/evaluation.dto';
 import { BalanceDto } from '@src/modules/gamification/balances/dto/balance.dto';
 import { EventDto } from '@src/modules/events/events/dto/event.dto';
+import { ObjectifEntity } from '@education/objectifs/entities/objectif.entity';
+import { ObjectifDto } from '@education/objectifs/dto/objectif.dto';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -116,6 +118,14 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @OneToMany(() => SessionEntity, (session) => session.mentor)
   @Field(() => [SessionDto])
   mentorSessions: SessionDto[];
+
+  @OneToMany(() => ObjectifEntity, (session) => session.mentee)
+  @Field(() => [ObjectifDto])
+  menteeObjectifs: ObjectifDto[];
+
+  @OneToMany(() => ObjectifEntity, (session) => session.mentor)
+  @Field(() => [ObjectifDto])
+  mentorObjectifs: ObjectifDto[];
 
   //rooms that the user is joined
   @ManyToMany(() => RoomEntity, (room) => room.members)
