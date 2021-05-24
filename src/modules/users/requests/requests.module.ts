@@ -10,19 +10,33 @@ import { Listeners } from '@src/listeners';
 import { EventsService } from '@src/modules/events/events/events.service';
 import { EventEntity } from '@src/modules/events/events/entities/event.entity';
 import { CreateEvents } from '@src/listeners/create-event';
+import { UsersService } from '../users/users.service';
+import { UserEntity } from '../users/entities/user.entity';
+import { ProfileEntity } from '../profiles/entities/profile.entity';
+import { ProfilesService } from '../profiles/profiles.service';
+import { EmailsService } from '../emails/emails.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RequestEntity, SubscriptionEntity, EventEntity]),
+    TypeOrmModule.forFeature([
+      RequestEntity,
+      SubscriptionEntity,
+      EventEntity,
+      UserEntity,
+      ProfileEntity,
+    ]),
     CaslModule,
   ],
   providers: [
+    UsersService,
     RequestsResolver,
     RequestsService,
     SubscriptionsService,
     Listeners,
     EventsService,
     CreateEvents,
+    ProfilesService,
+    EmailsService,
   ],
 })
 export class RequestsModule {}

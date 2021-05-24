@@ -82,7 +82,7 @@ export class UsersService {
       ],
       where: {
         ...UtilsService.getOptions(pageOptionsDto),
-        active: true,
+        // active: true,
       },
       ...UtilsService.pagination(pageOptionsDto),
     });
@@ -93,9 +93,9 @@ export class UsersService {
     return new UsersPageDto(users.toDtos(), pageMetaDto);
   }
 
-  async findByDomain(
+  async findMentorsByDomain(
     pageOptionsDto: UsersPageOptionsDto,
-    domain: string,
+    domainId: string,
   ): Promise<UsersPageDto> {
     const [users, usersCount] = await this.repo
       .createQueryBuilder('users')
@@ -104,8 +104,8 @@ export class UsersService {
       .innerJoinAndSelect('users.profile', 'profile')
       .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
       .innerJoinAndSelect('profile.domainExpertise', 'domainExpertise')
-      .where('coachingDomains.name = :domain', { domain })
-      .andWhere('users.active = :active', { active: true })
+      .where('coachingDomains.id = :domainId', { domainId })
+      // .andWhere('users.active = :active', { active: true })
       .andWhere('role.name = :role', { role: 'mentor' })
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)
@@ -116,6 +116,35 @@ export class UsersService {
       itemCount: usersCount,
     });
     return new UsersPageDto(users.toDtos(), pageMetaDto);
+  }
+
+  async suggestMentors(
+    pageOptionsDto: UsersPageOptionsDto,
+    userId: string,
+  ): Promise<UsersPageDto> {
+    const mentee = await this.findOne(userId);
+    if (mentee && mentee.profile.wantedDomain?.id) {
+      const menteeDomainId = mentee.profile.wantedDomain?.id;
+      const [users, usersCount] = await this.repo
+        .createQueryBuilder('users')
+        .innerJoinAndSelect('users.role', 'role')
+        .innerJoinAndSelect('role.permissions', 'permissions')
+        .innerJoinAndSelect('users.profile', 'profile')
+        .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
+        .innerJoinAndSelect('profile.domainExpertise', 'domainExpertise')
+        .where('coachingDomains.id = :menteeDomainId', { menteeDomainId })
+        // .andWhere('users.active = :active', { active: true })
+        .andWhere('role.name = :role', { role: 'mentor' })
+        .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
+        .take(pageOptionsDto.take)
+        .getManyAndCount();
+
+      const pageMetaDto = new PageMetaDto({
+        pageOptionsDto,
+        itemCount: usersCount,
+      });
+      return new UsersPageDto(users.toDtos(), pageMetaDto);
+    }
   }
 
   /**

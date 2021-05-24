@@ -85,12 +85,20 @@ export class UsersResolver {
     return this.usersService.findAll(pageOptionsDto);
   }
 
-  @Query(() => UsersPageDto, { name: 'findByDomain' })
+  @Query(() => UsersPageDto, { name: 'suggestMentors' })
+  suggestMentors(
+    @Args() pageOptionsDto: UsersPageOptionsDto,
+    @CurrentUser() userId,
+  ) {
+    return this.usersService.suggestMentors(pageOptionsDto, userId);
+  }
+
+  @Query(() => UsersPageDto, { name: 'mentorsByDomain' })
   findByDomain(
     @Args() pageOptionsDto: UsersPageOptionsDto,
-    @Args('domain', { type: () => String }) domain: string,
+    @Args('domainId', { type: () => String }) domainId: string,
   ) {
-    return this.usersService.findByDomain(pageOptionsDto, domain);
+    return this.usersService.findMentorsByDomain(pageOptionsDto, domainId);
   }
 
   // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))

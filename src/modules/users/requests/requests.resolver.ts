@@ -61,6 +61,22 @@ export class RequestsResolver {
     return this.requestsService.getRequests(args);
   }
 
+  @Query(() => RequestsPageDto, { name: 'suggestPublicRequests' })
+  suggestPublicRequests(
+    @Args() args: RequestsPageOptionsDto,
+    @CurrentUser() userId,
+  ): Promise<RequestsPageDto> {
+    return this.requestsService.suggestPublicRequests(args, userId);
+  }
+
+  @Query(() => RequestsPageDto, { name: 'publicRequestsByDomain' })
+  publicRequestsByDomain(
+    @Args() args: RequestsPageOptionsDto,
+    @Args('domainId', { type: () => String }) domainId: string,
+  ): Promise<RequestsPageDto> {
+    return this.requestsService.findPublicRequestsByDomain(args, domainId);
+  }
+
   @Query(() => RequestDto, { name: 'menteePublicRequest', nullable: true })
   async findUserPublic(
     @Args('mentee', { type: () => String }) mentee: string,

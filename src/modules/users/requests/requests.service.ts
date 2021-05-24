@@ -7,12 +7,12 @@ import { RequestEntity } from './entities/request.entity';
 import { Repository, Not, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionsService } from '@users/subscriptions/subscriptions.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RequestDto } from './dto/request.dto';
 import { RequestsPageOptionsDto } from './dto/requests-page-options.dto';
 import { RequestsPageDto } from './dto/requests-page.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UtilsService } from '@src/providers/utils.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class RequestsService {
@@ -20,7 +20,7 @@ export class RequestsService {
     @InjectRepository(RequestEntity)
     private readonly repo: Repository<RequestEntity>,
     private subscriptionService: SubscriptionsService,
-    private eventEmitter: EventEmitter2,
+    private usersService: UsersService,
   ) {}
 
   async canRequest(mentee: string): Promise<boolean> {
@@ -82,25 +82,43 @@ export class RequestsService {
     }
   }
 
-  async findByDomain(
+  async suggestPublicRequests(
     pageOptionsDto: RequestsPageOptionsDto,
-    domain: string,
+    userId: string,
   ): Promise<RequestsPageDto> {
-    const { mentee: from, mentor: to } = pageOptionsDto;
-    delete pageOptionsDto.mentee;
-    delete pageOptionsDto.mentor;
+    const mentor = await this.usersService.findOne(userId);
+    if (mentor && mentor.profile.coachingDomains.length > 0) {
+      const mentorDomains = mentor.profile.coachingDomains.map((d) => d.id);
+      const [requests, requestsCount] = await this.repo
+        .createQueryBuilder('requests')
+        .innerJoinAndSelect('requests.from', 'from')
+        .innerJoinAndSelect('from.profile', 'profile')
+        .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain')
+        .where('wantedDomain.id IN (:...mentorDomains)', { mentorDomains })
+        .andWhere('requests.to is null')
+        .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
+        .take(pageOptionsDto.take)
+        .getManyAndCount();
+
+      const pageMetaDto = new PageMetaDto({
+        pageOptionsDto,
+        itemCount: requestsCount,
+      });
+      return new RequestsPageDto(requests.toDtos(), pageMetaDto);
+    }
+  }
+
+  async findPublicRequestsByDomain(
+    pageOptionsDto: RequestsPageOptionsDto,
+    domainId: string,
+  ): Promise<RequestsPageDto> {
     const [requests, requestsCount] = await this.repo
       .createQueryBuilder('requests')
-      .innerJoinAndSelect('requests.to', 'to')
       .innerJoinAndSelect('requests.from', 'from')
-      .innerJoinAndSelect('to.profile', 'profile')
       .innerJoinAndSelect('from.profile', 'profile')
-      .innerJoinAndSelect('to.profile.coachingDomains', 'coachingDomains')
-      .innerJoinAndSelect('from.profile.wantedDomain', 'wantedDomain')
-      .innerJoinAndSelect('from.profile.domainExpertise', 'domainExpertise')
-      .where('coachingDomains.name = :domain', { domain })
-      .andWhere('to.id = :to', { to })
-      .andWhere('from.id = :from', { from })
+      .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain')
+      .where('wantedDomain.id = :domainId', { domainId })
+      .andWhere('requests.to is null')
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)
       .getManyAndCount();
