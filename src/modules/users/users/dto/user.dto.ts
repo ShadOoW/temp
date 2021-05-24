@@ -16,7 +16,7 @@ export class UserDto extends AbstractDto {
   @Field(() => Boolean, { nullable: true })
   active: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   status: string;
 
   @Field(() => String)

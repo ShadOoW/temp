@@ -478,8 +478,8 @@ input PropositionInput {
 
 type Query {
   activatedSessions: [SessionDto!]!
-  activities(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
-  activitiesM2m(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
+  activities(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
+  activitiesM2m(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   badge(id: String!): BadgeDto!
   badges(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): BadgesPageDto!
   canRequest(mentee: String!): Boolean!
@@ -488,13 +488,13 @@ type Query {
   emailExists(email: String!): Boolean!
   evaluation(id: String!): EvaluationDto!
   evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
-  events(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
+  events(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
   menteesCount: Int!
   mentorsByDomain(active: Boolean = null, domainId: String!, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
   messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
-  messagesNotifications(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
-  notifications(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EventsPageDto!
+  messagesNotifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
+  notifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   permission(id: String!): PermissionDto!
   permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
   point(id: String!): PointDto!
@@ -834,7 +834,7 @@ type UserDto {
   provider: String!
   providerId: String
   role: RoleDto
-  status: String!
+  status: String
   updatedAt: DateTime
   username: String
 }
