@@ -92,6 +92,14 @@ export class SessionsResolver {
     return this.sessionsService.findActivated(userId);
   }
 
+  @Query(() => SessionDto, { name: 'upcomingSession' })
+  upcomingSession(
+    @Args('mentor', { type: () => String }) mentor: string,
+    @Args('mentee', { type: () => String }) mentee: string,
+  ) {
+    return this.sessionsService.upcomingSession(mentor, mentee);
+  }
+
   @Query(() => SessionDto, { name: 'session' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.sessionsService.findOne(id);

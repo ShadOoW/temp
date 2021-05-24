@@ -53,7 +53,7 @@ export class UserEntity extends AbstractEntity<UserDto> {
     type: 'enum',
     enum: ['open', 'close', 'away', 'busy'],
     enumName: 'userStatusEnum',
-    default: 'close',
+    default: 'open',
   })
   status: UserStatus;
 

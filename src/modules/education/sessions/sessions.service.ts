@@ -38,6 +38,21 @@ export class SessionsService {
     return { count: parseInt(count), durationTotal: parseInt(sum) };
   }
 
+  async upcomingSession(mentor: string, mentee: string) {
+    const upcoming = await this.repo.findOne({
+      where: {
+        ...UtilsService.getOptions({ mentee, mentor }),
+        status: 'accepted',
+        startDate: MoreThanOrEqual(new Date()),
+      },
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+    return upcoming ? upcoming.toDto() : null;
+  }
+
   // TODO WHERE & PAGE OPTIONS
   async findNotDue(
     pageOptionsDto: SessionsPageOptionsDto,

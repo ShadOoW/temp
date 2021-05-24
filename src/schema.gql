@@ -520,6 +520,7 @@ type Query {
   subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
   suggestMentors(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
   suggestPublicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
+  upcomingSession(mentee: String!, mentor: String!): SessionDto!
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
   users(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
