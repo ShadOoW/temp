@@ -125,9 +125,13 @@ export class SessionsService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    let duration = session.duration;
+    if (session.status === 'activated' && updateSessionInput.status === 'done')
+      duration = UtilsService.getMinDiff(session.updatedAt);
     const createdSession = await this.repo.create({
       id,
       ...updateSessionInput,
+      duration,
     });
     await this.repo.save(createdSession);
     return this.findOne(id);

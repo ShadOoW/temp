@@ -110,4 +110,12 @@ export class UtilsService {
       skip: (page - 1) * take,
     };
   }
+
+  static getMinDiff(date) {
+    const today = new Date();
+    const lastDate = new Date(date);
+    const diffMs = today.valueOf() - lastDate.valueOf();
+    const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+    return diffMins;
+  }
 }
