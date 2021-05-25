@@ -20,7 +20,8 @@
       "@events/*": ["src/guards/events/*"],
       "@gamification/*": ["src/modules/gamification/*"],
       "@messaging/*": ["src/guards/messaging/*"],
-      "@education/*": ["src/modules/education/*"]
+      "@education/*": ["src/modules/education/*"],
+      "@documents/*": ["src/modules/documents/*"]
     }
   }
 }

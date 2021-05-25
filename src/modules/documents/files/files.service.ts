@@ -1,0 +1,59 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { UtilsService } from '@src/providers/utils.service';
+import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
+import { Repository } from 'typeorm';
+import { CreateFileInput } from './dto/create-file.input';
+import { FilesPageOptionsDto } from './dto/files-page-options.dto';
+import { FilesPageDto } from './dto/files-page.dto';
+import { UpdateFileInput } from './dto/update-file.input';
+import { FileEntity } from './entities/file.entity';
+
+@Injectable()
+export class FilesService {
+  constructor(
+    @InjectRepository(FileEntity) private readonly repo: Repository<FileEntity>,
+  ) {}
+
+  async create(createFileInput: CreateFileInput) {
+    const createdFile = await this.repo.create(createFileInput);
+    return (await this.repo.save(createdFile)).toDto();
+  }
+
+  async findAll(pageOptionsDto: FilesPageOptionsDto): Promise<FilesPageDto> {
+    const [files, filesCount] = await this.repo.findAndCount({
+      where: UtilsService.getOptions(pageOptionsDto),
+      relations: ['permissions'],
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: filesCount,
+    });
+    return new FilesPageDto(files.toDtos(), pageMetaDto);
+  }
+
+  async findOne(id: string) {
+    const file = await this.repo.findOne(id);
+    return file ? file.toDto() : null;
+  }
+
+  async update(id: string, updateFileInput: UpdateFileInput) {
+    const file = await this.repo.findOne({ id });
+    if (!file) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const createdFile = await this.repo.create({ id, ...updateFileInput });
+    return (await this.repo.save(createdFile)).toDto();
+  }
+
+  async remove(id: string) {
+    const fileToDelete = await this.repo.findOne(id);
+    await this.repo.delete(id);
+    return fileToDelete.toDto();
+  }
+}

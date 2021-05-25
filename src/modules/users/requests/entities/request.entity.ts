@@ -6,7 +6,7 @@ import { RequestDto } from '../dto/request.dto';
 
 @Entity({ name: 'requests' })
 export class RequestEntity extends AbstractEntity<RequestDto> {
-  @Column({ type: 'varchar',nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   title: string;
 
   @Column({ type: 'text', nullable: true })
@@ -33,5 +33,4 @@ export class RequestEntity extends AbstractEntity<RequestDto> {
   from: UserEntity;
 
   dtoClass = RequestDto;
-
 }

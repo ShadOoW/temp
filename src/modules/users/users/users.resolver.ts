@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { UserEntity } from './entities/user.entity';
+// import { UserEntity } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { PoliciesGuard } from '@src/guards/check-policies.guard';
-import { AppAbility } from '@users/casl/casl-ability.factory';
-import { CheckPolicies } from '@src/decorators/check-policies.decorator';
-import { Actions } from '@shared/actions';
+// import { AppAbility } from '@users/casl/casl-ability.factory';
+// import { CheckPolicies } from '@src/decorators/check-policies.decorator';
+// import { Actions } from '@shared/actions';
 import { Public } from '@shared/public.decorator';
 import { UserDto } from './dto/user.dto';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';

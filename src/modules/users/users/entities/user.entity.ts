@@ -34,6 +34,10 @@ import { BalanceDto } from '@src/modules/gamification/balances/dto/balance.dto';
 import { EventDto } from '@src/modules/events/events/dto/event.dto';
 import { ObjectifEntity } from '@education/objectifs/entities/objectif.entity';
 import { ObjectifDto } from '@education/objectifs/dto/objectif.dto';
+import { FileDto } from '@documents/files/dto/file.dto';
+import { FileEntity } from '@documents/files/entities/file.entity';
+import { FileTagDto } from '@documents/file-tags/dto/file-tag.dto';
+import { FileTagEntity } from '@documents/file-tags/entities/file-tag.entity';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -139,6 +143,15 @@ export class UserEntity extends AbstractEntity<UserDto> {
 
   @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
   evaluations: EvaluationDto[];
+
+  @OneToMany(() => FileTagEntity, (fileTag) => fileTag.user)
+  fileTags: FileTagDto[];
+
+  @OneToMany(() => FileEntity, (file) => file.user)
+  files: FileDto[];
+
+  @ManyToMany(() => FileEntity, (file) => file.sharedWith)
+  sharedFiles: FileEntity[];
 
   dtoClass = UserDto;
 }

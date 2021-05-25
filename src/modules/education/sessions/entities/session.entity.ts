@@ -35,7 +35,7 @@ export class SessionEntity extends AbstractEntity<SessionDto> {
   })
   status?: Status;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', default: 0 })
   duration?: number;
 
   dtoClass = SessionDto;

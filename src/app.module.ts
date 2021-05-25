@@ -32,6 +32,8 @@ import { QuestionsModule } from '@education/questions/questions.module';
 import { QuizzesModule } from '@education/quizzes/quizzes.module';
 import { EvaluationsModule } from '@education/evaluations/evaluations.module';
 import { ObjectifModule } from '@education/objectifs/objectifs.module';
+import { FilesModule } from '@documents/files/files.module';
+import { FileTagsModule } from '@documents/file-tags/file-tags.module';
 
 /**
  * AppModule support GraphQl code first with auto genetare schema file
@@ -78,6 +80,8 @@ import { ObjectifModule } from '@education/objectifs/objectifs.module';
     QuestionsModule,
     QuizzesModule,
     EvaluationsModule,
+    FilesModule,
+    FileTagsModule,
   ],
   providers: [
     {
