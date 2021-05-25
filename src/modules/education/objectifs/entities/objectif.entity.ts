@@ -17,7 +17,7 @@ export class ObjectifEntity extends AbstractEntity<ObjectifDto> {
   @ManyToOne(() => UserEntity, (user) => user.mentorObjectifs)
   mentor: UserEntity;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: true, default: 0 })
   progression?: number;
 
   dtoClass = ObjectifDto;

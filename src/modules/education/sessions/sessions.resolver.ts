@@ -83,7 +83,7 @@ export class SessionsResolver {
   }
 
   @Query(() => SessionsCalcsDto, { name: 'sessionCalcs' })
-  sessionCalcs(@CurrentUser() userId) {
+  sessionCalcs(@Args('id', { type: () => String }) userId) {
     return this.sessionsService.sessionCalcs(userId);
   }
 

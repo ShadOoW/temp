@@ -39,7 +39,7 @@ export class SubscriptionsResolver {
   }
 
   @Query(() => Int, { name: 'menteesCount' })
-  usersCount(@CurrentUser() userId) {
+  usersCount(@Args('id', { type: () => String }) userId) {
     return this.subscriptionsService.usersCount(userId);
   }
 }
