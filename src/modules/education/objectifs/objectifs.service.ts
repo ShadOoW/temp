@@ -27,7 +27,6 @@ export class ObjectifsService {
   // TODO WHERE & PAGE OPTIONS
   async findAll(
     pageOptionsDto: ObjectifsPageOptionsDto,
-    status?: string,
     mentor?: string,
     mentee?: string,
   ) {
@@ -36,7 +35,6 @@ export class ObjectifsService {
         ...pageOptionsDto,
         mentee,
         mentor,
-        status,
       }),
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
       ...UtilsService.pagination(pageOptionsDto),

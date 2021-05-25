@@ -11,6 +11,9 @@ export class ObjectifDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   title: string;
 
+  @Field(() => String, { nullable: true })
+  type: string;
+
   @Field(() => UserDto, { nullable: true })
   mentee: UserDto;
 

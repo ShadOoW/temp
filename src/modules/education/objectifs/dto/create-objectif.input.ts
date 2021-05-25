@@ -12,6 +12,10 @@ export class CreateObjectifInput {
   @IsString()
   title: string;
 
+  @Field(() => String)
+  @IsString()
+  type: string;
+
   @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()

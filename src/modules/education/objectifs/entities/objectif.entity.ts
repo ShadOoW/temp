@@ -11,6 +11,9 @@ export class ObjectifEntity extends AbstractEntity<ObjectifDto> {
   @Column({ type: 'varchar', length: 300 })
   title: string;
 
+  @Column({ type: 'varchar', length: 300 })
+  type: string;
+
   @ManyToOne(() => UserEntity, (user) => user.menteeObjectifs)
   mentee: UserEntity;
 
