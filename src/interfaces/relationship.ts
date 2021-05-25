@@ -1,7 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsUUID } from 'class-validator';
 
-@ObjectType()
+@InputType()
 export class Relationship {
   @Field(() => String)
   @IsUUID()
