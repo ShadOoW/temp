@@ -520,7 +520,7 @@ type Query {
   events(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
   menteesCount(id: String!): Int!
-  mentorsByDomain(active: Boolean = null, domainId: String!, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
+  mentorsByDomain(active: Boolean = null, domainId: String, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
   messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
   messagesNotifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   notifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
@@ -532,7 +532,7 @@ type Query {
   points(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PointsPageDto!
   profile(id: String!): ProfileDto!
   publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
-  publicRequestsByDomain(domainId: String!, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
+  publicRequestsByDomain(domainId: String, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   question(id: String!): QuestionDto!
   questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuestionsPageDto!
   quiz(id: String!): QuizDto!

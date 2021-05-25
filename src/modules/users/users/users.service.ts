@@ -96,14 +96,17 @@ export class UsersService {
     pageOptionsDto: UsersPageOptionsDto,
     domainId: string,
   ): Promise<UsersPageDto> {
-    const [users, usersCount] = await this.repo
+    const joinUsers = this.repo
       .createQueryBuilder('users')
       .innerJoinAndSelect('users.role', 'role')
       .innerJoinAndSelect('role.permissions', 'permissions')
       .innerJoinAndSelect('users.profile', 'profile')
-      .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
-      .where('coachingDomains.id = :domainId', { domainId })
-      // .andWhere('users.active = :active', { active: true })
+      .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains');
+    const whereDomain = domainId
+      ? joinUsers.where('coachingDomains.id = :domainId', { domainId })
+      : joinUsers;
+    // .andWhere('users.active = :active', { active: true })
+    const [users, usersCount] = await whereDomain
       .andWhere('role.name = :role', { role: 'mentor' })
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)

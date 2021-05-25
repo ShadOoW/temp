@@ -112,12 +112,15 @@ export class RequestsService {
     pageOptionsDto: RequestsPageOptionsDto,
     domainId: string,
   ): Promise<RequestsPageDto> {
-    const [requests, requestsCount] = await this.repo
+    const joinRequest = this.repo
       .createQueryBuilder('requests')
       .innerJoinAndSelect('requests.from', 'from')
       .innerJoinAndSelect('from.profile', 'profile')
-      .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain')
-      .where('wantedDomain.id = :domainId', { domainId })
+      .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain');
+    const whereDomain = domainId
+      ? joinRequest.where('wantedDomain.id = :domainId', { domainId })
+      : joinRequest;
+    const [requests, requestsCount] = await whereDomain
       .andWhere('requests.to is null')
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)

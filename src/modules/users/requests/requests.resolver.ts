@@ -72,7 +72,7 @@ export class RequestsResolver {
   @Query(() => RequestsPageDto, { name: 'publicRequestsByDomain' })
   publicRequestsByDomain(
     @Args() args: RequestsPageOptionsDto,
-    @Args('domainId', { type: () => String }) domainId: string,
+    @Args('domainId', { type: () => String, nullable: true }) domainId: string,
   ): Promise<RequestsPageDto> {
     return this.requestsService.findPublicRequestsByDomain(args, domainId);
   }

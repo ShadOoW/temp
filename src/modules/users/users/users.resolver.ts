@@ -96,7 +96,7 @@ export class UsersResolver {
   @Query(() => UsersPageDto, { name: 'mentorsByDomain' })
   findByDomain(
     @Args() pageOptionsDto: UsersPageOptionsDto,
-    @Args('domainId', { type: () => String }) domainId: string,
+    @Args('domainId', { type: () => String, nullable: true }) domainId: string,
   ) {
     return this.usersService.findMentorsByDomain(pageOptionsDto, domainId);
   }
