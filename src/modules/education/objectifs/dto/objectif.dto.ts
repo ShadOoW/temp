@@ -27,6 +27,7 @@ export class ObjectifDto extends AbstractDto {
     super(objectif);
     this.dueDate = objectif.dueDate;
     this.title = objectif.title;
+    this.type = objectif.type;
     this.mentee = objectif.mentee;
     this.mentor = objectif.mentor;
     this.progression = objectif.progression;
