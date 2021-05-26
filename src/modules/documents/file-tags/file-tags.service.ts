@@ -17,9 +17,13 @@ export class FileTagsService {
     private readonly repo: Repository<FileTagEntity>,
   ) {}
 
-  async create(createFileTagInput: CreateFileTagInput) {
-    const createdFileTag = await this.repo.create(createFileTagInput);
-    return (await this.repo.save(createdFileTag)).toDto();
+  async create(createFileTagInput: CreateFileTagInput, user: any) {
+    const createdFileTag = await this.repo.create({
+      ...createFileTagInput,
+      user,
+    });
+    const savedFileTag = await this.repo.save(createdFileTag);
+    return await this.findOne(savedFileTag.id);
   }
 
   async findAll(
@@ -27,7 +31,7 @@ export class FileTagsService {
   ): Promise<FileTagsPageDto> {
     const [fileTags, fileTagsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
-      relations: ['permissions'],
+      relations: ['user', 'files'],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -38,7 +42,9 @@ export class FileTagsService {
   }
 
   async findOne(id: string) {
-    const fileTag = await this.repo.findOne(id);
+    const fileTag = await this.repo.findOne(id, {
+      relations: ['user', 'files'],
+    });
     return fileTag ? fileTag.toDto() : null;
   }
 
@@ -54,12 +60,13 @@ export class FileTagsService {
       id,
       ...updateFileTagInput,
     });
-    return (await this.repo.save(createdFileTag)).toDto();
+    await this.repo.save(createdFileTag);
+    return await this.findOne(id);
   }
 
   async remove(id: string) {
-    const fileTagToDelete = await this.repo.findOne(id);
+    const fileTagToDelete = await this.findOne(id);
     await this.repo.delete(id);
-    return fileTagToDelete.toDto();
+    return fileTagToDelete;
   }
 }

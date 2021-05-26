@@ -25,7 +25,7 @@ export class FileEntity extends AbstractEntity<FileDto> {
   })
   status?: FileStatus;
 
-  @ManyToMany(() => FileTagEntity)
+  @ManyToMany(() => FileTagEntity, (fileTag) => fileTag.files)
   @JoinTable()
   tags: FileTagDto[];
 
@@ -33,6 +33,7 @@ export class FileEntity extends AbstractEntity<FileDto> {
   user: UserEntity;
 
   @ManyToMany(() => UserEntity, (user) => user.sharedFiles)
+  @JoinTable()
   sharedWith: UserEntity[];
 
   dtoClass = FileDto;

@@ -21,7 +21,7 @@ async function genUser(username, type, role = null, domains = []) {
       username === 'admin' || username === 'mentee' || username === 'mentor'
         ? true
         : false,
-    status: 'close',
+    status: 'open',
     role,
     profile: {
       firstName: faker.name.firstName(),

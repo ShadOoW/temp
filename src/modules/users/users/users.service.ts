@@ -105,8 +105,13 @@ export class UsersService {
     const whereDomain = domainId
       ? joinUsers.where('coachingDomains.id = :domainId', { domainId })
       : joinUsers;
-    // .andWhere('users.active = :active', { active: true })
-    const [users, usersCount] = await whereDomain
+    const whereStatus = pageOptionsDto.status
+      ? whereDomain.where('users.status = :status', {
+          status: pageOptionsDto.status,
+        })
+      : whereDomain;
+    const [users, usersCount] = await whereStatus
+      .andWhere('users.active = :active', { active: true })
       .andWhere('role.name = :role', { role: 'mentor' })
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)

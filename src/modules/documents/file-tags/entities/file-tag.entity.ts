@@ -1,5 +1,5 @@
 import { AbstractEntity } from '@src/common/abstract.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { FileEntity } from '@documents/files/entities/file.entity';
 import { FileTagDto } from '../dto/file-tag.dto';
 import { UserEntity } from '@users/users/entities/user.entity';
@@ -11,8 +11,7 @@ export class FileTagEntity extends AbstractEntity<FileTagDto> {
   @Column({ type: 'varchar', length: 300, nullable: false })
   name: string;
 
-  @ManyToMany(() => FileEntity)
-  @JoinTable()
+  @ManyToMany(() => FileEntity, (file) => file.tags)
   files: FileDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.fileTags)

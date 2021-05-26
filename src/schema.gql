@@ -363,6 +363,16 @@ type FileTagDto {
   user: UserDto
 }
 
+type FileTagsPageDto {
+  data: [FileTagDto!]!
+  meta: PageMetaDto!
+}
+
+type FilesPageDto {
+  data: [FileDto!]!
+  meta: PageMetaDto!
+}
+
 type MessageDto {
   createdAt: DateTime
   id: String
@@ -560,8 +570,8 @@ type Query {
   events(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   file(id: String!): FileDto!
   fileTag(id: String!): FileTagDto!
-  fileTags(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): [FileTagDto!]!
-  files(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): [FileDto!]!
+  fileTags(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): FileTagsPageDto!
+  files(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): FilesPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
   menteesCount(id: String!): Int!
   mentorsByDomain(active: Boolean = null, domainId: String, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!

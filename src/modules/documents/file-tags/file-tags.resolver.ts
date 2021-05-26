@@ -5,6 +5,7 @@ import { UpdateFileTagInput } from './dto/update-file-tag.input';
 import { FileTagDto } from './dto/file-tag.dto';
 import { FileTagsPageOptionsDto } from './dto/file-tags-page-options.dto';
 import { FileTagsPageDto } from './dto/file-tags-page.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => FileTagDto)
 export class FileTagsResolver {
@@ -13,11 +14,12 @@ export class FileTagsResolver {
   @Mutation(() => FileTagDto)
   createFileTag(
     @Args('createFileTagInput') createFileTagInput: CreateFileTagInput,
+    @CurrentUser() user,
   ) {
-    return this.fileTagsService.create(createFileTagInput);
+    return this.fileTagsService.create(createFileTagInput, { id: user });
   }
 
-  @Query(() => [FileTagDto], { name: 'fileTags' })
+  @Query(() => FileTagsPageDto, { name: 'fileTags' })
   findAll(
     @Args() pageOptionsDto: FileTagsPageOptionsDto,
   ): Promise<FileTagsPageDto> {

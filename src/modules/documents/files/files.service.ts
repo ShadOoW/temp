@@ -16,15 +16,16 @@ export class FilesService {
     @InjectRepository(FileEntity) private readonly repo: Repository<FileEntity>,
   ) {}
 
-  async create(createFileInput: CreateFileInput) {
-    const createdFile = await this.repo.create(createFileInput);
-    return (await this.repo.save(createdFile)).toDto();
+  async create(createFileInput: CreateFileInput, user: any) {
+    const createdFile = await this.repo.create({ ...createFileInput, user });
+    const savedFile = await this.repo.save(createdFile);
+    return await this.findOne(savedFile.id);
   }
 
   async findAll(pageOptionsDto: FilesPageOptionsDto): Promise<FilesPageDto> {
     const [files, filesCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
-      relations: ['permissions'],
+      relations: ['user', 'tags', 'sharedWith'],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -35,7 +36,9 @@ export class FilesService {
   }
 
   async findOne(id: string) {
-    const file = await this.repo.findOne(id);
+    const file = await this.repo.findOne(id, {
+      relations: ['user', 'tags', 'sharedWith'],
+    });
     return file ? file.toDto() : null;
   }
 
@@ -48,12 +51,13 @@ export class FilesService {
       );
     }
     const createdFile = await this.repo.create({ id, ...updateFileInput });
-    return (await this.repo.save(createdFile)).toDto();
+    await this.repo.save(createdFile);
+    return await this.findOne(id);
   }
 
   async remove(id: string) {
-    const fileToDelete = await this.repo.findOne(id);
+    const fileToDelete = await this.findOne(id);
     await this.repo.delete(id);
-    return fileToDelete.toDto();
+    return fileToDelete;
   }
 }

@@ -5,17 +5,21 @@ import { UpdateFileInput } from './dto/update-file.input';
 import { FileDto } from './dto/file.dto';
 import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => FileDto)
 export class FilesResolver {
   constructor(private readonly filesService: FilesService) {}
 
   @Mutation(() => FileDto)
-  createFile(@Args('createFileInput') createFileInput: CreateFileInput) {
-    return this.filesService.create(createFileInput);
+  createFile(
+    @Args('createFileInput') createFileInput: CreateFileInput,
+    @CurrentUser() user,
+  ) {
+    return this.filesService.create(createFileInput, { id: user });
   }
 
-  @Query(() => [FileDto], { name: 'files' })
+  @Query(() => FilesPageDto, { name: 'files' })
   findAll(@Args() pageOptionsDto: FilesPageOptionsDto): Promise<FilesPageDto> {
     return this.filesService.findAll(pageOptionsDto);
   }
