@@ -406,6 +406,7 @@ type Mutation {
   createSubscription(createSubscriptionInput: CreateSubscriptionInput!): UserSubscription!
   createUser(createUserInput: CreateUserInput!): UserDto!
   forgetPassword(email: String!): Boolean!
+  messagesAsRead: Boolean!
   removeBadge(id: String!): BadgeDto!
   removeDomain(id: String!): DomainDto!
   removeFile(id: String!): FileDto!

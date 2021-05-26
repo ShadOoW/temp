@@ -61,6 +61,11 @@ export class EventsResolver {
     });
   }
 
+  @Mutation(() => Boolean)
+  messagesAsRead(@CurrentUser() userId) {
+    return this.eventsService.updateAllMessages(userId);
+  }
+
   @Query(() => EventsPageDto, { name: 'events' })
   findAll(@Args() args: EventsPageOptionsDto) {
     return this.eventsService.findAll(args);

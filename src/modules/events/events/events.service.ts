@@ -27,6 +27,19 @@ export class EventsService {
     return (await this.repo.save(updatedEvent)).toDto();
   }
 
+  async updateAllMessages(userId: string) {
+    await this.repo
+      .createQueryBuilder('events')
+      .leftJoinAndSelect('events.to', 'to')
+      .update(EventEntity)
+      .set({ read: true })
+      .where('to.id = :userId', { userId })
+      .andWhere('read = :read', { read: false })
+      .andWhere('module = :module', { module: 'message' })
+      .execute();
+    return true;
+  }
+
   async findOne(id: string) {
     const event = await this.repo.findOne(id, {
       relations: ['to', 'from', 'to.profile', 'from.profile'],
