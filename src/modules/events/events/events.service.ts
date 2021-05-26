@@ -51,8 +51,16 @@ export class EventsService {
   async findM2mActivities(pageOptionsDto: EventsPageOptionsDto) {
     const [events, eventsCount] = await this.repo.findAndCount({
       where: [
-        { to: pageOptionsDto.to, from: pageOptionsDto.from },
-        { from: pageOptionsDto.to, to: pageOptionsDto.from },
+        {
+          to: pageOptionsDto.to,
+          from: pageOptionsDto.from,
+          module: ['session', 'request'],
+        },
+        {
+          from: pageOptionsDto.to,
+          to: pageOptionsDto.from,
+          module: ['session', 'request'],
+        },
       ],
       relations: ['to', 'from', 'to.profile', 'from.profile'],
       ...UtilsService.pagination(pageOptionsDto),
