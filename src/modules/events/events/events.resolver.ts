@@ -41,7 +41,10 @@ export class EventsResolver {
 
   @Query(() => EventsPageDto, { name: 'activitiesM2m' })
   activitiesM2m(@Args() args: EventsPageOptionsDto) {
-    return this.eventsService.findM2mActivities(args);
+    return this.eventsService.findM2mActivities({
+      ...args,
+      module: ['session', 'request'],
+    });
   }
 
   @Query(() => EventsPageDto, { name: 'notifications' })
