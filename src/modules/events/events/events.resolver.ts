@@ -32,7 +32,11 @@ export class EventsResolver {
 
   @Query(() => EventsPageDto, { name: 'activities' })
   activities(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
-    return this.eventsService.findAll({ ...args, from: userId });
+    return this.eventsService.findAll({
+      ...args,
+      from: userId,
+      module: ['session', 'request'],
+    });
   }
 
   @Query(() => EventsPageDto, { name: 'activitiesM2m' })

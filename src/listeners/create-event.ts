@@ -102,7 +102,7 @@ export class CreateEvents {
           this.pubSub.publish('messageNotification', {
             messageNotification: createdEvent,
           });
-          this.pubSub.publish('activity', { activity: createdEvent });
+          // this.pubSub.publish('activity', { activity: createdEvent });
         });
     }
   }
