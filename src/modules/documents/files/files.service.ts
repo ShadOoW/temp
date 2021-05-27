@@ -22,9 +22,19 @@ export class FilesService {
     return await this.findOne(savedFile.id);
   }
 
-  async findAll(pageOptionsDto: FilesPageOptionsDto): Promise<FilesPageDto> {
+  async findAll(
+    pageOptionsDto: FilesPageOptionsDto,
+    userId: string,
+  ): Promise<FilesPageDto> {
     const [files, filesCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(pageOptionsDto),
+      where: UtilsService.getOptions({
+        ...pageOptionsDto,
+        status: pageOptionsDto.status
+          ? pageOptionsDto.status
+          : ['created', 'updated', 'shared'],
+        // tags: { id:  },
+        user: userId,
+      }),
       relations: ['user', 'tags', 'sharedWith'],
       ...UtilsService.pagination(pageOptionsDto),
     });

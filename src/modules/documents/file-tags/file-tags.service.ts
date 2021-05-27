@@ -28,9 +28,10 @@ export class FileTagsService {
 
   async findAll(
     pageOptionsDto: FileTagsPageOptionsDto,
+    userId: string,
   ): Promise<FileTagsPageDto> {
     const [fileTags, fileTagsCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(pageOptionsDto),
+      where: { ...UtilsService.getOptions(pageOptionsDto), user: userId },
       relations: ['user', 'files'],
       ...UtilsService.pagination(pageOptionsDto),
     });

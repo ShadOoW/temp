@@ -20,8 +20,11 @@ export class FilesResolver {
   }
 
   @Query(() => FilesPageDto, { name: 'files' })
-  findAll(@Args() pageOptionsDto: FilesPageOptionsDto): Promise<FilesPageDto> {
-    return this.filesService.findAll(pageOptionsDto);
+  findAll(
+    @Args() pageOptionsDto: FilesPageOptionsDto,
+    @CurrentUser() userId,
+  ): Promise<FilesPageDto> {
+    return this.filesService.findAll(pageOptionsDto, userId);
   }
 
   @Query(() => FileDto, { name: 'file' })
