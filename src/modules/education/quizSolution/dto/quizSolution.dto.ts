@@ -1,26 +1,26 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
-import { EvaluationEntity } from '../entities/evaluation.entity';
+import { QuizSolutionEntity } from '../entities/quizSolution.entity';
 import { UserDto } from '@src/modules/users/users/dto/user.dto';
 import { AnswerDto } from './answer.dto';
 import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @ObjectType()
-export class EvaluationDto extends AbstractDto {
+export class QuizSolutionDto extends AbstractDto {
   @Field(() => String, {
-    description: 'title of the evaluation',
+    description: 'title of the quizSolution',
     nullable: true,
   })
   title: string;
 
   @Field(() => QuizDto, {
-    description: 'Questions of the evaluation',
+    description: 'Questions of the quizSolution',
     nullable: true,
   })
   quiz: QuizDto;
 
   @Field(() => [AnswerDto], {
-    description: 'Answer of the evaluation',
+    description: 'Answer of the quizSolution',
     nullable: true,
   })
   answers: AnswerDto[];
@@ -31,12 +31,12 @@ export class EvaluationDto extends AbstractDto {
   @Field(() => UserDto, { nullable: true })
   mentee: UserDto;
 
-  constructor(evaluation: EvaluationEntity) {
-    super(evaluation);
-    this.title = evaluation.title;
-    this.quiz = evaluation.quiz;
-    this.answers = evaluation.answers;
-    this.mentor = evaluation.mentor;
-    this.mentee = evaluation.mentee;
+  constructor(quizSolution: QuizSolutionEntity) {
+    super(quizSolution);
+    this.title = quizSolution.title;
+    this.quiz = quizSolution.quiz;
+    this.answers = quizSolution.answers;
+    this.mentor = quizSolution.mentor;
+    this.mentee = quizSolution.mentee;
   }
 }

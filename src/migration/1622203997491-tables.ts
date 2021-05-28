@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class tables1622198414578 implements MigrationInterface {
-    name = 'tables1622198414578'
+export class tables1622203997491 implements MigrationInterface {
+    name = 'tables1622203997491'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "permissions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "description" text, CONSTRAINT "PK_920331560282b8bd21bb02290df" PRIMARY KEY ("id"))`);
@@ -19,7 +19,7 @@ export class tables1622198414578 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "badges" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "name" character varying(300) NOT NULL, "message" text, "description" text, "image" character varying(300), CONSTRAINT "PK_8a651318b8de577e8e217676466" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "points" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "number" integer NOT NULL, "action" character varying(300) NOT NULL, "message" text, "description" text, "image" character varying(300), "balanceId" uuid, "badgeId" uuid, CONSTRAINT "PK_57a558e5e1e17668324b165dadf" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "balances" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "score" integer NOT NULL, CONSTRAINT "PK_74904758e813e401abc3d4261c2" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "evaluations" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300) NOT NULL, "answers" jsonb, "quizId" uuid, "mentorId" uuid, "menteeId" uuid, CONSTRAINT "PK_f683b433eba0e6dae7e19b29e29" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "quizSolutions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300) NOT NULL, "answers" jsonb, "quizId" uuid, "mentorId" uuid, "menteeId" uuid, CONSTRAINT "PK_05a2a9076021a74962f69db6049" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "quizzes" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "title" character varying(300) NOT NULL, "questions" jsonb, "mentorId" uuid, CONSTRAINT "PK_b24f0f7662cf6b3a0e7dba0a1b4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "objectifs" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "dueDate" TIMESTAMP WITH TIME ZONE NOT NULL, "title" character varying(300) NOT NULL, "type" character varying(300) NOT NULL, "progression" integer DEFAULT '0', "menteeId" uuid, "mentorId" uuid, CONSTRAINT "PK_ae81453bb8c79cf4cab68d69bc4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "userStatusEnum" AS ENUM('open', 'close', 'away', 'busy')`);
@@ -58,9 +58,9 @@ export class tables1622198414578 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "events" ADD CONSTRAINT "FK_e94e3646540cf678e49ad37d6a0" FOREIGN KEY ("toId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "points" ADD CONSTRAINT "FK_b14f0969d4e56dff5dac6a58cdf" FOREIGN KEY ("balanceId") REFERENCES "balances"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "points" ADD CONSTRAINT "FK_278396d738790d67859eb457f76" FOREIGN KEY ("badgeId") REFERENCES "badges"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "evaluations" ADD CONSTRAINT "FK_f4a2f087492c004158576b511fd" FOREIGN KEY ("quizId") REFERENCES "quizzes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "evaluations" ADD CONSTRAINT "FK_7d08d6fee0c1aa5ff51f79561ac" FOREIGN KEY ("mentorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "evaluations" ADD CONSTRAINT "FK_61364e2dec054b2eddba3149997" FOREIGN KEY ("menteeId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" ADD CONSTRAINT "FK_dd157383578b50a710364f75e05" FOREIGN KEY ("quizId") REFERENCES "quizzes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" ADD CONSTRAINT "FK_147ecf27e37222ea2efd02ee571" FOREIGN KEY ("mentorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" ADD CONSTRAINT "FK_7e79755e31b19b855ca0dd086f4" FOREIGN KEY ("menteeId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "quizzes" ADD CONSTRAINT "FK_0f4df28a4d98ad3ce55054b0fde" FOREIGN KEY ("mentorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "objectifs" ADD CONSTRAINT "FK_0080e03e9e5e34bdc9ae1cf9cac" FOREIGN KEY ("menteeId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "objectifs" ADD CONSTRAINT "FK_7eeae9b017a7dcf33108ebbaf4f" FOREIGN KEY ("mentorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -104,9 +104,9 @@ export class tables1622198414578 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "objectifs" DROP CONSTRAINT "FK_7eeae9b017a7dcf33108ebbaf4f"`);
         await queryRunner.query(`ALTER TABLE "objectifs" DROP CONSTRAINT "FK_0080e03e9e5e34bdc9ae1cf9cac"`);
         await queryRunner.query(`ALTER TABLE "quizzes" DROP CONSTRAINT "FK_0f4df28a4d98ad3ce55054b0fde"`);
-        await queryRunner.query(`ALTER TABLE "evaluations" DROP CONSTRAINT "FK_61364e2dec054b2eddba3149997"`);
-        await queryRunner.query(`ALTER TABLE "evaluations" DROP CONSTRAINT "FK_7d08d6fee0c1aa5ff51f79561ac"`);
-        await queryRunner.query(`ALTER TABLE "evaluations" DROP CONSTRAINT "FK_f4a2f087492c004158576b511fd"`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" DROP CONSTRAINT "FK_7e79755e31b19b855ca0dd086f4"`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" DROP CONSTRAINT "FK_147ecf27e37222ea2efd02ee571"`);
+        await queryRunner.query(`ALTER TABLE "quizSolutions" DROP CONSTRAINT "FK_dd157383578b50a710364f75e05"`);
         await queryRunner.query(`ALTER TABLE "points" DROP CONSTRAINT "FK_278396d738790d67859eb457f76"`);
         await queryRunner.query(`ALTER TABLE "points" DROP CONSTRAINT "FK_b14f0969d4e56dff5dac6a58cdf"`);
         await queryRunner.query(`ALTER TABLE "events" DROP CONSTRAINT "FK_e94e3646540cf678e49ad37d6a0"`);
@@ -145,7 +145,7 @@ export class tables1622198414578 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "userStatusEnum"`);
         await queryRunner.query(`DROP TABLE "objectifs"`);
         await queryRunner.query(`DROP TABLE "quizzes"`);
-        await queryRunner.query(`DROP TABLE "evaluations"`);
+        await queryRunner.query(`DROP TABLE "quizSolutions"`);
         await queryRunner.query(`DROP TABLE "balances"`);
         await queryRunner.query(`DROP TABLE "points"`);
         await queryRunner.query(`DROP TABLE "badges"`);

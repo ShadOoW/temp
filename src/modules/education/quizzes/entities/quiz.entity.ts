@@ -11,8 +11,8 @@ import { QuestionDto } from '@src/modules/education/quizzes/dto/question.dto';
 import { QuizDto } from '../dto/quiz.dto';
 import { AbstractEntity } from '@src/common/abstract.entity';
 import { UserDto } from '@src/modules/users/users/dto/user.dto';
-import { EvaluationEntity } from '../../evaluations/entities/evaluation.entity';
-import { EvaluationDto } from '../../evaluations/dto/evaluation.dto';
+import { QuizSolutionEntity } from '../../quizSolution/entities/quizSolution.entity';
+import { QuizSolutionDto } from '../../quizSolution/dto/quizSolution.dto';
 
 @Entity({ name: 'quizzes' })
 export class QuizEntity extends AbstractEntity<QuizDto> {
@@ -22,8 +22,8 @@ export class QuizEntity extends AbstractEntity<QuizDto> {
   @Column({ type: 'jsonb', nullable: true })
   questions: QuestionDto[];
 
-  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.quiz)
-  evaluations: EvaluationDto[];
+  @OneToMany(() => QuizSolutionEntity, (quizSolution) => quizSolution.quiz)
+  quizSolutions: QuizSolutionDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.quizzes)
   mentor: UserEntity;

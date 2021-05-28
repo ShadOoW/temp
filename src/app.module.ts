@@ -29,7 +29,7 @@ import { PointsModule } from '@gamification/points/points.module';
 import { BadgesModule } from '@gamification/badges/badges.module';
 import { BalancesModule } from '@gamification/balances/balances.module';
 import { QuizzesModule } from '@education/quizzes/quizzes.module';
-import { EvaluationsModule } from '@education/evaluations/evaluations.module';
+import { QuizSolutionsModule } from '@src/modules/education/quizSolution/quizSolutions.module';
 import { ObjectifModule } from '@education/objectifs/objectifs.module';
 import { FilesModule } from '@documents/files/files.module';
 import { FileTagsModule } from '@documents/file-tags/file-tags.module';
@@ -77,7 +77,7 @@ import { FileTagsModule } from '@documents/file-tags/file-tags.module';
     BadgesModule,
     BalancesModule,
     QuizzesModule,
-    EvaluationsModule,
+    QuizSolutionsModule,
     FilesModule,
     FileTagsModule,
   ],

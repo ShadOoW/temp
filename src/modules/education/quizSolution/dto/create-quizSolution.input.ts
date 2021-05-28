@@ -5,22 +5,22 @@ import { QuizDto } from '../../quizzes/dto/quiz.dto';
 import { AnswerInput } from './answer.input';
 
 @InputType()
-export class CreateEvaluationInput {
+export class CreateQuizSolutionInput {
   @Field(() => String, {
-    description: 'title of the evaluation',
+    description: 'title of the quizSolution',
     nullable: true,
   })
   @IsString()
   title: string;
 
   @Field(() => String, {
-    description: 'Questions of the evaluation',
+    description: 'Questions of the quizSolution',
   })
   @IsString()
   quiz: QuizDto;
 
   @Field(() => [AnswerInput], {
-    description: 'Answer of the evaluation',
+    description: 'Answer of the quizSolution',
   })
   @IsArray()
   answers: AnswerInput[];

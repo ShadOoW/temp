@@ -1,16 +1,16 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
-import { EvaluationDto } from './evaluation.dto';
+import { QuizSolutionDto } from './quizSolution.dto';
 
 @ObjectType()
-export class EvaluationsPageDto {
-  @Field(() => [EvaluationDto])
-  readonly data: EvaluationDto[];
+export class QuizSolutionsPageDto {
+  @Field(() => [QuizSolutionDto])
+  readonly data: QuizSolutionDto[];
 
   @Field(() => PageMetaDto)
   readonly meta: PageMetaDto;
 
-  constructor(data: EvaluationDto[], meta: PageMetaDto) {
+  constructor(data: QuizSolutionDto[], meta: PageMetaDto) {
     this.data = data;
     this.meta = meta;
   }
