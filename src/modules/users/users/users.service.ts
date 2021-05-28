@@ -135,13 +135,17 @@ export class UsersService {
     const mentee = await this.findOne(userId);
     if (mentee && mentee.profile.wantedDomain?.id) {
       const menteeDomainId = mentee.profile.wantedDomain?.id;
-      const [users, usersCount] = await this.repo
+      let q = this.repo
         .createQueryBuilder('users')
         .innerJoinAndSelect('users.role', 'role')
         .innerJoinAndSelect('role.permissions', 'permissions')
         .innerJoinAndSelect('users.profile', 'profile')
         .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
-        .where('coachingDomains.id = :menteeDomainId', { menteeDomainId })
+        .where('coachingDomains.id = :menteeDomainId', { menteeDomainId });
+      q = pageOptionsDto.status
+        ? q.andWhere('users.id = :status', { status })
+        : q;
+      const [users, usersCount] = await q
         // .andWhere('users.active = :active', { active: true })
         .andWhere('role.name = :role', { role: 'mentor' })
         .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
