@@ -1,65 +1,24 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import {
-  IsArray,
-  IsDateString,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { UserEntity } from '@users/users/entities/user.entity';
-import { QuestionQuizInput } from './question-quiz.input';
+import { InputType, Field } from '@nestjs/graphql';
+import { Relationship } from '@src/interfaces/relationship';
+import { IsArray, IsString } from 'class-validator';
+import { QuestionInput } from './question.input';
 
 @InputType()
 export class CreateQuizInput {
-  @Field(() => Date, { description: 'Date to start the quiz', nullable: true })
-  @IsDateString()
-  @IsOptional()
-  startAt?: Date;
-
-  @Field(() => Date, { description: 'Date to end the quiz', nullable: true })
-  @IsDateString()
-  @IsOptional()
-  endAt?: Date;
-
-  @Field(() => Int, {
-    description: 'Duration of the quiz on minutes',
+  @Field(() => String, {
+    description: 'title of the quiz',
     nullable: true,
   })
-  @IsOptional()
-  @IsNumber()
-  duration?: number;
-
-  @Field(() => String, { description: 'Title of the quiz' })
   @IsString()
   title: string;
 
-  @Field(() => String, {
-    description: 'Description of the quiz',
-    nullable: true,
-  })
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @Field(() => String, {
-    description: 'Image of the quiz',
-    nullable: true,
-  })
-  @IsString()
-  @IsOptional()
-  image?: string;
-
-  @Field(() => [QuestionQuizInput], {
-    description: 'Questions IDs',
+  @Field(() => [QuestionInput], {
+    description: 'Questions of the quiz',
     nullable: true,
   })
   @IsArray()
-  questions: QuestionQuizInput[];
+  questions: QuestionInput[];
 
-  @Field(() => String, {
-    description: 'Quiz created by',
-    nullable: true,
-  })
-  @IsString()
-  user: UserEntity;
+  @Field(() => [Relationship])
+  mentees: Relationship[];
 }

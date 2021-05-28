@@ -1,40 +1,30 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
-import { QuizEntity } from '../../quizzes/entities/quiz.entity';
-import { UserEntity } from '@users/users/entities/user.entity';
+import { InputType, Field } from '@nestjs/graphql';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
+import { IsArray, IsString } from 'class-validator';
+import { QuizDto } from '../../quizzes/dto/quiz.dto';
+import { AnswerInput } from './answer.input';
 
 @InputType()
 export class CreateEvaluationInput {
-  @Field(() => Int, { description: 'The score of the evaluation' })
-  @IsNumber()
-  score: number;
-
-  @Field(() => Date, { description: 'Started DateTime', nullable: true })
-  @IsDateString()
-  @IsOptional()
-  startAt?: Date;
-
-  @Field(() => Int, {
-    description: 'Time Spent on the quiz',
+  @Field(() => String, {
+    description: 'title of the evaluation',
     nullable: true,
   })
-  @IsOptional()
-  @IsNumber()
-  timeSpent?: number;
+  @IsString()
+  title: string;
 
   @Field(() => String, {
-    description: 'User note',
-    nullable: true,
+    description: 'Questions of the evaluation',
   })
-  @IsOptional()
   @IsString()
-  note?: string;
+  quiz: QuizDto;
 
-  @Field(() => String, { description: 'Quiz ID' })
-  @IsString()
-  quiz: QuizEntity;
+  @Field(() => [AnswerInput], {
+    description: 'Answer of the evaluation',
+  })
+  @IsArray()
+  answers: AnswerInput[];
 
-  @Field(() => String, { description: 'User ID' })
-  @IsString()
-  user: UserEntity;
+  @Field(() => String)
+  mentor: UserDto;
 }

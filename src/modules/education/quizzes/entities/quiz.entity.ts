@@ -1,40 +1,36 @@
-import { EvaluationEntity } from '@education/evaluations/entities/evaluation.entity';
-import { QuestionEntity } from '@education/questions/entities/question.entity';
 import { UserEntity } from '@users/users/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { QuestionDto } from '@education/questions/dto/question.dto';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { QuestionDto } from '@src/modules/education/quizzes/dto/question.dto';
 import { QuizDto } from '../dto/quiz.dto';
 import { AbstractEntity } from '@src/common/abstract.entity';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
+import { EvaluationEntity } from '../../evaluations/entities/evaluation.entity';
 import { EvaluationDto } from '../../evaluations/dto/evaluation.dto';
 
 @Entity({ name: 'quizzes' })
 export class QuizEntity extends AbstractEntity<QuizDto> {
-  @Column({ type: 'timestamptz', nullable: true })
-  startAt?: Date;
-
-  @Column({ type: 'timestamptz', nullable: true })
-  endAt?: Date;
-
-  @Column({ type: 'int', nullable: true })
-  duration?: number;
-
   @Column({ type: 'varchar', length: 300 })
   title: string;
 
-  @Column({ type: 'text', nullable: true })
-  description?: string;
-
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  image?: string;
-
-  @OneToMany(() => QuestionEntity, (question) => question.quiz)
+  @Column({ type: 'jsonb', nullable: true })
   questions: QuestionDto[];
 
-  @ManyToOne(() => UserEntity, (user) => user.quizzes)
-  user: UserEntity;
-
   @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.quiz)
-  evaluations: EvaluationDto;
+  evaluations: EvaluationDto[];
+
+  @ManyToOne(() => UserEntity, (user) => user.quizzes)
+  mentor: UserEntity;
+
+  @ManyToMany(() => UserEntity, (user) => user.participate)
+  @JoinTable()
+  mentees: UserDto[];
 
   dtoClass = QuizDto;
 }

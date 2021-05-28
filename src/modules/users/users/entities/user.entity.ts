@@ -18,7 +18,6 @@ import { UserStatus } from '../interfaces/user';
 import { RoomEntity } from '@src/modules/messaging/chat/entities/room.entity';
 import { EventEntity } from '@src/modules/events/events/entities/event.entity';
 import { BalanceEntity } from '@gamification/balances/entities/balance.entity';
-import { QuestionEntity } from '@education/questions/entities/question.entity';
 import { QuizEntity } from '@education/quizzes/entities/quiz.entity';
 import { EvaluationEntity } from '@education/evaluations/entities/evaluation.entity';
 import { AbstractEntity } from '@src/common/abstract.entity';
@@ -29,7 +28,7 @@ import { SubscriptionDto } from '../../subscriptions/dto/subscription.dto';
 import { RequestDto } from '../../requests/dto/request.dto';
 import { SessionDto } from '@education/sessions/dto/session.dto';
 import { QuizDto } from '@education/quizzes/dto/quiz.dto';
-import { EvaluationDto } from '@education/evaluations/dto/evaluation.dto';
+import { EvaluationDto } from '@src/modules/education/evaluations/dto/evaluation.dto';
 import { BalanceDto } from '@src/modules/gamification/balances/dto/balance.dto';
 import { EventDto } from '@src/modules/events/events/dto/event.dto';
 import { ObjectifEntity } from '@education/objectifs/entities/objectif.entity';
@@ -134,15 +133,18 @@ export class UserEntity extends AbstractEntity<UserDto> {
   //rooms that the user is joined
   @ManyToMany(() => RoomEntity, (room) => room.members)
   rooms: RoomEntity[];
-
-  @OneToMany(() => QuestionEntity, (question) => question.user)
-  questions: QuestionEntity[];
-
-  @OneToMany(() => QuizEntity, (quiz) => quiz.user)
+  // Mentor create Quiz
+  @OneToMany(() => QuizEntity, (quiz) => quiz.mentor)
   quizzes: QuizDto[];
-
-  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
+  // Mentor related to Evaluation
+  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.mentor)
   evaluations: EvaluationDto[];
+  // Mentee related to quiz
+  @ManyToMany(() => QuizEntity, (quiz) => quiz.mentees)
+  participate: QuizEntity[];
+  // Mentee create an evaluation
+  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.mentee)
+  responses: EvaluationDto[];
 
   @OneToMany(() => FileTagEntity, (fileTag) => fileTag.user)
   fileTags: FileTagDto[];

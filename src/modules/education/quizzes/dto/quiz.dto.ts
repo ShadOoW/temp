@@ -1,39 +1,16 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { EvaluationEntity } from '@education/evaluations/entities/evaluation.entity';
-import { UserEntity } from '@users/users/entities/user.entity';
-import { QuestionDto } from '@education/questions/dto/question.dto';
+import { ObjectType, Field } from '@nestjs/graphql';
+import { QuestionDto } from '@src/modules/education/quizzes/dto/question.dto';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { QuizEntity } from '../entities/quiz.entity';
-import { EvaluationDto } from '../../evaluations/dto/evaluation.dto';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
 
 @ObjectType()
 export class QuizDto extends AbstractDto {
-  @Field(() => Date, { description: 'Date to start the quiz', nullable: true })
-  startAt?: Date;
-
-  @Field(() => Date, { description: 'Date to end the quiz', nullable: true })
-  endAt?: Date;
-
-  @Field(() => Int, {
-    description: 'Duration of the quiz on minutes',
+  @Field(() => String, {
+    description: 'title of the quiz',
     nullable: true,
   })
-  duration?: number;
-
-  @Field(() => String, { description: 'Title of the quiz' })
   title: string;
-
-  @Field(() => String, {
-    description: 'Description of the quiz',
-    nullable: true,
-  })
-  description?: string;
-
-  @Field(() => String, {
-    description: 'Image of the quiz',
-    nullable: true,
-  })
-  image?: string;
 
   @Field(() => [QuestionDto], {
     description: 'Questions of the quiz',
@@ -41,21 +18,17 @@ export class QuizDto extends AbstractDto {
   })
   questions: QuestionDto[];
 
-  user: UserEntity;
+  @Field(() => UserDto, { nullable: true })
+  mentor: UserDto;
 
-  evaluations: EvaluationDto;
+  @Field(() => [UserDto], { nullable: true })
+  mentees: UserDto[];
 
   constructor(quiz: QuizEntity) {
     super(quiz);
-    this.startAt = quiz.startAt;
-    this.endAt = quiz.endAt;
-    this.duration = quiz.duration;
-    this.endAt = quiz.endAt;
     this.title = quiz.title;
-    this.description = quiz.description;
-    this.image = quiz.image;
     this.questions = quiz.questions;
-    this.user = quiz.user;
-    this.evaluations = quiz.evaluations;
+    this.mentor = quiz.mentor;
+    this.mentees = quiz.mentees;
   }
 }

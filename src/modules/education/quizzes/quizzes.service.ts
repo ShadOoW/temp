@@ -15,15 +15,32 @@ export class QuizzesService {
   constructor(
     @InjectRepository(QuizEntity) private readonly repo: Repository<QuizEntity>,
   ) {}
-  async create(createQuizInput: CreateQuizInput) {
-    const createdQuiz = await this.repo.create(createQuizInput);
+  async create(createQuizInput: CreateQuizInput, userId) {
+    const createdQuiz = await this.repo.create({
+      ...createQuizInput,
+      mentor: userId,
+    });
     return (await this.repo.save(createdQuiz)).toDto();
   }
 
   async findAll(pageOptionsDto: QuizzesPageOptionsDto) {
+    const mentee = pageOptionsDto.mentee;
+    delete pageOptionsDto.mentee;
     const [quizzes, quizzesCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(pageOptionsDto),
-      relations: ['user', 'questions'],
+      join: { alias: 'quizzes', innerJoin: { mentees: 'quizzes.mentees' } },
+
+      // where: {
+      //   ...UtilsService.getOptions(pageOptionsDto),
+      //   mentees: { id: mentee },
+      // },
+      where: mentee
+        ? (qb) => {
+            qb.where({
+              ...UtilsService.getOptions(pageOptionsDto),
+            }).andWhere('mentees.id = :id', { id: mentee });
+          }
+        : UtilsService.getOptions(pageOptionsDto),
+      relations: ['mentor', 'mentees'],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -35,7 +52,7 @@ export class QuizzesService {
 
   async findOne(id: string) {
     const quiz = await this.repo.findOneOrFail(id, {
-      relations: ['user', 'questions'],
+      relations: ['mentor', 'mentees'],
     });
     return quiz ? quiz.toDto() : null;
   }

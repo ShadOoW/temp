@@ -5,19 +5,27 @@ import { UpdateQuizInput } from './dto/update-quiz.input';
 import { QuizDto } from './dto/quiz.dto';
 import { QuizzesPageDto } from './dto/quizzes-page.dto';
 import { QuizzesPageOptionsDto } from './dto/quizzes-page-options.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 
 @Resolver(() => QuizDto)
 export class QuizzesResolver {
   constructor(private readonly quizzesService: QuizzesService) {}
 
   @Mutation(() => QuizDto)
-  createQuiz(@Args('createQuizInput') createQuizInput: CreateQuizInput) {
-    return this.quizzesService.create(createQuizInput);
+  createQuiz(
+    @Args('createQuizInput') createQuizInput: CreateQuizInput,
+    @CurrentUser() userId,
+  ) {
+    return this.quizzesService.create(createQuizInput, userId);
   }
 
   @Query(() => QuizzesPageDto, { name: 'quizzes' })
-  findAll(@Args() pageOptionsDto: QuizzesPageOptionsDto) {
-    return this.quizzesService.findAll(pageOptionsDto);
+  findAll(
+    @Args() pageOptionsDto: QuizzesPageOptionsDto,
+    @Args('mentee', { type: () => String, nullable: true }) mentee: string,
+    @Args('mentor', { type: () => String, nullable: true }) mentor: string,
+  ) {
+    return this.quizzesService.findAll({ ...pageOptionsDto, mentee, mentor });
   }
 
   @Query(() => QuizDto, { name: 'quiz' })

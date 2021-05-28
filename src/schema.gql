@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AnswerDto {
+  """option of the answer"""
+  option: String
+
+  """options of the answer"""
+  options: [String!]
+
+  """text of the answer"""
+  text: String
+}
+
+input AnswerInput {
+  """Option Type"""
+  option: String
+
+  """options of the question"""
+  options: [String!]
+
+  """Text Type"""
+  text: String
+}
+
 type BadgeDto {
   createdAt: DateTime
 
@@ -64,23 +86,15 @@ input CreateDomainInput {
 }
 
 input CreateEvaluationInput {
-  """User note"""
-  note: String
+  """Answer of the evaluation"""
+  answers: [AnswerInput!]!
+  mentor: String!
 
-  """Quiz ID"""
+  """Questions of the evaluation"""
   quiz: String!
 
-  """The score of the evaluation"""
-  score: Int!
-
-  """Started DateTime"""
-  startAt: DateTime
-
-  """Time Spent on the quiz"""
-  timeSpent: Int
-
-  """User ID"""
-  user: String!
+  """title of the evaluation"""
+  title: String
 }
 
 input CreateEventInput {
@@ -174,53 +188,14 @@ input CreatePublicRequestInput {
   whyNeedCoaching: String!
 }
 
-input CreateQuestionInput {
-  """Description of the question"""
-  description: String
-
-  """Duration of the question on seconds"""
-  duration: Int
-
-  """Image of the question"""
-  image: String
-
-  """Order of the question"""
-  order: Int!
-
-  """Propositions of the question"""
-  propositions: [PropositionInput!]!
-
-  """Title of the question"""
-  title: String!
-
-  """Question created by"""
-  user: String
-}
-
 input CreateQuizInput {
-  """Description of the quiz"""
-  description: String
+  mentees: [Relationship!]!
 
-  """Duration of the quiz on minutes"""
-  duration: Int
+  """Questions of the quiz"""
+  questions: [QuestionInput!]
 
-  """Date to end the quiz"""
-  endAt: DateTime
-
-  """Image of the quiz"""
-  image: String
-
-  """Questions IDs"""
-  questions: [QuestionQuizInput!]
-
-  """Date to start the quiz"""
-  startAt: DateTime
-
-  """Title of the quiz"""
-  title: String!
-
-  """Quiz created by"""
-  user: String
+  """title of the quiz"""
+  title: String
 }
 
 input CreateRequestInput {
@@ -286,20 +261,18 @@ type DomainsPageDto {
 }
 
 type EvaluationDto {
+  """Answer of the evaluation"""
+  answers: [AnswerDto!]
   createdAt: DateTime
   id: String
+  mentee: UserDto
+  mentor: UserDto
 
-  """User note"""
-  note: String
+  """Questions of the evaluation"""
+  quiz: QuizDto
 
-  """Score of the quiz"""
-  score: Int!
-
-  """Started Time of the quiz"""
-  startAt: DateTime
-
-  """Time spent on quiz"""
-  timeSpent: Int
+  """title of the evaluation"""
+  title: String
   updatedAt: DateTime
 }
 
@@ -398,7 +371,6 @@ type Mutation {
   createPoint(createPointInput: CreatePointInput!): PointDto!
   createPrivateRequest(createPrivateRequestInput: CreatePrivateRequestInput!): RequestDto!
   createPublicRequest(createPublicRequestInput: CreatePublicRequestInput!): RequestDto!
-  createQuestion(createQuestionInput: CreateQuestionInput!): QuestionDto!
   createQuiz(createQuizInput: CreateQuizInput!): QuizDto!
   createRequest(createRequestInput: CreateRequestInput!): RequestDto!
   createRole(createRoleInput: CreateRoleInput!): RoleDto!
@@ -409,12 +381,12 @@ type Mutation {
   messagesAsRead: Boolean!
   removeBadge(id: String!): BadgeDto!
   removeDomain(id: String!): DomainDto!
+  removeEvaluation(id: String!): EvaluationDto!
   removeFile(id: String!): FileDto!
   removeFileTag(id: String!): FileTagDto!
   removeObjectif(id: String!): ObjectifDto!
   removePermission(id: String!): PermissionDto!
   removePoint(id: String!): PointDto!
-  removeQuestion(id: String!): QuestionDto!
   removeQuiz(id: String!): QuizDto!
   removeRequest(id: String!): RequestDto!
   removeRole(id: String!): RoleDto!
@@ -424,6 +396,7 @@ type Mutation {
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): BadgeDto!
   updateBalance(id: String!, updateBalanceInput: UpdateBalanceInput!): BalanceDto!
   updateDomain(id: String!, updateDomainInput: UpdateDomainInput!): DomainDto!
+  updateEvaluation(id: String!, updateEvaluationInput: UpdateEvaluationInput!): EvaluationDto!
   updateEvent(id: String!, updateEventInput: UpdateEventInput!): EventDto!
   updateFile(id: String!, updateFileInput: UpdateFileInput!): FileDto!
   updateFileTag(id: String!, updateFileTagInput: UpdateFileTagInput!): FileTagDto!
@@ -431,7 +404,6 @@ type Mutation {
   updatePermission(id: String!, updatePermissionInput: UpdatePermissionInput!): PermissionDto!
   updatePoint(id: String!, updatePointInput: UpdatePointInput!): PointDto!
   updateProfile(id: String!, updateProfileInput: UpdateProfileInput!): ProfileDto!
-  updateQuestion(id: String!, updateQuestionInput: UpdateQuestionInput!): QuestionDto!
   updateQuiz(id: String!, updateQuizInput: UpdateQuizInput!): QuizDto!
   updateRequest(id: String!, updateRequestInput: UpdateRequestInput!): RequestDto!
   updateRole(id: String!, updateRoleInput: UpdateRoleInput!): RoleDto!
@@ -528,34 +500,6 @@ type ProfileDto {
   yearsOfExperience: Int
 }
 
-type PropositionDto {
-  """If proposition is correct or not"""
-  correct: Boolean!
-
-  """Proposition description"""
-  desciption: String
-
-  """Proposition points value"""
-  points: Int!
-
-  """Proposition title"""
-  title: String!
-}
-
-input PropositionInput {
-  """If proposition is correct or not"""
-  correct: Boolean!
-
-  """Proposition description"""
-  desciption: String
-
-  """Proposition points value"""
-  points: Int!
-
-  """Proposition title"""
-  title: String!
-}
-
 type Query {
   activatedSessions: [SessionDto!]!
   activities(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
@@ -567,7 +511,7 @@ type Query {
   domains(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): DomainsPageDto!
   emailExists(email: String!): Boolean!
   evaluation(id: String!): EvaluationDto!
-  evaluations(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
+  evaluations(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): EvaluationsPageDto!
   events(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   file(id: String!): FileDto!
   fileTag(id: String!): FileTagDto!
@@ -588,10 +532,8 @@ type Query {
   profile(id: String!): ProfileDto!
   publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   publicRequestsByDomain(domainId: String, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
-  question(id: String!): QuestionDto!
-  questions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuestionsPageDto!
   quiz(id: String!): QuizDto!
-  quizzes(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
+  quizzes(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
   request(id: String!): RequestDto!
   requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   role(id: String!): RoleDto!
@@ -613,63 +555,38 @@ type Query {
 }
 
 type QuestionDto {
-  createdAt: DateTime
-
   """Description of the question"""
-  description: String
-
-  """Duration of the question on seconds"""
-  duration: Int
-  id: String
-
-  """Description of the question"""
-  image: String
-
-  """Order of the question"""
-  order: Int!
-
-  """Titile of the question"""
-  propositions: [PropositionDto!]!
+  options: [String!]
 
   """Title of the question"""
-  title: String!
-  updatedAt: DateTime
+  question: String!
+
+  """Description of the question"""
+  type: String!
 }
 
-input QuestionQuizInput {
-  """Quiz id"""
-  id: String!
-}
+input QuestionInput {
+  """Description of the question"""
+  options: [String!]
 
-type QuestionsPageDto {
-  data: [QuestionDto!]!
-  meta: PageMetaDto!
+  """Title of the question"""
+  question: String!
+
+  """Description of the question"""
+  type: String!
 }
 
 type QuizDto {
   createdAt: DateTime
-
-  """Description of the quiz"""
-  description: String
-
-  """Duration of the quiz on minutes"""
-  duration: Int
-
-  """Date to end the quiz"""
-  endAt: DateTime
   id: String
-
-  """Image of the quiz"""
-  image: String
+  mentees: [UserDto!]
+  mentor: UserDto
 
   """Questions of the quiz"""
   questions: [QuestionDto!]
 
-  """Date to start the quiz"""
-  startAt: DateTime
-
-  """Title of the quiz"""
-  title: String!
+  """title of the quiz"""
+  title: String
   updatedAt: DateTime
 }
 
@@ -784,6 +701,18 @@ input UpdateDomainInput {
   name: String!
 }
 
+input UpdateEvaluationInput {
+  """Answer of the evaluation"""
+  answers: [AnswerInput!]
+  mentor: String
+
+  """Questions of the evaluation"""
+  quiz: String
+
+  """title of the evaluation"""
+  title: String
+}
+
 input UpdateEventInput {
   read: String!
 }
@@ -854,53 +783,14 @@ input UpdateProfileInput {
   yearsOfExperience: Int
 }
 
-input UpdateQuestionInput {
-  """Description of the question"""
-  description: String
-
-  """Duration of the question on seconds"""
-  duration: Int
-
-  """Image of the question"""
-  image: String
-
-  """Order of the question"""
-  order: Int
-
-  """Propositions of the question"""
-  propositions: [PropositionInput!]
-
-  """Title of the question"""
-  title: String
-
-  """Question created by"""
-  user: String
-}
-
 input UpdateQuizInput {
-  """Description of the quiz"""
-  description: String
+  mentees: [Relationship!]
 
-  """Duration of the quiz on minutes"""
-  duration: Int
+  """Questions of the quiz"""
+  questions: [QuestionInput!]
 
-  """Date to end the quiz"""
-  endAt: DateTime
-
-  """Image of the quiz"""
-  image: String
-
-  """Questions IDs"""
-  questions: [QuestionQuizInput!]
-
-  """Date to start the quiz"""
-  startAt: DateTime
-
-  """Title of the quiz"""
+  """title of the quiz"""
   title: String
-
-  """Quiz created by"""
-  user: String
 }
 
 input UpdateRequestInput {

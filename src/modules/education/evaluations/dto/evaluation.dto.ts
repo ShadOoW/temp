@@ -1,42 +1,42 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
-import { UserEntity } from '@users/users/entities/user.entity';
-import { QuizDto } from '../../quizzes/dto/quiz.dto';
 import { EvaluationEntity } from '../entities/evaluation.entity';
+import { UserDto } from '@src/modules/users/users/dto/user.dto';
+import { AnswerDto } from './answer.dto';
+import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @ObjectType()
 export class EvaluationDto extends AbstractDto {
-  @Field(() => Int, { description: 'Score of the quiz' })
-  score: number;
-
-  @Field(() => Date, {
-    description: 'Started Time of the quiz',
-    nullable: true,
-  })
-  startAt?: Date;
-
-  @Field(() => Int, {
-    description: 'Time spent on quiz',
-    nullable: true,
-  })
-  timeSpent?: number;
-
   @Field(() => String, {
-    description: 'User note',
+    description: 'title of the evaluation',
     nullable: true,
   })
-  note?: string;
+  title: string;
 
+  @Field(() => QuizDto, {
+    description: 'Questions of the evaluation',
+    nullable: true,
+  })
   quiz: QuizDto;
 
-  user: UserEntity;
+  @Field(() => [AnswerDto], {
+    description: 'Answer of the evaluation',
+    nullable: true,
+  })
+  answers: AnswerDto[];
+
+  @Field(() => UserDto, { nullable: true })
+  mentor: UserDto;
+
+  @Field(() => UserDto, { nullable: true })
+  mentee: UserDto;
 
   constructor(evaluation: EvaluationEntity) {
     super(evaluation);
-    this.score = evaluation.score;
-    this.startAt = evaluation.startAt;
-    this.note = evaluation.note;
+    this.title = evaluation.title;
     this.quiz = evaluation.quiz;
-    this.user = evaluation.user;
+    this.answers = evaluation.answers;
+    this.mentor = evaluation.mentor;
+    this.mentee = evaluation.mentee;
   }
 }

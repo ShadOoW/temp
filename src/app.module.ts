@@ -28,7 +28,6 @@ import { PubSub } from 'graphql-subscriptions';
 import { PointsModule } from '@gamification/points/points.module';
 import { BadgesModule } from '@gamification/badges/badges.module';
 import { BalancesModule } from '@gamification/balances/balances.module';
-import { QuestionsModule } from '@education/questions/questions.module';
 import { QuizzesModule } from '@education/quizzes/quizzes.module';
 import { EvaluationsModule } from '@education/evaluations/evaluations.module';
 import { ObjectifModule } from '@education/objectifs/objectifs.module';
@@ -77,7 +76,6 @@ import { FileTagsModule } from '@documents/file-tags/file-tags.module';
     PointsModule,
     BadgesModule,
     BalancesModule,
-    QuestionsModule,
     QuizzesModule,
     EvaluationsModule,
     FilesModule,
