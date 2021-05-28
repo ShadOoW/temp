@@ -28,11 +28,6 @@ export class QuizzesService {
     delete pageOptionsDto.mentee;
     const [quizzes, quizzesCount] = await this.repo.findAndCount({
       join: { alias: 'quizzes', innerJoin: { mentees: 'quizzes.mentees' } },
-
-      // where: {
-      //   ...UtilsService.getOptions(pageOptionsDto),
-      //   mentees: { id: mentee },
-      // },
       where: mentee
         ? (qb) => {
             qb.where({

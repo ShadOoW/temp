@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // import { UtilsService } from '@shared/providers/utils.service';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UtilsService } from '@src/providers/utils.service';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateEventInput } from './dto/create-event.input';
 import { EventsPageOptionsDto } from './dto/events-page-options.dto';
 import { EventsPageDto } from './dto/events-page.dto';
@@ -54,12 +54,12 @@ export class EventsService {
         {
           to: pageOptionsDto.to,
           from: pageOptionsDto.from,
-          module: ['session', 'request'],
+          module: In(['session', 'request']),
         },
         {
           from: pageOptionsDto.to,
           to: pageOptionsDto.from,
-          module: ['session', 'request'],
+          module: In(['session', 'request']),
         },
       ],
       relations: ['to', 'from', 'to.profile', 'from.profile'],

@@ -106,9 +106,13 @@ export class UsersService {
       ? joinUsers.where('coachingDomains.id = :domainId', { domainId })
       : joinUsers;
     const whereStatus = pageOptionsDto.status
-      ? whereDomain.where('users.status = :status', {
-          status: pageOptionsDto.status,
-        })
+      ? whereDomain
+        ? whereDomain.andWhere('users.status = :status', {
+            status: pageOptionsDto.status,
+          })
+        : whereDomain.where('users.status = :status', {
+            status: pageOptionsDto.status,
+          })
       : whereDomain;
     const [users, usersCount] = await whereStatus
       .andWhere('users.active = :active', { active: true })

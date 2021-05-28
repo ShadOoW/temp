@@ -43,7 +43,7 @@ export class EventsResolver {
   activitiesM2m(@Args() args: EventsPageOptionsDto) {
     return this.eventsService.findM2mActivities({
       ...args,
-      module: ['session', 'request'],
+      // module: ['session', 'request'],
     });
   }
 

@@ -30,6 +30,16 @@ export class SessionsResolver {
   }
 
   @Query(() => SessionsPageDto, { name: 'sessions' })
+  async sessionM2m(
+    @Args('status', { type: () => String, nullable: true }) status: string,
+    @Args() pageOptionsDto: SessionsPageOptionsDto,
+    @Args('mentor', { type: () => String, nullable: true }) mentor: string,
+    @Args('mentee', { type: () => String, nullable: true }) mentee: string,
+  ) {
+    return this.sessionsService.findAll(pageOptionsDto, status, mentor, mentee);
+  }
+
+  @Query(() => SessionsPageDto, { name: 'sessions' })
   async findAll(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args() pageOptionsDto: SessionsPageOptionsDto,

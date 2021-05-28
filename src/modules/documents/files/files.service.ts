@@ -26,15 +26,23 @@ export class FilesService {
     pageOptionsDto: FilesPageOptionsDto,
     userId: string,
   ): Promise<FilesPageDto> {
+    let where = UtilsService.getOptions({
+      ...pageOptionsDto,
+      status: pageOptionsDto.status
+        ? pageOptionsDto.status
+        : ['created', 'updated', 'shared'],
+      user: userId,
+    });
+    where = pageOptionsDto.tags
+      ? (qb) => {
+          qb.where({
+            ...where,
+          }).andWhere('tags.id = :id', { id: pageOptionsDto.tags });
+        }
+      : where;
     const [files, filesCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions({
-        ...pageOptionsDto,
-        status: pageOptionsDto.status
-          ? pageOptionsDto.status
-          : ['created', 'updated', 'shared'],
-        // tags: { id:  },
-        user: userId,
-      }),
+      join: { alias: 'files', leftJoin: { tags: 'files.tags' } },
+      where,
       relations: ['user', 'tags', 'sharedWith'],
       ...UtilsService.pagination(pageOptionsDto),
     });

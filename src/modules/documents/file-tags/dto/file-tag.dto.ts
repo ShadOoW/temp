@@ -17,7 +17,6 @@ export class FileTagDto extends AbstractDto {
 
   constructor(fileTag: FileTagEntity) {
     super(fileTag);
-    console.log(fileTag);
     this.name = fileTag.name;
     this.files = fileTag.files;
     this.user = fileTag.user;
