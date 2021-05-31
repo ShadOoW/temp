@@ -5,4 +5,5 @@ import { PageOptionsDto } from '@src/common/dto/page-options.dto';
 export class QuizSolutionsPageOptionsDto extends PageOptionsDto {
   mentee?: string;
   mentor?: string;
+  quiz?: string;
 }

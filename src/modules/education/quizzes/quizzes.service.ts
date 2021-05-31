@@ -35,7 +35,7 @@ export class QuizzesService {
             }).andWhere('mentees.id = :id', { id: mentee });
           }
         : UtilsService.getOptions(pageOptionsDto),
-      relations: ['mentor', 'mentees'],
+      relations: ['mentor', 'mentees', 'mentor.profile', 'mentees.profile'],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -47,7 +47,7 @@ export class QuizzesService {
 
   async findOne(id: string) {
     const quiz = await this.repo.findOneOrFail(id, {
-      relations: ['mentor', 'mentees'],
+      relations: ['mentor', 'mentees', 'mentor.profile', 'mentees.profile'],
     });
     return quiz ? quiz.toDto() : null;
   }

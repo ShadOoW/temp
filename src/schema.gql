@@ -511,7 +511,7 @@ type Query {
   publicRequestsByDomain(domainId: String, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
   quiz(id: String!): QuizDto!
   quizSolution(id: String!): QuizSolutionDto!
-  quizSolutions(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizSolutionsPageDto!
+  quizSolutions(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, quiz: String, take: Int = 2): QuizSolutionsPageDto!
   quizzes(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
   request(id: String!): RequestDto!
   requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!

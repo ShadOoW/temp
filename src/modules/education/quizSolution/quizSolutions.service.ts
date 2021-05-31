@@ -27,7 +27,13 @@ export class QuizSolutionsService {
   async findAll(pageOptionsDto: QuizSolutionsPageOptionsDto) {
     const [quizSolutions, quizzesCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
-      relations: ['mentee', 'mentor', 'quiz'],
+      relations: [
+        'mentee',
+        'mentor',
+        'quiz',
+        'mentee.profile',
+        'mentor.profile',
+      ],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -39,7 +45,7 @@ export class QuizSolutionsService {
 
   async findOne(id: string) {
     const quizSolution = await this.repo.findOneOrFail(id, {
-      relations: ['mentee', 'mentor'],
+      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
     });
     return quizSolution ? quizSolution.toDto() : null;
   }

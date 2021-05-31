@@ -25,8 +25,14 @@ export class QuizSolutionsResolver {
     @Args() pageOptionsDto: QuizSolutionsPageOptionsDto,
     @Args('mentee', { type: () => String, nullable: true }) mentee: string,
     @Args('mentor', { type: () => String, nullable: true }) mentor: string,
+    @Args('quiz', { type: () => String, nullable: true }) quiz: string,
   ) {
-    return this.quizzesService.findAll({ ...pageOptionsDto, mentee, mentor });
+    return this.quizzesService.findAll({
+      ...pageOptionsDto,
+      mentee,
+      mentor,
+      quiz,
+    });
   }
 
   @Query(() => QuizSolutionDto, { name: 'quizSolution' })
