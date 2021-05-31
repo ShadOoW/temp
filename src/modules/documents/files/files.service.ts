@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateFileInput } from './dto/create-file.input';
 import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
@@ -26,6 +26,7 @@ export class FilesService {
     pageOptionsDto: FilesPageOptionsDto,
     userId: string,
   ): Promise<FilesPageDto> {
+    // console.log(pageOptionsDto);
     let where = UtilsService.getOptions({
       ...pageOptionsDto,
       status: pageOptionsDto.status
@@ -38,12 +39,26 @@ export class FilesService {
           qb.where({
             ...where,
           }).andWhere('tags.id = :id', { id: pageOptionsDto.tags });
+          // .andWhere(
+          //   new Brackets((qb) => {
+          //     qb.where('user.id = :id', {
+          //       id: userId,
+          //     }).orWhere('sharedWith.id = :id', { id: userId });
+          //   }),
+          // );
+          // .andWhere('user = :id', { id: userId });
+          // .orWhere('sharedWith.id = :id', { id: userId });
         }
       : where;
+    // console.log(where);
     const [files, filesCount] = await this.repo.findAndCount({
       join: {
         alias: 'files',
-        leftJoin: { tags: 'files.tags', sharedWith: 'files.sharedWith' },
+        leftJoin: {
+          user: 'files.user',
+          tags: 'files.tags',
+          sharedWith: 'files.sharedWith',
+        },
       },
       where,
       relations: [
@@ -59,6 +74,7 @@ export class FilesService {
       pageOptionsDto,
       itemCount: filesCount,
     });
+    console.log(files.toDtos());
     return new FilesPageDto(files.toDtos(), pageMetaDto);
   }
 
