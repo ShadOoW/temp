@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { UserDto } from '@src/modules/users/users/dto/user.dto';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { QuizDto } from '../../quizzes/dto/quiz.dto';
 import { AnswerInput } from './answer.input';
 
@@ -11,7 +11,8 @@ export class CreateQuizSolutionInput {
     nullable: true,
   })
   @IsString()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @Field(() => String, {
     description: 'Questions of the quizSolution',
