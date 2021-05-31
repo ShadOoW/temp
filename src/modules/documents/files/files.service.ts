@@ -41,9 +41,18 @@ export class FilesService {
         }
       : where;
     const [files, filesCount] = await this.repo.findAndCount({
-      join: { alias: 'files', leftJoin: { tags: 'files.tags' } },
+      join: {
+        alias: 'files',
+        leftJoin: { tags: 'files.tags', sharedWith: 'files.sharedWith' },
+      },
       where,
-      relations: ['user', 'tags', 'sharedWith'],
+      relations: [
+        'user',
+        'tags',
+        'sharedWith',
+        'user.profile',
+        'sharedWith.profile',
+      ],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
@@ -55,7 +64,13 @@ export class FilesService {
 
   async findOne(id: string) {
     const file = await this.repo.findOne(id, {
-      relations: ['user', 'tags', 'sharedWith'],
+      relations: [
+        'user',
+        'tags',
+        'sharedWith',
+        'user.profile',
+        'sharedWith.profile',
+      ],
     });
     return file ? file.toDto() : null;
   }

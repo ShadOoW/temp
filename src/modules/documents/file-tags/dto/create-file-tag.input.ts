@@ -4,4 +4,7 @@ import { InputType, Field } from '@nestjs/graphql';
 export class CreateFileTagInput {
   @Field(() => String)
   name: string;
+
+  @Field(() => String)
+  color: string;
 }

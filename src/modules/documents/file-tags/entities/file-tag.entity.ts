@@ -11,6 +11,9 @@ export class FileTagEntity extends AbstractEntity<FileTagDto> {
   @Column({ type: 'varchar', length: 300, nullable: false })
   name: string;
 
+  @Column({ type: 'varchar', length: 300, default: '#333333' })
+  color: string;
+
   @ManyToMany(() => FileEntity, (file) => file.tags)
   files: FileDto[];
 

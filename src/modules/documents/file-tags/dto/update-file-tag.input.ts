@@ -3,6 +3,9 @@ import { InputType, Field, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateFileTagInput extends PartialType(CreateFileTagInput) {
-  @Field(() => String)
-  name: string;
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  color?: string;
 }

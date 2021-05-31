@@ -101,6 +101,7 @@ input CreateFileInput {
 }
 
 input CreateFileTagInput {
+  color: String!
   name: String!
 }
 
@@ -307,6 +308,7 @@ type FileDto {
 }
 
 type FileTagDto {
+  color: String
   createdAt: DateTime
   files: [FileDto!]
   id: String
@@ -715,7 +717,8 @@ input UpdateFileInput {
 }
 
 input UpdateFileTagInput {
-  name: String!
+  color: String
+  name: String
 }
 
 input UpdateObjectifInput {

@@ -9,6 +9,9 @@ export class FileTagDto extends AbstractDto {
   @Field(() => String)
   name: string;
 
+  @Field(() => String, { nullable: true })
+  color?: string;
+
   @Field(() => [FileDto], { nullable: true })
   files?: FileDto[];
 
@@ -18,6 +21,7 @@ export class FileTagDto extends AbstractDto {
   constructor(fileTag: FileTagEntity) {
     super(fileTag);
     this.name = fileTag.name;
+    this.color = fileTag.color;
     this.files = fileTag.files;
     this.user = fileTag.user;
   }
