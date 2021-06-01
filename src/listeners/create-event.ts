@@ -109,8 +109,9 @@ export class CreateEvents {
 
   async quiz(quiz, command: string) {
     const { mentor, mentees } = quiz;
+    console.log(mentor, mentees);
     if (mentor && mentees) {
-      const from = quiz.mentor.id;
+      const from = quiz.mentor;
       // const to = quiz.mentee;
       const eventsPromises = mentees.map(async (mentee) => {
         const to = mentee.id;
@@ -142,7 +143,7 @@ export class CreateEvents {
     const { mentor } = quizSolution;
     if (mentor) {
       const from = quizSolution.userId;
-      const to = quizSolution.mentor.id;
+      const to = quizSolution.mentor;
       const sessionCreatedEvent = new CreateEventInput(
         'quizSolution',
         command,

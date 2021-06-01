@@ -55,10 +55,6 @@ export class Listeners {
     await this.createEvent.quiz(quiz, 'updated');
   }
 
-  @OnEvent('quiz.deleted')
-  async handleQuizDeletedEvent(quiz: QuizDto) {
-    await this.createEvent.quiz(quiz, 'deleted');
-  }
   /// Quiz Events
   @OnEvent('quizSolution.created')
   async handleQuizSolutionCreatedEvent(quizSolution: QuizSolutionDto) {
@@ -68,10 +64,5 @@ export class Listeners {
   @OnEvent('quizSolution.updated')
   async handleQuizSolutionUpdatedEvent(quizSolution: QuizSolutionDto) {
     await this.createEvent.quizSolution(quizSolution, 'updated');
-  }
-
-  @OnEvent('quizSolution.deleted')
-  async handleQuizSolutionDeletedEvent(quizSolution: QuizSolutionDto) {
-    await this.createEvent.quizSolution(quizSolution, 'deleted');
   }
 }

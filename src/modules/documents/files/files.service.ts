@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
-import { UtilsService } from '@src/providers/utils.service';
+// import { UtilsService } from '@src/providers/utils.service';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
-import { Brackets, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateFileInput } from './dto/create-file.input';
 import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
@@ -31,16 +31,16 @@ export class FilesService {
       .createQueryBuilder('files')
       .leftJoinAndSelect('files.user', 'user')
       .leftJoinAndSelect('files.tags', 'tags')
-      .leftJoinAndSelect('files.sharedWith', 'sharedWith')
-      .where('user.id = :userId OR sharedWith.id = :userId', { userId });
+      .leftJoinAndSelect('files.sharedWith', 'sharedWith');
+    // .where('user.id = :userId OR sharedWith.id = :userId', { userId });
     const statusQ = pageOptionsDto.status
-      ? fileQ.andWhere('files.status = :status', {
+      ? fileQ.where('files.status = :status', {
           status: pageOptionsDto.status,
         })
-      : fileQ.andWhere('files.status IN (:...status)', {
+      : fileQ.where('files.status IN (:...status)', {
           status: ['created', 'updated', 'shared'],
         });
-    console.log('statusQ', await statusQ.getRawMany());
+    // console.log('statusQ', await statusQ.getRawMany());
     const tagQ = pageOptionsDto.tags
       ? fileQ.andWhere('tags.id = :id', {
           id: pageOptionsDto.tags,
@@ -48,7 +48,7 @@ export class FilesService {
       : fileQ;
     console.log('tagQ', pageOptionsDto.tags, await tagQ.getRawMany());
 
-    const [files, filesCount] = await tagQ.getManyAndCount();
+    const [files, filesCount] = await statusQ.getManyAndCount();
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

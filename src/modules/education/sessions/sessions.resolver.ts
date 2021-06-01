@@ -29,7 +29,7 @@ export class SessionsResolver {
     });
   }
 
-  @Query(() => SessionsPageDto, { name: 'sessionM2m' })
+  @Query(() => SessionsPageDto, { name: 'sessionsM2m' })
   async sessionM2m(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args() pageOptionsDto: SessionsPageOptionsDto,

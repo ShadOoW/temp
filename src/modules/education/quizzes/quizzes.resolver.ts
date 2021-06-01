@@ -57,9 +57,6 @@ export class QuizzesResolver {
     @Args('id', { type: () => String }) id: string,
     @CurrentUser() userId,
   ) {
-    return this.quizzesService.remove(id).then((event) => {
-      this.eventEmitter.emit('quiz.deleted', { ...event, userId });
-      return event;
-    });
+    return this.quizzesService.remove(id);
   }
 }
