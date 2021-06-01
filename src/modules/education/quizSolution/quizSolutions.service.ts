@@ -28,9 +28,9 @@ export class QuizSolutionsService {
     const [quizSolutions, quizzesCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions(pageOptionsDto),
       relations: [
+        'quiz',
         'mentee',
         'mentor',
-        'quiz',
         'mentee.profile',
         'mentor.profile',
       ],
@@ -45,7 +45,13 @@ export class QuizSolutionsService {
 
   async findOne(id: string) {
     const quizSolution = await this.repo.findOneOrFail(id, {
-      relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+      relations: [
+        'quiz',
+        'mentee',
+        'mentor',
+        'mentee.profile',
+        'mentor.profile',
+      ],
     });
     return quizSolution ? quizSolution.toDto() : null;
   }

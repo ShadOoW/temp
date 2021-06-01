@@ -9,7 +9,7 @@ import { QuizDto } from '../../quizzes/dto/quiz.dto';
 
 @Entity({ name: 'quizSolutions' })
 export class QuizSolutionEntity extends AbstractEntity<QuizSolutionDto> {
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   title: string;
 
   @ManyToOne(() => QuizEntity, (quiz) => quiz.quizSolutions)
