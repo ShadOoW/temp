@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 // import { UtilsService } from '@src/providers/utils.service';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateFileInput } from './dto/create-file.input';
 import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
@@ -27,28 +27,69 @@ export class FilesService {
     userId: string,
   ): Promise<FilesPageDto> {
     console.log(pageOptionsDto);
-    const fileQ = this.repo
-      .createQueryBuilder('files')
-      .leftJoinAndSelect('files.user', 'user')
-      .leftJoinAndSelect('files.tags', 'tags')
-      .leftJoinAndSelect('files.sharedWith', 'sharedWith');
-    // .where('user.id = :userId OR sharedWith.id = :userId', { userId });
-    const statusQ = pageOptionsDto.status
-      ? fileQ.where('files.status = :status', {
-          status: pageOptionsDto.status,
-        })
-      : fileQ.where('files.status IN (:...status)', {
-          status: ['created', 'updated', 'shared'],
+    // const fileQ = this.repo
+    //   .createQueryBuilder('files')
+    //   // .leftJoinAndSelect('files.user', 'user')
+    //   // .innerJoin
+    //   .innerJoin('files.tags', 'tags')
+    //   // .leftJoinAndSelect('files.sharedWith', 'sharedWith')
+    //   .where('tags.id = :id', {
+    //     id: pageOptionsDto.tags,
+    //   });
+    const fileQ = this.repo.findAndCount({
+      join: {
+        alias: 'files',
+        leftJoin: {
+          user: 'files.user',
+          tags: 'files.tags',
+          sharedWith: 'files.sharedWith',
+        },
+      },
+      where: (qb) => {
+        qb.where({
+          user: userId,
+          status: pageOptionsDto.status
+            ? pageOptionsDto.status
+            : In(['created', 'updated', 'shared']),
         });
+        if (pageOptionsDto.tags) {
+          qb.andWhere('tags.id = :id', { id: pageOptionsDto.tags });
+          if (!pageOptionsDto.status)
+            qb.orWhere(
+              'sharedWith.id = :userId AND tags.id = :id AND files.status != :status',
+              {
+                userId,
+                id: pageOptionsDto.tags,
+                status: 'deleted',
+              },
+            );
+        } else {
+          if (!pageOptionsDto.status)
+            qb.orWhere('sharedWith.id = :userId AND files.status != :status', {
+              userId,
+              status: 'deleted',
+            });
+        }
+      },
+      relations: ['tags', 'user', 'sharedWith'],
+    });
+    // .where('user.id = :userId OR sharedWith.id = :userId', { userId });
+    // const statusQ = pageOptionsDto.status
+    //   ? fileQ.where('files.status = :status', {
+    //       status: pageOptionsDto.status,
+    //     })
+    //   : fileQ.where('files.status IN (:...status)', {
+    //       status: ['created', 'updated', 'shared'],
+    //     });
     // console.log('statusQ', await statusQ.getRawMany());
-    const tagQ = pageOptionsDto.tags
-      ? fileQ.andWhere('tags.id = :id', {
-          id: pageOptionsDto.tags,
-        })
-      : fileQ;
-    console.log('tagQ', pageOptionsDto.tags, await tagQ.getRawMany());
+    // const tagQ = pageOptionsDto.tags
+    //   ? fileQ.andWhere('tags.id = :id', {
+    //       id: pageOptionsDto.tags,
+    //     })
+    //   : fileQ;
+    // console.log('tagQ', pageOptionsDto.tags, await tagQ.getRawMany());
 
-    const [files, filesCount] = await statusQ.getManyAndCount();
+    const [files, filesCount] = await fileQ;
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
