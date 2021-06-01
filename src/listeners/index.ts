@@ -3,6 +3,8 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SessionDto } from '@education/sessions/dto/session.dto';
 import { RequestDto } from '@users/requests/dto/request.dto';
 import { CreateEvents } from './create-event';
+import { QuizDto } from '@education/quizzes/dto/quiz.dto';
+import { QuizSolutionDto } from '@education/quizSolution/dto/quizSolution.dto';
 
 @Injectable()
 export class Listeners {
@@ -41,5 +43,35 @@ export class Listeners {
   @OnEvent('message.created')
   async handleMessageCreatedEvent(message) {
     await this.createEvent.message(message, 'created');
+  }
+  /// Quiz Events
+  @OnEvent('quiz.created')
+  async handleQuizCreatedEvent(quiz: QuizDto) {
+    await this.createEvent.quiz(quiz, 'created');
+  }
+
+  @OnEvent('quiz.updated')
+  async handleQuizUpdatedEvent(quiz: QuizDto) {
+    await this.createEvent.quiz(quiz, 'updated');
+  }
+
+  @OnEvent('quiz.deleted')
+  async handleQuizDeletedEvent(quiz: QuizDto) {
+    await this.createEvent.quiz(quiz, 'deleted');
+  }
+  /// Quiz Events
+  @OnEvent('quizSolution.created')
+  async handleQuizSolutionCreatedEvent(quizSolution: QuizSolutionDto) {
+    await this.createEvent.quizSolution(quizSolution, 'created');
+  }
+
+  @OnEvent('quizSolution.updated')
+  async handleQuizSolutionUpdatedEvent(quizSolution: QuizSolutionDto) {
+    await this.createEvent.quizSolution(quizSolution, 'updated');
+  }
+
+  @OnEvent('quizSolution.deleted')
+  async handleQuizSolutionDeletedEvent(quizSolution: QuizSolutionDto) {
+    await this.createEvent.quizSolution(quizSolution, 'deleted');
   }
 }

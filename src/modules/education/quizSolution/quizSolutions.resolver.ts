@@ -6,10 +6,14 @@ import { QuizSolutionDto } from './dto/quizSolution.dto';
 import { QuizSolutionsPageDto } from './dto/quizSolutions-page.dto';
 import { QuizSolutionsPageOptionsDto } from './dto/quizSolutions-page-options.dto';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Resolver(() => QuizSolutionDto)
 export class QuizSolutionsResolver {
-  constructor(private readonly quizzesService: QuizSolutionsService) {}
+  constructor(
+    private readonly quizzesService: QuizSolutionsService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Mutation(() => QuizSolutionDto)
   createQuizSolution(
@@ -17,7 +21,12 @@ export class QuizSolutionsResolver {
     createQuizSolutionInput: CreateQuizSolutionInput,
     @CurrentUser() userId,
   ) {
-    return this.quizzesService.create(createQuizSolutionInput, userId);
+    return this.quizzesService
+      .create(createQuizSolutionInput, userId)
+      .then((event) => {
+        this.eventEmitter.emit('quizSolution.created', { ...event, userId });
+        return event;
+      });
   }
 
   @Query(() => QuizSolutionsPageDto, { name: 'quizSolutions' })
@@ -45,12 +54,24 @@ export class QuizSolutionsResolver {
     @Args('id', { type: () => String }) id: string,
     @Args('updateQuizSolutionInput')
     updateQuizSolutionInput: UpdateQuizSolutionInput,
+    @CurrentUser() userId,
   ) {
-    return this.quizzesService.update(id, updateQuizSolutionInput);
+    return this.quizzesService
+      .update(id, updateQuizSolutionInput)
+      .then((event) => {
+        this.eventEmitter.emit('quizSolution.updated', { ...event, userId });
+        return event;
+      });
   }
 
   @Mutation(() => QuizSolutionDto)
-  removeQuizSolution(@Args('id', { type: () => String }) id: string) {
-    return this.quizzesService.remove(id);
+  removeQuizSolution(
+    @Args('id', { type: () => String }) id: string,
+    @CurrentUser() userId,
+  ) {
+    return this.quizzesService.remove(id).then((event) => {
+      this.eventEmitter.emit('quizSolution.deleted', { ...event, userId });
+      return event;
+    });
   }
 }

@@ -6,17 +6,24 @@ import { QuizDto } from './dto/quiz.dto';
 import { QuizzesPageDto } from './dto/quizzes-page.dto';
 import { QuizzesPageOptionsDto } from './dto/quizzes-page-options.dto';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Resolver(() => QuizDto)
 export class QuizzesResolver {
-  constructor(private readonly quizzesService: QuizzesService) {}
+  constructor(
+    private readonly quizzesService: QuizzesService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Mutation(() => QuizDto)
   createQuiz(
     @Args('createQuizInput') createQuizInput: CreateQuizInput,
     @CurrentUser() userId,
   ) {
-    return this.quizzesService.create(createQuizInput, userId);
+    return this.quizzesService.create(createQuizInput, userId).then((event) => {
+      this.eventEmitter.emit('quiz.created', { ...event, userId });
+      return event;
+    });
   }
 
   @Query(() => QuizzesPageDto, { name: 'quizzes' })
@@ -37,12 +44,22 @@ export class QuizzesResolver {
   updateQuiz(
     @Args('id', { type: () => String }) id: string,
     @Args('updateQuizInput') updateQuizInput: UpdateQuizInput,
+    @CurrentUser() userId,
   ) {
-    return this.quizzesService.update(id, updateQuizInput);
+    return this.quizzesService.update(id, updateQuizInput).then((event) => {
+      this.eventEmitter.emit('quiz.updated', { ...event, userId });
+      return event;
+    });
   }
 
   @Mutation(() => QuizDto)
-  removeQuiz(@Args('id', { type: () => String }) id: string) {
-    return this.quizzesService.remove(id);
+  removeQuiz(
+    @Args('id', { type: () => String }) id: string,
+    @CurrentUser() userId,
+  ) {
+    return this.quizzesService.remove(id).then((event) => {
+      this.eventEmitter.emit('quiz.deleted', { ...event, userId });
+      return event;
+    });
   }
 }

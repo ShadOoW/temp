@@ -106,4 +106,61 @@ export class CreateEvents {
         });
     }
   }
+
+  async quiz(quiz, command: string) {
+    const { mentor, mentees } = quiz;
+    if (mentor && mentees) {
+      const from = quiz.mentor.id;
+      // const to = quiz.mentee;
+      const eventsPromises = mentees.map(async (mentee) => {
+        const to = mentee.id;
+        const quizCreatedEvent = new CreateEventInput(
+          'quiz',
+          command,
+          quiz.id,
+          from,
+          to,
+          {
+            name: quiz.title,
+            createdAt: quiz.createdAt,
+          },
+        );
+        return await this.eventsService
+          .create(quizCreatedEvent)
+          .then(async (event) => {
+            const createdEvent = await this.eventsService.findOne(event.id);
+            this.pubSub.publish('notification', { notification: createdEvent });
+            this.pubSub.publish('activity', { activity: createdEvent });
+          });
+      });
+
+      return await Promise.all(eventsPromises);
+    }
+  }
+
+  async quizSolution(quizSolution, command: string) {
+    const { mentor } = quizSolution;
+    if (mentor) {
+      const from = quizSolution.userId;
+      const to = quizSolution.mentor.id;
+      const sessionCreatedEvent = new CreateEventInput(
+        'quizSolution',
+        command,
+        quizSolution.id,
+        from,
+        to,
+        {
+          name: quizSolution.title,
+          createdAt: quizSolution.createdAt,
+        },
+      );
+      return await this.eventsService
+        .create(sessionCreatedEvent)
+        .then(async (event) => {
+          const createdEvent = await this.eventsService.findOne(event.id);
+          this.pubSub.publish('notification', { notification: createdEvent });
+          this.pubSub.publish('activity', { activity: createdEvent });
+        });
+    }
+  }
 }

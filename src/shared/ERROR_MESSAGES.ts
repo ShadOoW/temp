@@ -1,7 +1,8 @@
 export const ERROR_MESSAGES = {
   UNAUTHORIZE: 'Unauthorized access',
-  INVALID_CREDENTIALS: 'Invalid credentials',
-  NOT_ACTIVE: 'Compte not exists or not activated',
+  INVALID_CREDENTIALS: 'Email et/ou mot de passe est incorrect',
+  USER_NOT_EXISTS: 'Ce compte n’existe pas',
+  USER_NOT_ACTIVATED: 'Votre compte compte n’est pas encore active',
   EXISTED: 'Already exists',
   NOT_EXISTED: 'Not exists',
   PRODUCT_NOT_FOUND: 'Product not found',

@@ -322,13 +322,9 @@ export class UsersService {
    * @returns {object} user info or exeption
    */
   async findByLogin(loginDTO: LoginDto): Promise<UserDto> {
-    const { username, email, password } = loginDTO;
+    const { email, password } = loginDTO;
     const user = await this.repo.findOne({
-      where: [
-        { email, active: true },
-        { email, isAdmin: true },
-        { username, active: true },
-      ],
+      where: { email },
       relations: [
         'role',
         'role.permissions',
@@ -339,7 +335,12 @@ export class UsersService {
     });
     if (!user) {
       throw new HttpException(
-        ERROR_MESSAGES.NOT_ACTIVE,
+        ERROR_MESSAGES.USER_NOT_EXISTS,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    } else if (!user.active) {
+      throw new HttpException(
+        ERROR_MESSAGES.USER_NOT_ACTIVATED,
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
