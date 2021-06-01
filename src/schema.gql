@@ -522,6 +522,7 @@ type Query {
   rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
   sessionCalcs(id: String!): SessionsCalcsDto!
+  sessionM2m(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   sessions(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
   subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!

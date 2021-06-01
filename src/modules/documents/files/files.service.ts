@@ -26,50 +26,30 @@ export class FilesService {
     pageOptionsDto: FilesPageOptionsDto,
     userId: string,
   ): Promise<FilesPageDto> {
-    // console.log(pageOptionsDto);
-    let where = UtilsService.getOptions({
-      ...pageOptionsDto,
-      status: pageOptionsDto.status
-        ? pageOptionsDto.status
-        : ['created', 'updated', 'shared'],
-      user: userId,
-    });
-    where = pageOptionsDto.tags
-      ? (qb) => {
-          qb.where({
-            ...where,
-          }).andWhere('tags.id = :id', { id: pageOptionsDto.tags });
-          // .andWhere(
-          //   new Brackets((qb) => {
-          //     qb.where('user.id = :id', {
-          //       id: userId,
-          //     }).orWhere('sharedWith.id = :id', { id: userId });
-          //   }),
-          // );
-          // .andWhere('user = :id', { id: userId });
-          // .orWhere('sharedWith.id = :id', { id: userId });
-        }
-      : where;
-    // console.log(where);
-    const [files, filesCount] = await this.repo.findAndCount({
-      join: {
-        alias: 'files',
-        leftJoin: {
-          user: 'files.user',
-          tags: 'files.tags',
-          sharedWith: 'files.sharedWith',
-        },
-      },
-      where,
-      relations: [
-        'user',
-        'tags',
-        'sharedWith',
-        'user.profile',
-        'sharedWith.profile',
-      ],
-      ...UtilsService.pagination(pageOptionsDto),
-    });
+    console.log(pageOptionsDto);
+    const fileQ = this.repo
+      .createQueryBuilder('files')
+      .leftJoinAndSelect('files.user', 'user')
+      .leftJoinAndSelect('files.tags', 'tags')
+      .leftJoinAndSelect('files.sharedWith', 'sharedWith')
+      .where('user.id = :userId OR sharedWith.id = :userId', { userId });
+    const statusQ = pageOptionsDto.status
+      ? fileQ.andWhere('files.status = :status', {
+          status: pageOptionsDto.status,
+        })
+      : fileQ.andWhere('files.status IN (:...status)', {
+          status: ['created', 'updated', 'shared'],
+        });
+    console.log('statusQ', await statusQ.getRawMany());
+    const tagQ = pageOptionsDto.tags
+      ? fileQ.andWhere('tags.id = :id', {
+          id: pageOptionsDto.tags,
+        })
+      : fileQ;
+    console.log('tagQ', pageOptionsDto.tags, await tagQ.getRawMany());
+
+    const [files, filesCount] = await tagQ.getManyAndCount();
+
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: filesCount,
