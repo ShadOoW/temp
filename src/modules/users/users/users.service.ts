@@ -143,7 +143,9 @@ export class UsersService {
         .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
         .where('coachingDomains.id = :menteeDomainId', { menteeDomainId });
       q = pageOptionsDto.status
-        ? q.andWhere('users.id = :status', { status })
+        ? q.andWhere('users.status = :status', {
+            status: pageOptionsDto.status,
+          })
         : q;
       const [users, usersCount] = await q
         // .andWhere('users.active = :active', { active: true })
