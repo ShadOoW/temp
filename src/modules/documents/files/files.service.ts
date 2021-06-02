@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
-// import { UtilsService } from '@src/providers/utils.service';
+import { UtilsService } from '@src/providers/utils.service';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
 import { In, Repository } from 'typeorm';
 import { CreateFileInput } from './dto/create-file.input';
@@ -26,16 +26,6 @@ export class FilesService {
     pageOptionsDto: FilesPageOptionsDto,
     userId: string,
   ): Promise<FilesPageDto> {
-    console.log(pageOptionsDto);
-    // const fileQ = this.repo
-    //   .createQueryBuilder('files')
-    //   // .leftJoinAndSelect('files.user', 'user')
-    //   // .innerJoin
-    //   .innerJoin('files.tags', 'tags')
-    //   // .leftJoinAndSelect('files.sharedWith', 'sharedWith')
-    //   .where('tags.id = :id', {
-    //     id: pageOptionsDto.tags,
-    //   });
     const fileQ = this.repo.findAndCount({
       join: {
         alias: 'files',
@@ -72,30 +62,13 @@ export class FilesService {
         }
       },
       relations: ['tags', 'user', 'sharedWith'],
+      ...UtilsService.pagination(pageOptionsDto),
     });
-    // .where('user.id = :userId OR sharedWith.id = :userId', { userId });
-    // const statusQ = pageOptionsDto.status
-    //   ? fileQ.where('files.status = :status', {
-    //       status: pageOptionsDto.status,
-    //     })
-    //   : fileQ.where('files.status IN (:...status)', {
-    //       status: ['created', 'updated', 'shared'],
-    //     });
-    // console.log('statusQ', await statusQ.getRawMany());
-    // const tagQ = pageOptionsDto.tags
-    //   ? fileQ.andWhere('tags.id = :id', {
-    //       id: pageOptionsDto.tags,
-    //     })
-    //   : fileQ;
-    // console.log('tagQ', pageOptionsDto.tags, await tagQ.getRawMany());
-
     const [files, filesCount] = await fileQ;
-
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: filesCount,
     });
-    console.log(files.toDtos());
     return new FilesPageDto(files.toDtos(), pageMetaDto);
   }
 
