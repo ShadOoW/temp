@@ -51,7 +51,7 @@ export class EmailProcessor {
             Data: subject,
           },
         },
-        Source: 'noreply@abwebcommunity.com',
+        Source: 'm2m@abwebcommunity.com',
       };
 
       const sendEmail = ses.sendEmail(email).promise();
