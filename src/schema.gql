@@ -504,7 +504,8 @@ type Query {
   notifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
   objectif(id: String!): ObjectifDto!
   objectifs(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): ObjectifsPageDto!
-  passwodIsCorrect(passwod: String!): Boolean!
+  objectifsAvg(mentee: String!, mentor: String!): Float!
+  passwordIsCorrect(passwod: String!): Boolean!
   permission(id: String!): PermissionDto!
   permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
   point(id: String!): PointDto!

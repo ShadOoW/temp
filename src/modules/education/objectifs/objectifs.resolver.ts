@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Float } from '@nestjs/graphql';
 import { ObjectifsService } from './objectifs.service';
 import { UpdateObjectifInput } from './dto/update-objectif.input';
 import { CreateObjectifInput } from './dto/create-objectif.input';
@@ -33,6 +33,14 @@ export class ObjectifsResolver {
     @Args('mentee', { type: () => String }) mentee: string,
   ) {
     return this.objectifsService.findAll(pageOptionsDto, mentor, mentee);
+  }
+
+  @Query(() => Float, { name: 'objectifsAvg' })
+  async objectifsAvg(
+    @Args('mentor', { type: () => String }) mentor: string,
+    @Args('mentee', { type: () => String }) mentee: string,
+  ) {
+    return this.objectifsService.objectifsAvg(mentor, mentee);
   }
 
   @Mutation(() => ObjectifDto, { name: 'updateObjectif' })

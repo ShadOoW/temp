@@ -64,8 +64,8 @@ export class UsersResolver {
     }
   }
 
-  @Query(() => Boolean, { name: 'passwodIsCorrect' })
-  async passwodIsCorrect(
+  @Query(() => Boolean, { name: 'passwordIsCorrect' })
+  async passwordIsCorrect(
     @Args('passwod', { type: () => String }) passwod: string,
     @CurrentUser() userId,
   ) {

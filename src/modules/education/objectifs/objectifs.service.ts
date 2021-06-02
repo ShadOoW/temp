@@ -46,6 +46,17 @@ export class ObjectifsService {
     return new ObjectifsPageDto(objectifs.toDtos(), pageMetaDto);
   }
 
+  async objectifsAvg(mentor: string, mentee: string) {
+    const { avg } = await this.repo
+      .createQueryBuilder('objectifs')
+      .innerJoinAndSelect('objectifs.mentor', 'mentor')
+      .innerJoinAndSelect('objectifs.mentee', 'mentee')
+      .andWhere('mentor.id = :id', { id: mentor })
+      .orWhere('mentee.id = :id', { id: mentee })
+      .select('AVG(objectifs.progression)', 'avg')
+      .getRawOne();
+    return parseFloat(avg).toFixed(2);
+  }
   async findOne(id: string) {
     const objectif = await this.repo.findOneOrFail(id, {
       relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
