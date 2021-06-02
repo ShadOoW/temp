@@ -35,7 +35,7 @@ export class EventsResolver {
     return this.eventsService.findAll({
       ...args,
       from: userId,
-      module: ['session', 'request'],
+      module: ['session', 'request', 'quiz', 'quizSolution'],
     });
   }
 
@@ -52,7 +52,7 @@ export class EventsResolver {
     return this.eventsService.findAll({
       ...args,
       to: userId,
-      module: ['session', 'request'],
+      module: ['session', 'request', 'quiz', 'quizSolution'],
     });
   }
 

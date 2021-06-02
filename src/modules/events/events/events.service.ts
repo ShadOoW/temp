@@ -54,12 +54,12 @@ export class EventsService {
         {
           to: pageOptionsDto.to,
           from: pageOptionsDto.from,
-          module: In(['session', 'request']),
+          module: In(['session', 'request', 'quiz', 'quizSolution']),
         },
         {
           from: pageOptionsDto.to,
           to: pageOptionsDto.from,
-          module: In(['session', 'request']),
+          module: In(['session', 'request', 'quiz', 'quizSolution']),
         },
       ],
       relations: ['to', 'from', 'to.profile', 'from.profile'],
