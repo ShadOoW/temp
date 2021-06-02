@@ -299,6 +299,17 @@ export class UsersService {
     await this.repo.save(updatedUser);
     return true;
   }
+
+  async checkUserPassword(id: string, password: string) {
+    const user = await this.repo.findOne(id);
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return await bcrypt.compare(password, user.password);
+  }
   /**
    * Removes user
    * @param {string} id of user

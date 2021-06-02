@@ -64,6 +64,14 @@ export class UsersResolver {
     }
   }
 
+  @Query(() => Boolean, { name: 'passwodIsCorrect' })
+  async passwodIsCorrect(
+    @Args('passwod', { type: () => String }) passwod: string,
+    @CurrentUser() userId,
+  ) {
+    return !!(await this.usersService.checkUserPassword(userId, passwod));
+  }
+
   @Mutation(() => Boolean)
   async resetPassword(
     @Args('password', { type: () => String }) password: string,
