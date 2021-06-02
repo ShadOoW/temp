@@ -27,6 +27,15 @@ export class FilesResolver {
     return this.filesService.findAll(pageOptionsDto, userId);
   }
 
+  @Query(() => FilesPageDto, { name: 'filesM2m' })
+  filesM2m(
+    @Args() pageOptionsDto: FilesPageOptionsDto,
+    @Args('mentor', { type: () => String }) mentor: string,
+    @Args('mentee', { type: () => String }) mentee: string,
+  ): Promise<FilesPageDto> {
+    return this.filesService.filesM2m(pageOptionsDto, mentor, mentee);
+  }
+
   @Query(() => FileDto, { name: 'file' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.filesService.findOne(id);

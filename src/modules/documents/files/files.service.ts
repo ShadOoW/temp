@@ -22,6 +22,52 @@ export class FilesService {
     return await this.findOne(savedFile.id);
   }
 
+  async filesM2m(
+    pageOptionsDto: FilesPageOptionsDto,
+    mentor: string,
+    mentee: string,
+  ) {
+    const fileQ = this.repo.findAndCount({
+      join: {
+        alias: 'files',
+        leftJoin: {
+          user: 'files.user',
+          tags: 'files.tags',
+          sharedWith: 'files.sharedWith',
+        },
+      },
+      where: (qb) => {
+        qb.where({
+          user: mentor,
+          status: 'shared',
+        });
+        qb.andWhere('sharedWith.id = :mentee', { mentee });
+        qb.orWhere(
+          'user.id = :mentee AND sharedWith.id = :mentor AND files.status = :status',
+          {
+            mentee,
+            mentor,
+            status: 'shared',
+          },
+        );
+      },
+      relations: [
+        'tags',
+        'user',
+        'sharedWith',
+        'user.profile',
+        'sharedWith.profile',
+      ],
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const [files, filesCount] = await fileQ;
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: filesCount,
+    });
+    return new FilesPageDto(files.toDtos(), pageMetaDto);
+  }
+
   async findAll(
     pageOptionsDto: FilesPageOptionsDto,
     userId: string,
