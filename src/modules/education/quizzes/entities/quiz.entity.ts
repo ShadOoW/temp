@@ -22,9 +22,7 @@ export class QuizEntity extends AbstractEntity<QuizDto> {
   @Column({ type: 'jsonb', nullable: true })
   questions: QuestionDto[];
 
-  @OneToMany(() => QuizSolutionEntity, (quizSolution) => quizSolution.quiz, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => QuizSolutionEntity, (quizSolution) => quizSolution.quiz)
   quizSolutions: QuizSolutionDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.quizzes)

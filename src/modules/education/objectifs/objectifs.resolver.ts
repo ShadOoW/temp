@@ -35,12 +35,12 @@ export class ObjectifsResolver {
     return this.objectifsService.findAll(pageOptionsDto, mentor, mentee);
   }
 
-  @Query(() => Float, { name: 'objectifsAvg' })
-  async objectifsAvg(
+  @Query(() => Float, { name: 'overallProgression' })
+  async overallProgression(
     @Args('mentor', { type: () => String }) mentor: string,
     @Args('mentee', { type: () => String }) mentee: string,
   ) {
-    return this.objectifsService.objectifsAvg(mentor, mentee);
+    return this.objectifsService.overallProgression(mentor, mentee);
   }
 
   @Mutation(() => ObjectifDto, { name: 'updateObjectif' })

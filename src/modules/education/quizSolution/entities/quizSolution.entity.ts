@@ -12,7 +12,9 @@ export class QuizSolutionEntity extends AbstractEntity<QuizSolutionDto> {
   @Column({ type: 'varchar', length: 300, nullable: true })
   title: string;
 
-  @ManyToOne(() => QuizEntity, (quiz) => quiz.quizSolutions)
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.quizSolutions, {
+    onDelete: 'CASCADE',
+  })
   quiz: QuizDto;
 
   @Column({ type: 'jsonb', nullable: true })

@@ -46,7 +46,7 @@ export class ObjectifsService {
     return new ObjectifsPageDto(objectifs.toDtos(), pageMetaDto);
   }
 
-  async objectifsAvg(mentor: string, mentee: string) {
+  async overallProgression(mentor: string, mentee: string) {
     const { avg } = await this.repo
       .createQueryBuilder('objectifs')
       .innerJoinAndSelect('objectifs.mentor', 'mentor')
