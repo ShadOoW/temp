@@ -117,4 +117,8 @@ export class ChatService {
     });
     return new MessagesPageDto(messages.toDtos(), pageMetaDto);
   }
+
+  async count() {
+    return await this.messageRepository.count();
+  }
 }
