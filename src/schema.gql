@@ -156,6 +156,7 @@ input CreateProfileInput {
   country: String
   currentPost: String
   domainExpertise: [String!]
+  facebook: String
   firstName: String
   hoursPerMonth: String
   lastName: String
@@ -165,6 +166,7 @@ input CreateProfileInput {
   professionalBg: String
   sector: String
   selfDescription: String
+  twitter: String
   wantedDomain: CreateProfileDomainInput
   website: String
   whyNeedCoaching: String
@@ -464,6 +466,7 @@ type ProfileDto {
   createdAt: DateTime
   currentPost: String
   domainExpertise: [String!]
+  facebook: String
   firstName: String
   hoursPerMonth: String
   id: String
@@ -474,6 +477,7 @@ type ProfileDto {
   professionalBg: String
   sector: String
   selfDescription: String
+  twitter: String
   updatedAt: DateTime
   wantedDomain: DomainDto
   website: String
@@ -537,7 +541,7 @@ type Query {
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
   users(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
-  usersByRole(active: Boolean = null, id: String!, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
+  usersByRole(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, role: String!, status: String = null, take: Int = 2): UsersPageDto!
 }
 
 type QuestionDto {
@@ -764,6 +768,7 @@ input UpdateProfileInput {
   country: String
   currentPost: String
   domainExpertise: [String!]
+  facebook: String
   firstName: String
   hoursPerMonth: String
   lastName: String
@@ -773,6 +778,7 @@ input UpdateProfileInput {
   professionalBg: String
   sector: String
   selfDescription: String
+  twitter: String
   wantedDomain: CreateProfileDomainInput
   website: String
   whyNeedCoaching: String

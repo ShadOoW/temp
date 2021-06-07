@@ -113,9 +113,9 @@ export class UsersResolver {
   @Query(() => UsersPageDto, { name: 'usersByRole' })
   findByRole(
     @Args() pageOptionsDto: UsersPageOptionsDto,
-    @Args('id', { type: () => String }) id: string,
+    @Args('role', { type: () => String }) role: string,
   ) {
-    return this.usersService.findByRole(id, pageOptionsDto);
+    return this.usersService.findByRole(role, pageOptionsDto);
   }
 
   // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))

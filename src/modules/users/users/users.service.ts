@@ -170,6 +170,7 @@ export class UsersService {
     roleId: string,
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<UsersPageDto> {
+    console.log(UtilsService.getOptions(pageOptionsDto));
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
@@ -178,7 +179,10 @@ export class UsersService {
         'profile.coachingDomains',
         'profile.wantedDomain',
       ],
-      where: { role: roleId },
+      where: {
+        ...UtilsService.getOptions(pageOptionsDto),
+        // role: roleId,
+      },
       ...UtilsService.pagination(pageOptionsDto),
     });
     const pageMetaDto = new PageMetaDto({
