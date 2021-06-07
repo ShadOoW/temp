@@ -170,7 +170,6 @@ export class UsersService {
     roleId: string,
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<UsersPageDto> {
-    console.log(UtilsService.getOptions(pageOptionsDto));
     const [users, usersCount] = await this.repo.findAndCount({
       relations: [
         'role',
