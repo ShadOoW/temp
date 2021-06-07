@@ -40,6 +40,12 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   linkedin?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
+  facebook?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  twitter?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
   country?: string;
 
   @Column({ type: 'int', nullable: true })

@@ -31,6 +31,12 @@ export class ProfileDto extends AbstractDto {
   linkedin?: string;
 
   @Field(() => String, { nullable: true })
+  facebook?: string;
+
+  @Field(() => String, { nullable: true })
+  twitter?: string;
+
+  @Field(() => String, { nullable: true })
   country?: string;
 
   @Field(() => Int, { nullable: true })

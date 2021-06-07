@@ -29,6 +29,12 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   linkedin?: string;
 
   @Field(() => String, { nullable: true })
+  facebook?: string;
+
+  @Field(() => String, { nullable: true })
+  twitter?: string;
+
+  @Field(() => String, { nullable: true })
   country?: string;
 
   @Field(() => Int, { nullable: true })

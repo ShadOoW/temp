@@ -32,10 +32,14 @@ export class SessionsService {
       .where('sessions.status = :status', { status: 'done' })
       .andWhere('mentor.id = :id', { id })
       .orWhere('mentee.id = :id', { id })
-      .select('SUM(sessions.duration)', 'sum')
+      // .select('SUM(sessions.duration)', 'sum')
       .select(['COUNT(sessions.id)', 'SUM(sessions.duration)'])
       .getRawOne();
-    return { count: parseInt(count), durationTotal: parseInt(sum) };
+    console.log({ count, sum });
+    return {
+      count: count ? parseInt(count) : 0,
+      durationTotal: sum ? parseInt(sum) : 0,
+    };
   }
 
   async upcomingSession(mentor: string, mentee: string) {

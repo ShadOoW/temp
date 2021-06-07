@@ -14,7 +14,7 @@ export class MessagesResolver {
   }
 
   @Query(() => Int, { name: 'messagesCount' })
-  messagesCount() {
-    return this.chateService.count();
+  messagesCount(@Args('id', { type: () => String }) id: string) {
+    return this.chateService.count(id);
   }
 }

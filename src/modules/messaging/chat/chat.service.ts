@@ -118,7 +118,7 @@ export class ChatService {
     return new MessagesPageDto(messages.toDtos(), pageMetaDto);
   }
 
-  async count() {
-    return await this.messageRepository.count();
+  async count(id) {
+    return await this.messageRepository.count({ where: { sender: id } });
   }
 }
