@@ -85,6 +85,8 @@ export class ProfileDto extends AbstractDto {
     this.company = profile.company;
     this.website = profile.website;
     this.linkedin = profile.linkedin;
+    this.twitter = profile.twitter;
+    this.facebook = profile.facebook;
     this.country = profile.country;
     this.yearsOfExperience = profile.yearsOfExperience;
     this.domainExpertise = profile.domainExpertise;
