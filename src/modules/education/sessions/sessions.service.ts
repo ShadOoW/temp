@@ -35,7 +35,6 @@ export class SessionsService {
       // .select('SUM(sessions.duration)', 'sum')
       .select(['COUNT(sessions.id)', 'SUM(sessions.duration)'])
       .getRawOne();
-    console.log({ count, sum });
     return {
       count: count ? parseInt(count) : 0,
       durationTotal: sum ? parseInt(sum) : 0,

@@ -109,7 +109,6 @@ export class CreateEvents {
 
   async quiz(quiz, command: string) {
     const { mentor, mentees } = quiz;
-    console.log(mentor, mentees);
     if (mentor && mentees) {
       const from = quiz.mentor;
       // const to = quiz.mentee;
