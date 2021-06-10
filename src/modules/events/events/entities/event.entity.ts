@@ -21,7 +21,7 @@ export class EventEntity extends AbstractEntity<EventDto> {
   @ManyToOne(() => UserEntity, (user) => user.eventsTo)
   to?: UserEntity;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   payload?: EventPayloadDto;
 
   @Column({ type: 'boolean', default: false })

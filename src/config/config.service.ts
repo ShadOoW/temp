@@ -35,13 +35,13 @@ class ConfigService {
   // Configuration of database with postgress
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
-      type: 'postgres',
+      type: 'mysql',
 
-      host: this.getValue('POSTGRES_HOST'),
-      port: parseInt(this.getValue('POSTGRES_PORT')),
-      username: this.getValue('POSTGRES_USER'),
-      password: this.getValue('POSTGRES_PASSWORD'),
-      database: this.getValue('POSTGRES_DATABASE'),
+      host: this.getValue('MYSQL_HOST'),
+      port: parseInt(this.getValue('MYSQL_PORT')),
+      username: this.getValue('MYSQL_USER'),
+      password: this.getValue('MYSQL_PASSWORD'),
+      database: this.getValue('MYSQL_DATABASE'),
 
       entities: ['**/*.entity{.ts,.js}'],
 
@@ -59,11 +59,11 @@ class ConfigService {
 }
 
 const configService = new ConfigService(process.env).ensureValues([
-  'POSTGRES_HOST',
-  'POSTGRES_PORT',
-  'POSTGRES_USER',
-  'POSTGRES_PASSWORD',
-  'POSTGRES_DATABASE',
+  'MYSQL_HOST',
+  'MYSQL_PORT',
+  'MYSQL_USER',
+  'MYSQL_PASSWORD',
+  'MYSQL_DATABASE',
 ]);
 
 // const configRedis = new ConfigService(process.env).ensureValues([

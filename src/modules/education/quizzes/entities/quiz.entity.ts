@@ -19,7 +19,7 @@ export class QuizEntity extends AbstractEntity<QuizDto> {
   @Column({ type: 'varchar', length: 300 })
   title: string;
 
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   questions: QuestionDto[];
 
   @OneToMany(() => QuizSolutionEntity, (quizSolution) => quizSolution.quiz)

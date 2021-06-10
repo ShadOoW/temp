@@ -5,7 +5,7 @@ import { AbstractEntity } from '@src/common/abstract.entity';
 
 @Entity({ name: 'objectifs' })
 export class ObjectifEntity extends AbstractEntity<ObjectifDto> {
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   dueDate: Date;
 
   @Column({ type: 'varchar', length: 300 })

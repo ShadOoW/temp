@@ -12,14 +12,12 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
   id: string;
 
   @CreateDateColumn({
-    type: 'timestamp without time zone',
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'timestamp',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp without time zone',
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'timestamp',
   })
   updatedAt: Date;
 

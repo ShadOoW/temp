@@ -6,7 +6,7 @@ import { AbstractEntity } from '@src/common/abstract.entity';
 
 @Entity({ name: 'sessions' })
 export class SessionEntity extends AbstractEntity<SessionDto> {
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   startDate: Date;
 
   @Column({ type: 'varchar', length: 300 })

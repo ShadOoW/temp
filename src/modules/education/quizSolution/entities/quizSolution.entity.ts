@@ -17,7 +17,7 @@ export class QuizSolutionEntity extends AbstractEntity<QuizSolutionDto> {
   })
   quiz: QuizDto;
 
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   answers: AnswerDto[];
 
   @ManyToOne(() => UserEntity, (user) => user.quizSolutions)
