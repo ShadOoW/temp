@@ -38,3 +38,4 @@ lerna-debug.log*
 ormconfig.json
 m2m-key-pair.pem
 new_user_credentials.csv
+m2m-prod.pem
