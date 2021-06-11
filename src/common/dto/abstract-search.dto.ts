@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { ToInt } from '../../decorators/transforms.decorator';
+// import { ToInt } from '../../decorators/transforms.decorator';
 
 export class AbstractSearchDto {
   @IsString()
@@ -8,12 +8,10 @@ export class AbstractSearchDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @ToInt()
   page: number;
 
   @IsNumber()
   @IsOptional()
-  @ToInt()
   take = 10;
 
   get skip() {

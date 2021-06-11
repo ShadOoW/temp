@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-SERVER="five_ma_server";
+SERVER="m2m_ma_server";
 PW="123456";
-DB="five_ma";
+DB="m2m";
 
 echo "echo stop & remove old docker [$SERVER] and starting new fresh instance of [$SERVER]"
 (docker kill $SERVER || :) && \

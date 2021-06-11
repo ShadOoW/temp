@@ -17,10 +17,6 @@ async function run() {
       await rolesSeed();
     if (process.argv.includes('users') || process.argv.includes('all'))
       await usersSeed();
-    // if (process.argv.includes('requests') || process.argv.includes('all'))
-    //   await requestsSeed();
-    // if (process.argv.includes('chat') || process.argv.includes('all'))
-    //   await chatSeed();
     if (process.argv.includes('points') || process.argv.includes('all'))
       await pointsSeed();
     if (process.argv.includes('badges') || process.argv.includes('all'))
