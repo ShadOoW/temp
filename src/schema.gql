@@ -487,61 +487,61 @@ type ProfileDto {
 
 type Query {
   activatedSessions: [SessionDto!]!
-  activities(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
-  activitiesM2m(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
+  activities(from: String, module: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2, to: String): EventsPageDto!
+  activitiesM2m(from: String, module: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2, to: String): EventsPageDto!
   badge(id: String!): BadgeDto!
-  badges(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): BadgesPageDto!
+  badges(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): BadgesPageDto!
   canRequest(mentee: String!): Boolean!
   domain(id: String!): DomainDto!
-  domains(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): DomainsPageDto!
+  domains(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): DomainsPageDto!
   emailExists(email: String!): Boolean!
-  events(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
+  events(from: String, module: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2, to: String): EventsPageDto!
   file(id: String!): FileDto!
   fileTag(id: String!): FileTagDto!
-  fileTags(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): FileTagsPageDto!
-  files(order: String = "ASC", page: Int = 1, q: String, status: String, tags: String, take: Int = 2): FilesPageDto!
-  filesM2m(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, q: String, status: String, tags: String, take: Int = 2): FilesPageDto!
-  menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestDto
+  fileTags(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): FileTagsPageDto!
+  files(order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, tags: String, take: Int = 2): FilesPageDto!
+  filesM2m(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, tags: String, take: Int = 2): FilesPageDto!
+  menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestDto
   menteesCount(id: String!): Int!
-  mentorsByDomain(active: Boolean = null, domainId: String, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
-  messages(order: String = "ASC", page: Int = 1, q: String, room: String!, take: Int = 2): MessagesPageDto!
+  mentorsByDomain(active: Boolean = null, domainId: String, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
+  messages(order: String = "ASC", page: Int = 1, room: String!, search: String, searchBy: String, take: Int = 2): MessagesPageDto!
   messagesCount(id: String!): Int!
-  messagesNotifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
-  notifications(from: String, module: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2, to: String): EventsPageDto!
+  messagesNotifications(from: String, module: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2, to: String): EventsPageDto!
+  notifications(from: String, module: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2, to: String): EventsPageDto!
   objectif(id: String!): ObjectifDto!
-  objectifs(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): ObjectifsPageDto!
+  objectifs(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): ObjectifsPageDto!
   overallProgression(mentee: String!, mentor: String!): Float!
   passwordIsCorrect(password: String!): Boolean!
   permission(id: String!): PermissionDto!
-  permissions(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PermissionsPageDto!
+  permissions(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): PermissionsPageDto!
   point(id: String!): PointDto!
-  points(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): PointsPageDto!
+  points(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): PointsPageDto!
   profile(id: String!): ProfileDto!
-  publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
-  publicRequestsByDomain(domainId: String, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
+  publicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestsPageDto!
+  publicRequestsByDomain(domainId: String, mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestsPageDto!
   quiz(id: String!): QuizDto!
   quizSolution(id: String!): QuizSolutionDto!
-  quizSolutions(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, quiz: String, take: Int = 2): QuizSolutionsPageDto!
-  quizzes(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): QuizzesPageDto!
+  quizSolutions(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, quiz: String, search: String, searchBy: String, take: Int = 2): QuizSolutionsPageDto!
+  quizzes(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): QuizzesPageDto!
   request(id: String!): RequestDto!
-  requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
+  requests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestsPageDto!
   role(id: String!): RoleDto!
-  roles(order: String = "ASC", page: Int = 1, q: String, take: Int = 2): RolesPageDto!
+  roles(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): RolesPageDto!
   rolesByNames(rolesNames: [String!]!): [RoleDto!]!
   session(id: String!): SessionDto!
   sessionCalcs(id: String!): SessionsCalcsDto!
-  sessions(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
-  sessionsM2m(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
-  sessionsNotDue(order: String = "ASC", page: Int = 1, q: String, status: String, take: Int = 2): SessionsPageDto!
-  subscribers(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
-  subscriptions(id: String!, order: String = "ASC", page: Int = 1, q: String, take: Int = 2): SubscriptionsPageDto!
-  suggestMentors(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
-  suggestPublicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, q: String, status: String, take: Int = 2): RequestsPageDto!
+  sessions(order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, take: Int = 2): SessionsPageDto!
+  sessionsM2m(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, take: Int = 2): SessionsPageDto!
+  sessionsNotDue(order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, take: Int = 2): SessionsPageDto!
+  subscribers(id: String!, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): SubscriptionsPageDto!
+  subscriptions(id: String!, order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): SubscriptionsPageDto!
+  suggestMentors(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
+  suggestPublicRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestsPageDto!
   upcomingSession(mentee: String!, mentor: String!): SessionDto!
   user(id: String!): UserDto!
   userRequests(id: String!): UserDto!
-  users(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, status: String = null, take: Int = 2): UsersPageDto!
-  usersByRole(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, q: String, role: String!, status: String = null, take: Int = 2): UsersPageDto!
+  users(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
+  usersByRole(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, role: String!, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
 }
 
 type QuestionDto {

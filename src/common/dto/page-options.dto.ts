@@ -38,5 +38,11 @@ export class PageOptionsDto {
   @IsNotEmpty()
   @IsOptional()
   @Field(() => String, { nullable: true })
-  readonly q?: string;
+  readonly search?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  readonly searchBy?: string;
 }
