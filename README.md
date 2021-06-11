@@ -79,23 +79,39 @@
     # Enable nginx
     $ sudo systemctl enable nginx
     ```
-8. Install yarn
+8. Nginx Configuration 
+    ```bash
+    # update config file
+    $ sudo vi /etc/nginx/nginx.conf
+    ```
+    - Past this code under **include /etc/nginx/default.d/*.conf;** and update *private-IPv4-addresses* by your private adress
+    ```
+    location / {
+    proxy_pass http://private-IPv4-addresses:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+    ```
+9. Install yarn
     ```bash
     $ npm install yarn -g
     ```
-9. Install pm2
+10. Install pm2
     ```bash
     $ npm install pm2@latest -g
     # Generate a pm2 startup script
     $ pm2 startup
     ```
-10. Install project packages
+11. Install project packages
     ```bash
     # Install project packages
     $ cd ~/path/to/project/m2m # by default in ~/m2m
-    & yarn
+    & npm install
     ```
-11. Setup the .env file
+12. S3 & Database connection configuration on .env
     ```bash
     # create .env file in the projecy root
     $ vi ~/path/to/project/m2m/.env # by default vi ~/m2m/.env
@@ -121,35 +137,20 @@
     JWT_SECRET_KEY=secretkey
     JWT_EXPIRES_IN=4h
     ```
-12. Execute migrations to automatically create tables on database
+13. Add your server Ip to autorized Ips in database security group
+14. Execute migrations to automatically create tables on database
     ```bash
+    $ npm run typeorm:migration:generate -- tables
     $ npm run typeorm:migration:run
     ```
-13. 
-## Installation
+15. CI/CD
+Build the project and start project
 ```bash
-$ sudo vi /etc/nginx/nginx.conf
-# PM2 start server
-$ pm2 start npm --name "m2m" -- run start:dev
+# build
+$ yarn build
+# start server on production mode
+$ pm2 start npm --name "m2m-prod" -- run start:prod
+# start server on development mode
+$ pm2 start npm --name "m2m-dev" -- run start:dev
 ```
-
-## Running the app
-
-database connection configuration on .env
-
-```bash
-# generate migrations
-$ npm run typeorm:migration:generate -- my_init
-
-# execute migrations
-$ npm run typeorm:migration:run
-
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
+16. Check APIs docs on **http://your-ip-adress/graphql**

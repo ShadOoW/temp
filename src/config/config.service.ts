@@ -43,11 +43,11 @@ class ConfigService {
       password: this.getValue('MYSQL_PASSWORD'),
       database: this.getValue('MYSQL_DATABASE'),
 
-      entities: [`${__dirname}/../**/*.entity.{ts,js}`],
+      entities: ['**/*.entity{.ts,.js}'],
 
       migrationsTableName: 'migration',
 
-      migrations: [getMigrationDirectory()],
+      migrations: ['src/migration/*.ts'],
 
       cli: {
         migrationsDir: 'src/migration',
@@ -56,12 +56,6 @@ class ConfigService {
       ssl: this.isProduction(),
     };
   }
-}
-
-function getMigrationDirectory() {
-  const directory =
-    process.env.NODE_ENV === 'migration' ? 'src' : `${__dirname}`;
-  return `${directory}/migrations/**/*{.ts,.js}`;
 }
 
 const configService = new ConfigService(process.env).ensureValues([
