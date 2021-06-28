@@ -47,7 +47,9 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     const pw = await bcrypt.hash(password, 10);
-    const createdProfile = await this.profileService.create(profile);
+    const createdProfile = profile
+      ? await this.profileService.create(profile)
+      : null;
     const createdUser = await this.repo.create({
       ...createUserInputs,
       password: pw,

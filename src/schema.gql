@@ -239,7 +239,7 @@ input CreateUserInput {
   isAdmin: Boolean
   password: String
   profile: CreateProfileInput
-  provider: String!
+  provider: String
   providerId: String
   role: String
   username: String!

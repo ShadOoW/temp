@@ -6,9 +6,9 @@ import {
   IsBoolean,
   IsUUID,
 } from 'class-validator';
-import { UserEntity } from '../entities/user.entity';
+// import { UserEntity } from '../entities/user.entity';
 import { CreateProfileInput } from '@users/profiles/dto/create-profile.input';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 
 @InputType()
 export class CreateUserInput {
@@ -23,8 +23,9 @@ export class CreateUserInput {
   @Field(() => String, { nullable: true })
   password: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsString()
+  @IsOptional()
   provider: string;
 
   @Field(() => String, { nullable: true })
@@ -43,6 +44,7 @@ export class CreateUserInput {
 
   @Field(() => String, { nullable: true })
   @IsUUID()
+  @IsOptional()
   role: any;
 
   @Field(() => CreateProfileInput, { nullable: true })
