@@ -107,7 +107,13 @@ export class FilesService {
             });
         }
       },
-      relations: ['tags', 'user', 'sharedWith'],
+      relations: [
+        'tags',
+        'user',
+        'sharedWith',
+        'user.profile',
+        'sharedWith.profile',
+      ],
       ...UtilsService.pagination(pageOptionsDto),
     });
     const [files, filesCount] = await fileQ;
