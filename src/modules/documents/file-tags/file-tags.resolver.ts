@@ -24,7 +24,7 @@ export class FileTagsResolver {
     @Args() pageOptionsDto: FileTagsPageOptionsDto,
     @CurrentUser() user,
   ): Promise<FileTagsPageDto> {
-    return this.fileTagsService.findAll(pageOptionsDto, user.id);
+    return this.fileTagsService.findAll(pageOptionsDto, user);
   }
 
   @Query(() => FileTagDto, { name: 'fileTag' })

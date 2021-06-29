@@ -713,7 +713,7 @@ input UpdateDomainInput {
 }
 
 input UpdateEventInput {
-  read: String!
+  read: Boolean!
 }
 
 input UpdateFileInput {

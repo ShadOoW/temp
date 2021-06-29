@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProfileInput } from './dto/create-profile.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
 import { ProfileEntity } from './entities/profile.entity';
+import { ProfileDto } from './dto/profile.dto';
 
 @Injectable()
 export class ProfilesService {
@@ -13,8 +14,8 @@ export class ProfilesService {
     @InjectRepository(ProfileEntity)
     private readonly repo: Repository<ProfileEntity>,
   ) {}
-  create(createProfileInput: CreateProfileInput) {
-    return this.repo.save(createProfileInput).then((e) => e);
+  create(createProfileInput: CreateProfileInput): Promise<ProfileDto> {
+    return this.repo.save(createProfileInput);
   }
 
   async findOne(id: string) {

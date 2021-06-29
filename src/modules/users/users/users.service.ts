@@ -25,6 +25,7 @@ import { UserDto } from './dto/user.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { ProfileDto } from '../profiles/dto/profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -41,31 +42,35 @@ export class UsersService {
    */
   async create(createUserInputs: CreateUserInput): Promise<UserDto> {
     const { provider, password, profile } = createUserInputs;
-    if (provider === 'local' && !password)
-      throw new HttpException(
-        ERROR_MESSAGES.PASSWORD_REQUIRED,
-        HttpStatus.BAD_REQUEST,
+    try {
+      if (provider === 'local' && !password)
+        throw new HttpException(
+          ERROR_MESSAGES.PASSWORD_REQUIRED,
+          HttpStatus.BAD_REQUEST,
+        );
+      const pw = await bcrypt.hash(password, 10);
+      const createdProfile = await this.profileService.create(
+        new ProfileDto(profile),
       );
-    const pw = await bcrypt.hash(password, 10);
-    const createdProfile = profile
-      ? await this.profileService.create(profile)
-      : null;
-    const createdUser = await this.repo.create({
-      ...createUserInputs,
-      password: pw,
-      profile: createdProfile,
-    });
-    const savedUser = await this.repo.save(createdUser);
-    this.emailService.sendMail(
-      CREATE_USER_TEMPLATE,
-      savedUser.email,
-      CREATE_USER_SUBJECT,
-      {
-        firstName: createdProfile?.firstName,
-        lastName: createdProfile?.lastName,
-      },
-    );
-    return await this.findOne(savedUser.id);
+      const createdUser = await this.repo.create({
+        ...createUserInputs,
+        password: pw,
+        profile: createdProfile,
+      });
+      const savedUser = await this.repo.save(createdUser);
+      this.emailService.sendMail(
+        CREATE_USER_TEMPLATE,
+        savedUser.email,
+        CREATE_USER_SUBJECT,
+        {
+          firstName: createdProfile?.firstName,
+          lastName: createdProfile?.lastName,
+        },
+      );
+      return await this.findOne(savedUser.id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**

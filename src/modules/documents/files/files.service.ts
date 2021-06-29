@@ -70,43 +70,9 @@ export class FilesService {
 
   async findAll(
     pageOptionsDto: FilesPageOptionsDto,
-    userId: string,
+    user,
   ): Promise<FilesPageDto> {
-    const fileQ = this.repo.findAndCount({
-      join: {
-        alias: 'files',
-        leftJoin: {
-          user: 'files.user',
-          tags: 'files.tags',
-          sharedWith: 'files.sharedWith',
-        },
-      },
-      where: (qb) => {
-        qb.where({
-          user: userId,
-          status: pageOptionsDto.status
-            ? pageOptionsDto.status
-            : In(['created', 'updated', 'shared']),
-        });
-        if (pageOptionsDto.tags) {
-          qb.andWhere('tags.id = :id', { id: pageOptionsDto.tags });
-          if (!pageOptionsDto.status)
-            qb.orWhere(
-              'sharedWith.id = :userId AND tags.id = :id AND files.status != :status',
-              {
-                userId,
-                id: pageOptionsDto.tags,
-                status: 'deleted',
-              },
-            );
-        } else {
-          if (!pageOptionsDto.status)
-            qb.orWhere('sharedWith.id = :userId AND files.status != :status', {
-              userId,
-              status: 'deleted',
-            });
-        }
-      },
+    const opts = {
       relations: [
         'tags',
         'user',
@@ -115,7 +81,49 @@ export class FilesService {
         'sharedWith.profile',
       ],
       ...UtilsService.pagination(pageOptionsDto),
-    });
+    };
+    const fileQ = user.isAdmin
+      ? this.repo.findAndCount(opts)
+      : this.repo.findAndCount({
+          join: {
+            alias: 'files',
+            leftJoin: {
+              user: 'files.user',
+              tags: 'files.tags',
+              sharedWith: 'files.sharedWith',
+            },
+          },
+          where: (qb) => {
+            qb.where({
+              user: user.id,
+              status: pageOptionsDto.status
+                ? pageOptionsDto.status
+                : In(['created', 'updated', 'shared']),
+            });
+            if (pageOptionsDto.tags) {
+              qb.andWhere('tags.id = :id', { id: pageOptionsDto.tags });
+              if (!pageOptionsDto.status)
+                qb.orWhere(
+                  'sharedWith.id = :userId AND tags.id = :id AND files.status != :status',
+                  {
+                    userId: user.id,
+                    id: pageOptionsDto.tags,
+                    status: 'deleted',
+                  },
+                );
+            } else {
+              if (!pageOptionsDto.status)
+                qb.orWhere(
+                  'sharedWith.id = :userId AND files.status != :status',
+                  {
+                    userId: user.id,
+                    status: 'deleted',
+                  },
+                );
+            }
+          },
+          ...opts,
+        });
     const [files, filesCount] = await fileQ;
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,

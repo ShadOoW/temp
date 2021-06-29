@@ -24,7 +24,7 @@ export class FilesResolver {
     @Args() pageOptionsDto: FilesPageOptionsDto,
     @CurrentUser() user,
   ): Promise<FilesPageDto> {
-    return this.filesService.findAll(pageOptionsDto, user.id);
+    return this.filesService.findAll(pageOptionsDto, user);
   }
 
   @Query(() => FilesPageDto, { name: 'filesM2m' })

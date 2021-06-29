@@ -28,13 +28,19 @@ export class FileTagsService {
 
   async findAll(
     pageOptionsDto: FileTagsPageOptionsDto,
-    userId: string,
+    user,
   ): Promise<FileTagsPageDto> {
-    const [fileTags, fileTagsCount] = await this.repo.findAndCount({
-      where: { ...UtilsService.getOptions(pageOptionsDto), user: userId },
+    let opts: any = {
       relations: ['user', 'files'],
       ...UtilsService.pagination(pageOptionsDto),
-    });
+    };
+    opts = !user.isAdmin
+      ? {
+          where: { ...UtilsService.getOptions(pageOptionsDto), user: user.id },
+          ...opts,
+        }
+      : opts;
+    const [fileTags, fileTagsCount] = await this.repo.findAndCount(opts);
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
       itemCount: fileTagsCount,
