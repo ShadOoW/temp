@@ -21,10 +21,10 @@ export class SessionsResolver {
   @Mutation(() => SessionDto)
   createSession(
     @Args('createSessionInput') createSessionInput: CreateSessionInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.sessionsService.create(createSessionInput).then((event) => {
-      this.eventEmitter.emit('session.created', { ...event, userId });
+      this.eventEmitter.emit('session.created', { ...event, userId: user.id });
       return event;
     });
   }
@@ -43,40 +43,38 @@ export class SessionsResolver {
   async findAll(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args() pageOptionsDto: SessionsPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
-    const user = await this.usersService.findOne(userId);
     if (user.isAdmin)
       return this.sessionsService.findAll(pageOptionsDto, status);
     else if (user.role?.name === 'mentor')
-      return this.sessionsService.findAll(pageOptionsDto, status, userId);
+      return this.sessionsService.findAll(pageOptionsDto, status, user.id);
     else
       return this.sessionsService.findAll(
         pageOptionsDto,
         status,
         undefined,
-        userId,
+        user.id,
       );
   }
 
-  // TODO optimaze
+  // TODO optimize
   @Query(() => SessionsPageDto, { name: 'sessionsNotDue' })
   async sessionsNotDue(
     @Args('status', { type: () => String, nullable: true }) status: string,
     @Args() pageOptionsDto: SessionsPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
-    const user = await this.usersService.findOne(userId);
     if (user.isAdmin)
       return this.sessionsService.findNotDue(pageOptionsDto, status);
     else if (user.role?.name === 'mentor')
-      return this.sessionsService.findNotDue(pageOptionsDto, status, userId);
+      return this.sessionsService.findNotDue(pageOptionsDto, status, user.id);
     else
       return this.sessionsService.findNotDue(
         pageOptionsDto,
         status,
         undefined,
-        userId,
+        user.id,
       );
   }
 
@@ -84,10 +82,10 @@ export class SessionsResolver {
   update(
     @Args('id', { type: () => String }) id: string,
     @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.sessionsService.update(id, updateSessionInput).then((event) => {
-      this.eventEmitter.emit('session.updated', { ...event, userId });
+      this.eventEmitter.emit('session.updated', { ...event, userId: user.id });
       return event;
     });
   }
@@ -98,8 +96,8 @@ export class SessionsResolver {
   }
 
   @Query(() => [SessionDto], { name: 'activatedSessions' })
-  findActivated(@CurrentUser() userId) {
-    return this.sessionsService.findActivated(userId);
+  findActivated(@CurrentUser() user) {
+    return this.sessionsService.findActivated(user.id);
   }
 
   @Query(() => SessionDto, { name: 'upcomingSession' })
@@ -118,10 +116,10 @@ export class SessionsResolver {
   @Mutation(() => SessionDto)
   removeSession(
     @Args('id', { type: () => String }) id: string,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.sessionsService.remove(id).then((event) => {
-      this.eventEmitter.emit('session.deleted', { ...event, userId });
+      this.eventEmitter.emit('session.deleted', { ...event, userId: user.id });
       return event;
     });
   }

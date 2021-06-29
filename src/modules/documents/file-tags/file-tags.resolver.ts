@@ -16,15 +16,15 @@ export class FileTagsResolver {
     @Args('createFileTagInput') createFileTagInput: CreateFileTagInput,
     @CurrentUser() user,
   ) {
-    return this.fileTagsService.create(createFileTagInput, { id: user });
+    return this.fileTagsService.create(createFileTagInput, { id: user.id });
   }
 
   @Query(() => FileTagsPageDto, { name: 'fileTags' })
   findAll(
     @Args() pageOptionsDto: FileTagsPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<FileTagsPageDto> {
-    return this.fileTagsService.findAll(pageOptionsDto, userId);
+    return this.fileTagsService.findAll(pageOptionsDto, user.id);
   }
 
   @Query(() => FileTagDto, { name: 'fileTag' })

@@ -23,10 +23,10 @@ export class RequestsResolver {
   @Mutation(() => RequestDto)
   createRequest(
     @Args('createRequestInput') createRequestInput: CreateRequestInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.requestsService.create(createRequestInput).then((event) => {
-      this.eventEmitter.emit('request.created', { ...event, userId });
+      this.eventEmitter.emit('request.created', { ...event, userId: user.id });
       return event;
     });
   }
@@ -35,14 +35,14 @@ export class RequestsResolver {
   createPrivateRequest(
     @Args('createPrivateRequestInput')
     createPrivateRequestInput: CreatePrivateRequestInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.requestsService
       .create(createPrivateRequestInput)
       .then((event) => {
         this.eventEmitter.emit('request.created', {
           ...event,
-          userId,
+          userId: user.id,
         });
         return event;
       });
@@ -64,9 +64,9 @@ export class RequestsResolver {
   @Query(() => RequestsPageDto, { name: 'suggestPublicRequests' })
   suggestPublicRequests(
     @Args() args: RequestsPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<RequestsPageDto> {
-    return this.requestsService.suggestPublicRequests(args, userId);
+    return this.requestsService.suggestPublicRequests(args, user.id);
   }
 
   @Query(() => RequestsPageDto, { name: 'publicRequestsByDomain' })
@@ -110,10 +110,10 @@ export class RequestsResolver {
   updateRequest(
     @Args('id', { type: () => String }) id: string,
     @Args('updateRequestInput') updateRequestInput: UpdateRequestInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<RequestDto> {
     return this.requestsService.update(id, updateRequestInput).then((event) => {
-      this.eventEmitter.emit('request.updated', { ...event, userId });
+      this.eventEmitter.emit('request.updated', { ...event, userId: user.id });
       return event;
     });
   }
@@ -121,10 +121,10 @@ export class RequestsResolver {
   @Mutation(() => RequestDto)
   removeRequest(
     @Args('id', { type: () => String }) id: string,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<RequestDto> {
     return this.requestsService.remove(id).then((event) => {
-      this.eventEmitter.emit('request.deleted', { ...event, userId });
+      this.eventEmitter.emit('request.deleted', { ...event, userId: user.id });
       return event;
     });
   }

@@ -19,12 +19,15 @@ export class QuizSolutionsResolver {
   createQuizSolution(
     @Args('createQuizSolutionInput')
     createQuizSolutionInput: CreateQuizSolutionInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.quizzesService
-      .create(createQuizSolutionInput, userId)
+      .create(createQuizSolutionInput, user.id)
       .then((event) => {
-        this.eventEmitter.emit('quizSolution.created', { ...event, userId });
+        this.eventEmitter.emit('quizSolution.created', {
+          ...event,
+          userId: user.id,
+        });
         return event;
       });
   }
@@ -54,21 +57,21 @@ export class QuizSolutionsResolver {
     @Args('id', { type: () => String }) id: string,
     @Args('updateQuizSolutionInput')
     updateQuizSolutionInput: UpdateQuizSolutionInput,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.quizzesService
       .update(id, updateQuizSolutionInput)
       .then((event) => {
-        this.eventEmitter.emit('quizSolution.updated', { ...event, userId });
+        this.eventEmitter.emit('quizSolution.updated', {
+          ...event,
+          userId: user.id,
+        });
         return event;
       });
   }
 
   @Mutation(() => QuizSolutionDto)
-  removeQuizSolution(
-    @Args('id', { type: () => String }) id: string,
-    @CurrentUser() userId,
-  ) {
+  removeQuizSolution(@Args('id', { type: () => String }) id: string) {
     return this.quizzesService.remove(id);
   }
 }

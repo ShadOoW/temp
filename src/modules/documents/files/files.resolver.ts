@@ -16,15 +16,15 @@ export class FilesResolver {
     @Args('createFileInput') createFileInput: CreateFileInput,
     @CurrentUser() user,
   ) {
-    return this.filesService.create(createFileInput, { id: user });
+    return this.filesService.create(createFileInput, { id: user.id });
   }
 
   @Query(() => FilesPageDto, { name: 'files' })
   findAll(
     @Args() pageOptionsDto: FilesPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<FilesPageDto> {
-    return this.filesService.findAll(pageOptionsDto, userId);
+    return this.filesService.findAll(pageOptionsDto, user.id);
   }
 
   @Query(() => FilesPageDto, { name: 'filesM2m' })

@@ -67,17 +67,18 @@ export class UsersResolver {
   @Query(() => Boolean, { name: 'passwordIsCorrect' })
   async passwordIsCorrect(
     @Args('password', { type: () => String }) password: string,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
-    return !!(await this.usersService.checkUserPassword(userId, password));
+    return !!(await this.usersService.checkUserPassword(user.id, password));
   }
 
   @Mutation(() => Boolean)
   async resetPassword(
     @Args('password', { type: () => String }) password: string,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ): Promise<boolean> {
-    if (userId) return await this.usersService.updatePassword(userId, password);
+    if (user.id)
+      return await this.usersService.updatePassword(user.id, password);
   }
 
   @Mutation(() => UserDto)
@@ -96,9 +97,9 @@ export class UsersResolver {
   @Query(() => UsersPageDto, { name: 'suggestMentors' })
   suggestMentors(
     @Args() pageOptionsDto: UsersPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
-    return this.usersService.suggestMentors(pageOptionsDto, userId);
+    return this.usersService.suggestMentors(pageOptionsDto, user.id);
   }
 
   @Query(() => UsersPageDto, { name: 'mentorsByDomain' })

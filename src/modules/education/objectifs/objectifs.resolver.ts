@@ -18,7 +18,6 @@ export class ObjectifsResolver {
   @Mutation(() => ObjectifDto)
   createObjectif(
     @Args('createObjectifInput') createObjectifInput: CreateObjectifInput,
-    // @CurrentUser() userId,
   ) {
     return this.objectifsService.create(createObjectifInput).then((event) => {
       // this.eventEmitter.emit('objectif.created', { ...event, userId });
@@ -47,7 +46,6 @@ export class ObjectifsResolver {
   update(
     @Args('id', { type: () => String }) id: string,
     @Args('updateObjectifInput') updateObjectifInput: UpdateObjectifInput,
-    // @CurrentUser() userId,
   ) {
     return this.objectifsService
       .update(id, updateObjectifInput)
@@ -63,10 +61,7 @@ export class ObjectifsResolver {
   }
 
   @Mutation(() => ObjectifDto)
-  removeObjectif(
-    @Args('id', { type: () => String }) id: string,
-    // @CurrentUser() userId,
-  ) {
+  removeObjectif(@Args('id', { type: () => String }) id: string) {
     return this.objectifsService.remove(id).then((event) => {
       // this.eventEmitter.emit('objectif.deleted', { ...event, userId });
       return event;

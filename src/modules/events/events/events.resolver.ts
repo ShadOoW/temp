@@ -31,10 +31,10 @@ export class EventsResolver {
   }
 
   @Query(() => EventsPageDto, { name: 'activities' })
-  activities(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
+  activities(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
     return this.eventsService.findAll({
       ...args,
-      from: userId,
+      from: user.id,
       module: ['session', 'request', 'quiz', 'quizSolution'],
     });
   }
@@ -48,10 +48,10 @@ export class EventsResolver {
   }
 
   @Query(() => EventsPageDto, { name: 'notifications' })
-  notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() userId) {
+  notifications(@Args() args: EventsPageOptionsDto, @CurrentUser() user) {
     return this.eventsService.findAll({
       ...args,
-      to: userId,
+      to: user.id,
       module: ['session', 'request', 'quiz', 'quizSolution'],
     });
   }
@@ -59,18 +59,18 @@ export class EventsResolver {
   @Query(() => EventsPageDto, { name: 'messagesNotifications' })
   messagesNotifications(
     @Args() args: EventsPageOptionsDto,
-    @CurrentUser() userId,
+    @CurrentUser() user,
   ) {
     return this.eventsService.findAll({
       ...args,
-      to: userId,
+      to: user.id,
       module: ['message'],
     });
   }
 
   @Mutation(() => Boolean)
-  messagesAsRead(@CurrentUser() userId) {
-    return this.eventsService.updateAllMessages(userId);
+  messagesAsRead(@CurrentUser() user) {
+    return this.eventsService.updateAllMessages(user.id);
   }
 
   @Query(() => EventsPageDto, { name: 'events' })
