@@ -8,11 +8,14 @@ export class DomainDto extends AbstractDto {
   name: string;
 
   @Field(() => String)
-  description?: string;
+  type?: string;
 
-  constructor(user: DomainEntity) {
-    super(user);
-    this.name = user.name;
-    this.description = user.description;
+  @Field(() => String)
+  parent: string;
+
+  constructor(domain: DomainEntity) {
+    super(domain);
+    this.name = domain.name;
+    this.type = domain.type;
   }
 }

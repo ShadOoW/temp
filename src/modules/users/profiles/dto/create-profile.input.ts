@@ -22,6 +22,15 @@ export class CreateProfileInput {
   company?: string;
 
   @Field(() => String, { nullable: true })
+  geoZone?: string;
+
+  @Field(() => String, { nullable: true })
+  projectType?: string;
+
+  @Field(() => [String], { nullable: true })
+  spokenLanguages?: string[];
+
+  @Field(() => String, { nullable: true })
   website?: string;
 
   @Field(() => String, { nullable: true })
@@ -39,8 +48,8 @@ export class CreateProfileInput {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => [String], { nullable: true })
-  domainExpertise?: string[];
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
+  domainExpertise?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;
@@ -60,11 +69,11 @@ export class CreateProfileInput {
   @Field(() => String, { nullable: true })
   currentPost?: string;
 
-  @Field(() => String, { nullable: true })
-  sector?: string;
-
   @Field(() => CreateProfileDomainInput, { nullable: true })
-  wantedDomain?: CreateProfileDomainInput;
+  sector?: CreateProfileDomainInput;
+
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
+  wantedDomains?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })
   whyNeedCoaching?: string;

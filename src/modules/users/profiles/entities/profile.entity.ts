@@ -34,6 +34,15 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   company?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
+  geoZone?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  projectType?: string;
+
+  @Column({ type: 'simple-array', nullable: true })
+  spokenLanguages?: string[];
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
   website?: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
@@ -51,8 +60,9 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'int', nullable: true })
   yearsOfExperience?: number;
 
-  @Column({ type: 'simple-array', nullable: true })
-  domainExpertise?: string[];
+  @ManyToMany(() => DomainEntity, { nullable: true })
+  @JoinTable()
+  domainExpertise?: DomainDto[];
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   coachingType?: string;
@@ -73,11 +83,12 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'varchar', length: 300, nullable: true })
   currentPost?: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  sector?: string;
-
   @ManyToOne(() => DomainEntity)
-  wantedDomain?: DomainDto;
+  sector?: DomainDto;
+
+  @ManyToMany(() => DomainEntity)
+  @JoinTable()
+  wantedDomains?: DomainDto[];
 
   @Column({ type: 'text', nullable: true })
   whyNeedCoaching?: string;

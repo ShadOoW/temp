@@ -33,7 +33,7 @@ export class ConfigService {
 
   get typeOrmConfig(): TypeOrmModuleOptions {
     let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
-    let migrations = [__dirname + '/../../migrations/*{.ts,.js}'];
+    let migrations = [__dirname + '/../../migration/*{.ts,.js}'];
 
     if ((<any>module).hot) {
       const entityContext = (<any>require).context(
@@ -47,7 +47,7 @@ export class ConfigService {
         return entity;
       });
       const migrationContext = (<any>require).context(
-        './../../migrations',
+        './../../migration',
         false,
         /\.ts$/,
       );

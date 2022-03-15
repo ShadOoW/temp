@@ -84,7 +84,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
-        'profile.wantedDomain',
+        'profile.wantedDomains',
       ],
       where: {
         ...UtilsService.getOptions(pageOptionsDto),
@@ -140,15 +140,17 @@ export class UsersService {
     userId: string,
   ): Promise<UsersPageDto> {
     const mentee = await this.findOne(userId);
-    if (mentee && mentee.profile.wantedDomain?.id) {
-      const menteeDomainId = mentee.profile.wantedDomain?.id;
+    if (mentee && mentee.profile.wantedDomains.length > 0) {
+      const menteeDomainIds = mentee.profile.wantedDomains?.map((m) => m.id);
       let q = this.repo
         .createQueryBuilder('users')
         .innerJoinAndSelect('users.role', 'role')
         .innerJoinAndSelect('role.permissions', 'permissions')
         .innerJoinAndSelect('users.profile', 'profile')
         .innerJoinAndSelect('profile.coachingDomains', 'coachingDomains')
-        .where('coachingDomains.id = :menteeDomainId', { menteeDomainId });
+        .where('coachingDomains.id  IN (:...menteeDomainIds)', {
+          menteeDomainIds,
+        });
       q = pageOptionsDto.status
         ? q.andWhere('users.status = :status', {
             status: pageOptionsDto.status,
@@ -183,7 +185,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
-        'profile.wantedDomain',
+        'profile.wantedDomains',
       ],
       where: {
         ...UtilsService.getOptions(pageOptionsDto),
@@ -222,7 +224,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
-        'profile.wantedDomain',
+        'profile.wantedDomains',
       ],
     });
     return user ? user.toDto() : null;
@@ -351,7 +353,7 @@ export class UsersService {
         'role.permissions',
         'profile',
         'profile.coachingDomains',
-        'profile.wantedDomain',
+        'profile.wantedDomains',
       ],
     });
     if (!user) {

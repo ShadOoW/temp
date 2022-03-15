@@ -2,7 +2,6 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
 import { DomainDto } from '../../domains/dto/domain.dto';
 import { ProfileEntity } from '../entities/profile.entity';
-import { CreateProfileDomainInput } from './profile.inputs';
 
 @ObjectType()
 export class ProfileDto extends AbstractDto {
@@ -25,6 +24,15 @@ export class ProfileDto extends AbstractDto {
   company?: string;
 
   @Field(() => String, { nullable: true })
+  geoZone?: string;
+
+  @Field(() => String, { nullable: true })
+  projectType?: string;
+
+  @Field(() => [String], { nullable: true })
+  spokenLanguages?: string[];
+
+  @Field(() => String, { nullable: true })
   website?: string;
 
   @Field(() => String, { nullable: true })
@@ -42,8 +50,8 @@ export class ProfileDto extends AbstractDto {
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => [String], { nullable: true })
-  domainExpertise?: string[];
+  @Field(() => [DomainDto], { nullable: true })
+  domainExpertise?: DomainDto[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;
@@ -63,11 +71,11 @@ export class ProfileDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   currentPost?: string;
 
-  @Field(() => String, { nullable: true })
-  sector?: string;
-
   @Field(() => DomainDto, { nullable: true })
-  wantedDomain?: DomainDto;
+  sector?: DomainDto;
+
+  @Field(() => [DomainDto], { nullable: true })
+  wantedDomains?: DomainDto[];
 
   @Field(() => String, { nullable: true })
   whyNeedCoaching?: string;
@@ -97,7 +105,7 @@ export class ProfileDto extends AbstractDto {
     this.hoursPerMonth = profile.hoursPerMonth;
     this.currentPost = profile.currentPost;
     this.sector = profile.sector;
-    this.wantedDomain = profile.wantedDomain;
+    this.wantedDomains = profile.wantedDomains;
     this.whyNeedCoaching = profile.whyNeedCoaching;
     this.selfDescription = profile.selfDescription;
   }

@@ -93,8 +93,8 @@ export class RequestsService {
         .createQueryBuilder('requests')
         .innerJoinAndSelect('requests.from', 'from')
         .innerJoinAndSelect('from.profile', 'profile')
-        .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain')
-        .where('wantedDomain.id IN (:...mentorDomains)', { mentorDomains })
+        .innerJoinAndSelect('profile.wantedDomains', 'wantedDomains')
+        .where('wantedDomains.id IN (:...mentorDomains)', { mentorDomains })
         .andWhere('requests.to is null')
         .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
         .take(pageOptionsDto.take)
@@ -116,9 +116,9 @@ export class RequestsService {
       .createQueryBuilder('requests')
       .innerJoinAndSelect('requests.from', 'from')
       .innerJoinAndSelect('from.profile', 'profile')
-      .innerJoinAndSelect('profile.wantedDomain', 'wantedDomain');
+      .innerJoinAndSelect('profile.wantedDomains', 'wantedDomains');
     const whereDomain = domainId
-      ? joinRequest.where('wantedDomain.id = :domainId', { domainId })
+      ? joinRequest.where('wantedDomains.id = :domainId', { domainId })
       : joinRequest;
     const [requests, requestsCount] = await whereDomain
       .andWhere('requests.to is null')
@@ -175,7 +175,7 @@ export class RequestsService {
         'to.profile',
         'to.profile.coachingDomains',
         'from.profile',
-        'from.profile.wantedDomain',
+        'from.profile.wantedDomains',
       ],
       ...UtilsService.pagination(pageOptionsDto),
     });
@@ -196,7 +196,7 @@ export class RequestsService {
         'to.profile',
         'to.profile.coachingDomains',
         'from.profile',
-        'from.profile.wantedDomain',
+        'from.profile.wantedDomains',
       ],
     });
     return request ? request.toDto() : null;

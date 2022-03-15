@@ -37,11 +37,20 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   @Field(() => String, { nullable: true })
   country?: string;
 
+  @Field(() => String, { nullable: true })
+  geoZone?: string;
+
+  @Field(() => String, { nullable: true })
+  projectType?: string;
+
+  @Field(() => [String], { nullable: true })
+  spokenLanguages?: string[];
+
   @Field(() => Int, { nullable: true })
   yearsOfExperience?: number;
 
-  @Field(() => [String], { nullable: true })
-  domainExpertise?: string[];
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
+  domainExpertise?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })
   coachingType?: string;
@@ -61,11 +70,11 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   @Field(() => String, { nullable: true })
   currentPost?: string;
 
-  @Field(() => String, { nullable: true })
-  sector?: string;
-
   @Field(() => CreateProfileDomainInput, { nullable: true })
-  wantedDomain?: CreateProfileDomainInput;
+  sector?: CreateProfileDomainInput;
+
+  @Field(() => [CreateProfileDomainInput], { nullable: true })
+  wantedDomains?: CreateProfileDomainInput[];
 
   @Field(() => String, { nullable: true })
   whyNeedCoaching?: string;

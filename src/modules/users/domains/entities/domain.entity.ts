@@ -10,9 +10,13 @@ export class DomainEntity extends AbstractEntity<DomainDto> {
   @Column({ type: 'varchar', length: 300, nullable: false })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   @Field(() => String)
-  description?: string;
+  type?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Field(() => String)
+  parent?: string;
 
   dtoClass = DomainDto;
 }

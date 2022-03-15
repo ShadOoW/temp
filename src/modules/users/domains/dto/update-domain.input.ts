@@ -10,5 +10,9 @@ export class UpdateDomainInput extends PartialType(CreateDomainInput) {
 
   @Field(() => String)
   @IsString()
-  description: string;
+  type: string;
+
+  @Field(() => String)
+  @IsString()
+  parent?: string;
 }

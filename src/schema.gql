@@ -81,8 +81,9 @@ input CreateBadgeInput {
 }
 
 input CreateDomainInput {
-  description: String!
   name: String!
+  parent: String!
+  type: String!
 }
 
 input CreateEventInput {
@@ -155,19 +156,22 @@ input CreateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: [String!]
+  domainExpertise: [CreateProfileDomainInput!]
   facebook: String
   firstName: String
+  geoZone: String
   hoursPerMonth: String
   lastName: String
   linkedin: String
   phoneNumber: String
   picture: String
   professionalBg: String
-  sector: String
+  projectType: String
+  sector: CreateProfileDomainInput
   selfDescription: String
+  spokenLanguages: [String!]
   twitter: String
-  wantedDomain: CreateProfileDomainInput
+  wantedDomains: [CreateProfileDomainInput!]
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
@@ -252,9 +256,10 @@ scalar DateTime
 
 type DomainDto {
   createdAt: DateTime
-  description: String!
   id: String
   name: String!
+  parent: String!
+  type: String!
   updatedAt: DateTime
 }
 
@@ -465,9 +470,10 @@ type ProfileDto {
   country: String
   createdAt: DateTime
   currentPost: String
-  domainExpertise: [String!]
+  domainExpertise: [DomainDto!]
   facebook: String
   firstName: String
+  geoZone: String
   hoursPerMonth: String
   id: String
   lastName: String
@@ -475,11 +481,13 @@ type ProfileDto {
   phoneNumber: String
   picture: String
   professionalBg: String
-  sector: String
+  projectType: String
+  sector: DomainDto
   selfDescription: String
+  spokenLanguages: [String!]
   twitter: String
   updatedAt: DateTime
-  wantedDomain: DomainDto
+  wantedDomains: [DomainDto!]
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
@@ -708,8 +716,9 @@ input UpdateBalanceInput {
 }
 
 input UpdateDomainInput {
-  description: String!
   name: String!
+  parent: String!
+  type: String!
 }
 
 input UpdateEventInput {
@@ -767,19 +776,22 @@ input UpdateProfileInput {
   company: String
   country: String
   currentPost: String
-  domainExpertise: [String!]
+  domainExpertise: [CreateProfileDomainInput!]
   facebook: String
   firstName: String
+  geoZone: String
   hoursPerMonth: String
   lastName: String
   linkedin: String
   phoneNumber: String
   picture: String
   professionalBg: String
-  sector: String
+  projectType: String
+  sector: CreateProfileDomainInput
   selfDescription: String
+  spokenLanguages: [String!]
   twitter: String
-  wantedDomain: CreateProfileDomainInput
+  wantedDomains: [CreateProfileDomainInput!]
   website: String
   whyNeedCoaching: String
   yearsOfExperience: Int
