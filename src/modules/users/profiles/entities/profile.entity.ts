@@ -83,7 +83,8 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'varchar', length: 300, nullable: true })
   currentPost?: string;
 
-  @ManyToOne(() => DomainEntity)
+  @ManyToOne(() => DomainEntity, (domain) => domain.profiles)
+  @JoinTable()
   sector?: DomainDto;
 
   @ManyToMany(() => DomainEntity)

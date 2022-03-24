@@ -35,7 +35,12 @@ export class ProfilesService {
     }
     await this.repo.save({ id, ...updateProfileInput });
     const updatedProfile = await this.repo.findOne(id, {
-      relations: ['coachingDomains', 'wantedDomains'],
+      relations: [
+        'coachingDomains',
+        'wantedDomains',
+        'sector',
+        'domainExpertise',
+      ],
     });
     return updatedProfile ? updatedProfile.toDto() : null;
   }
