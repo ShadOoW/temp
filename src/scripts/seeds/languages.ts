@@ -2,7 +2,7 @@ import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '@config/config.service';
 import { LanguageEntity } from '@users/languages/entities/language.entity';
 
-export async function domainsSeed() {
+export async function languagesSeed() {
   const opt = {
     ...configService.getTypeOrmConfig(),
     debug: true,

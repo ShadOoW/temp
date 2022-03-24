@@ -20,11 +20,9 @@ export class DomainsResolver {
   }
 
   @Public()
-  @Query(() => DomainsPageDto, { name: 'domains' })
-  findAll(
-    @Args() pageOptionsDto: DomainsPageOptionsDto,
-  ): Promise<DomainsPageDto> {
-    return this.domainsService.findAll(pageOptionsDto);
+  @Query(() => [DomainDto], { name: 'domains' })
+  findAll(): Promise<DomainDto[]> {
+    return this.domainsService.findAll();
   }
 
   @Query(() => DomainDto, { name: 'domain' })

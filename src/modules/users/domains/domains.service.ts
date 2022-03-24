@@ -1,14 +1,10 @@
-import { Repository } from 'typeorm';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
-import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { Repository } from 'typeorm';
 import { CreateDomainInput } from './dto/create-domain.input';
 import { UpdateDomainInput } from './dto/update-domain.input';
 import { DomainEntity } from './entities/domain.entity';
-import { DomainsPageOptionsDto } from './dto/domains-page-options.dto';
-import { DomainsPageDto } from './dto/domains-page.dto';
-import { UtilsService } from '@src/providers/utils.service';
 
 @Injectable()
 export class DomainsService {
@@ -27,16 +23,9 @@ export class DomainsService {
     return (await this.repo.save(createdDomain)).toDto();
   }
 
-  async findAll(pageOptionsDto: DomainsPageOptionsDto) {
-    const [domains, domainsCount] = await this.repo.findAndCount({
-      where: UtilsService.getOptions(pageOptionsDto),
-      ...UtilsService.pagination(pageOptionsDto),
-    });
-    const pageMetaDto = new PageMetaDto({
-      pageOptionsDto,
-      itemCount: domainsCount,
-    });
-    return new DomainsPageDto(domains.toDtos(), pageMetaDto);
+  async findAll() {
+    const [domains, domainsCount] = await this.repo.findAndCount();
+    return domains.toDtos();
   }
 
   async findOne(id: string) {

@@ -91,6 +91,9 @@ export class ProfileDto extends AbstractDto {
     this.phoneNumber = profile.phoneNumber;
     this.city = profile.city;
     this.company = profile.company;
+    this.geoZone = profile.geoZone;
+    this.projectType = profile.projectType;
+    this.spokenLanguages = profile.spokenLanguages;
     this.website = profile.website;
     this.linkedin = profile.linkedin;
     this.twitter = profile.twitter;
