@@ -70,8 +70,8 @@ export class UpdateProfileInput extends PartialType(CreateProfileInput) {
   @Field(() => String, { nullable: true })
   currentPost?: string;
 
-  @Field(() => CreateProfileDomainInput, { nullable: true })
-  sector?: CreateProfileDomainInput;
+  @Field(() => String, { nullable: true })
+  sector?: string;
 
   @Field(() => [CreateProfileDomainInput], { nullable: true })
   wantedDomains?: CreateProfileDomainInput[];

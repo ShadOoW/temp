@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { AbstractDto } from '@src/common/dto/abstract.dto';
+import { String } from 'aws-sdk/clients/cloudsearchdomain';
 import { DomainDto } from '../../domains/dto/domain.dto';
 import { ProfileEntity } from '../entities/profile.entity';
 
@@ -72,7 +73,7 @@ export class ProfileDto extends AbstractDto {
   currentPost?: string;
 
   @Field(() => DomainDto, { nullable: true })
-  sector?: DomainDto;
+  sector?: string;
 
   @Field(() => [DomainDto], { nullable: true })
   wantedDomains?: DomainDto[];

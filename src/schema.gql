@@ -167,7 +167,7 @@ input CreateProfileInput {
   picture: String
   professionalBg: String
   projectType: String
-  sector: CreateProfileDomainInput
+  sector: String
   selfDescription: String
   spokenLanguages: [String!]
   twitter: String
@@ -782,7 +782,7 @@ input UpdateProfileInput {
   picture: String
   professionalBg: String
   projectType: String
-  sector: CreateProfileDomainInput
+  sector: String
   selfDescription: String
   spokenLanguages: [String!]
   twitter: String

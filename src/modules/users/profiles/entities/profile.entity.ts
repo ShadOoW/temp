@@ -85,7 +85,7 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
 
   @ManyToOne(() => DomainEntity, (domain) => domain.profiles)
   @JoinTable()
-  sector?: DomainDto;
+  sector?: string;
 
   @ManyToMany(() => DomainEntity)
   @JoinTable()
