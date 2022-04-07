@@ -97,6 +97,15 @@ export class ProfileEntity extends AbstractEntity<ProfileDto> {
   @Column({ type: 'text', nullable: true })
   selfDescription?: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  projectCountry?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  projectRegion?: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  projectCity?: string;
+
   @OneToOne(() => UserEntity, (user) => user.profile)
   user: UserDto;
 

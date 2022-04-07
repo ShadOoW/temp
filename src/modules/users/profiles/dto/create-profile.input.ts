@@ -80,4 +80,13 @@ export class CreateProfileInput {
 
   @Field(() => String, { nullable: true })
   selfDescription?: string;
+
+  @Field(() => String, { nullable: true })
+  projectCountry?: string;
+
+  @Field(() => String, { nullable: true })
+  projectRegion?: string;
+
+  @Field(() => String, { nullable: true })
+  projectCity?: string;
 }

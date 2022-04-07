@@ -166,6 +166,9 @@ input CreateProfileInput {
   phoneNumber: String
   picture: String
   professionalBg: String
+  projectCity: String
+  projectCountry: String
+  projectRegion: String
   projectType: String
   sector: String
   selfDescription: String
@@ -476,6 +479,9 @@ type ProfileDto {
   phoneNumber: String
   picture: String
   professionalBg: String
+  projectCity: String
+  projectCountry: String
+  projectRegion: String
   projectType: String
   sector: DomainDto
   selfDescription: String
@@ -781,6 +787,9 @@ input UpdateProfileInput {
   phoneNumber: String
   picture: String
   professionalBg: String
+  projectCity: String
+  projectCountry: String
+  projectRegion: String
   projectType: String
   sector: String
   selfDescription: String

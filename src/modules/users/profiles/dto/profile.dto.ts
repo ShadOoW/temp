@@ -84,6 +84,15 @@ export class ProfileDto extends AbstractDto {
   @Field(() => String, { nullable: true })
   selfDescription?: string;
 
+  @Field(() => String, { nullable: true })
+  projectCountry?: string;
+
+  @Field(() => String, { nullable: true })
+  projectRegion?: string;
+
+  @Field(() => String, { nullable: true })
+  projectCity?: string;
+
   constructor(profile: ProfileEntity) {
     super(profile);
     this.firstName = profile.firstName;
@@ -112,5 +121,8 @@ export class ProfileDto extends AbstractDto {
     this.wantedDomains = profile.wantedDomains;
     this.whyNeedCoaching = profile.whyNeedCoaching;
     this.selfDescription = profile.selfDescription;
+    this.projectCountry = profile.projectCountry;
+    this.projectRegion = profile.projectRegion;
+    this.projectCity = profile.projectCity;
   }
 }
