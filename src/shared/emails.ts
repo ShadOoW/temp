@@ -5,3 +5,6 @@ export const ACTIVE_USER_SUBJECT = 'M2M plateforme : Compte activé avec succès
 export const RESET_PASSWORD_TEMPLATE = 'reset.password';
 export const RESET_PASSWORD_SUBJECT =
   'M2M plateforme : Demande de changement de mot de passe';
+export const SUBSCRIBER_TEMPLATE = 'create.subscriber';
+export const SUBSCRIBER_SUBJECT =
+  'M2M plateforme : Vous avez un nouvel abonnement';

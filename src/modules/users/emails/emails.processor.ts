@@ -57,7 +57,7 @@ export class EmailProcessor {
       const sendEmail = ses.sendEmail(email).promise();
       sendEmail
         .then((data) => {
-          console.log('email submitted to SES', data);
+          console.log('email submitted to SES');
         })
         .catch((e) => {
           console.error(e);

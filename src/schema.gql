@@ -377,6 +377,7 @@ type Mutation {
   removeRequest(id: String!): RequestDto!
   removeRole(id: String!): RoleDto!
   removeSession(id: String!): SessionDto!
+  removeSubscription(id: String!): UserSubscription!
   removeUser(id: String!): UserDto!
   resetPassword(password: String!): Boolean!
   updateBadge(id: String!, updateBadgeInput: UpdateBadgeInput!): BadgeDto!

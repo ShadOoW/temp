@@ -1,11 +1,9 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { SubscriptionsService } from './subscriptions.service';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
-import { GetSubscriptions, GetSubscribers } from './dto/get-subscriptions.dto';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
 import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
-import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { SubscriptionsService } from './subscriptions.service';
 
 @Resolver(() => SubscriptionDto)
 export class SubscriptionsResolver {
@@ -41,5 +39,12 @@ export class SubscriptionsResolver {
   @Query(() => Int, { name: 'menteesCount' })
   usersCount(@Args('id', { type: () => String }) userId) {
     return this.subscriptionsService.usersCount(userId);
+  }
+
+  @Mutation(() => SubscriptionDto)
+  removeSubscription(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<SubscriptionDto> {
+    return this.subscriptionsService.remove(id);
   }
 }

@@ -6,8 +6,8 @@ import { ObjectifEntity } from './entities/objectif.entity';
 import { UsersService } from '@users/users/users.service';
 import { UserEntity } from '@users/users/entities/user.entity';
 import { ProfilesService } from '@src/modules/users/profiles/profiles.service';
-import { EmailsService } from '@src/modules/users/emails/emails.service';
 import { ProfileEntity } from '@src/modules/users/profiles/entities/profile.entity';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
 
 @Module({
   imports: [

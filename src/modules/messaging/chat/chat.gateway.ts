@@ -95,7 +95,6 @@ export class ChatGateway
     // const tt = await this.redisService
     //   .getClient()
     //   .get(`users:${payload.receiver}`);
-    console.log(tt);
     if (tt) {
       this.server.emit('msgToClient', ans);
       this.server.to(createdMessage.room.name).emit('msgToClient', ans);
