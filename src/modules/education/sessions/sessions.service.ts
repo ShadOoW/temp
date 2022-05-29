@@ -10,17 +10,26 @@ import { SessionDto } from './dto/session.dto';
 import { SessionsPageOptionsDto } from './dto/sessions-page-options.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { SessionsPageDto } from './dto/sessions-page.dto';
+import { UsersService } from '@src/modules/users/users/users.service';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
+import { SESSION_SUBJECT, SESSION_TEMPLATE } from '@src/shared/emails';
 
 @Injectable()
 export class SessionsService {
   constructor(
     @InjectRepository(SessionEntity)
     private readonly repo: Repository<SessionEntity>,
+    private usersService: UsersService,
+    private emailService: EmailsService,
   ) {}
 
   async create(createSessionInput: CreateSessionInput): Promise<SessionDto> {
     const createdSession = await this.repo.create(createSessionInput);
     const savedSession = await this.repo.save(createdSession);
+    await this.sendSessionEmail(
+      createSessionInput.mentee,
+      createSessionInput.mentor,
+    );
     return this.findOne(savedSession.id);
   }
   // TODO WHERE & PAGE OPTIONS
@@ -145,6 +154,37 @@ export class SessionsService {
     if (sessionToDelete) {
       await this.repo.delete(id);
       return sessionToDelete;
+    }
+  }
+
+  async sendSessionEmail(menteeId: any, mentorId: any) {
+    const mentee = await this.usersService.findOne(menteeId);
+    const mentor = await this.usersService.findOne(mentorId);
+    if (!mentee || !mentor) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (mentee && mentor) {
+      this.emailService.sendMail(
+        SESSION_TEMPLATE,
+        mentee.email,
+        SESSION_SUBJECT,
+        {
+          firstName: mentee.profile?.firstName,
+          lastName: mentee.profile?.lastName,
+        },
+      );
+      this.emailService.sendMail(
+        SESSION_TEMPLATE,
+        mentor.email,
+        SESSION_SUBJECT,
+        {
+          firstName: mentor.profile?.firstName,
+          lastName: mentor.profile?.lastName,
+        },
+      );
     }
   }
 }

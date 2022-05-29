@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
+import { UsersService } from '@src/modules/users/users/users.service';
 import { UtilsService } from '@src/providers/utils.service';
+import { SENDQUIZ_SUBJECT, SENDQUIZ_TEMPLATE } from '@src/shared/emails';
 import { Repository } from 'typeorm';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { QuizzesPageOptionsDto } from './dto/quizzes-page-options.dto';
@@ -14,12 +17,18 @@ import { QuizEntity } from './entities/quiz.entity';
 export class QuizzesService {
   constructor(
     @InjectRepository(QuizEntity) private readonly repo: Repository<QuizEntity>,
+    private usersService: UsersService,
+    private emailService: EmailsService,
   ) {}
   async create(createQuizInput: CreateQuizInput, userId) {
     const createdQuiz = await this.repo.create({
       ...createQuizInput,
       mentor: userId,
     });
+    const sendEmailPromise = createQuizInput.mentees.map((sendTo) =>
+      this.sendQuizEmail(userId, sendTo),
+    );
+    await Promise.all(sendEmailPromise);
     return (await this.repo.save(createdQuiz)).toDto();
   }
 
@@ -68,5 +77,27 @@ export class QuizzesService {
     const quizToDelete = await this.repo.findOne(id);
     await this.repo.delete(id);
     return quizToDelete.toDto();
+  }
+
+  async sendQuizEmail(createdById: any, sendToId: any) {
+    const createdBy = await this.usersService.findOne(createdById);
+    const sendTo = await this.usersService.findOne(sendToId);
+    if (!createdBy && !sendTo) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (sendTo && createdBy) {
+      this.emailService.sendMail(
+        SENDQUIZ_TEMPLATE,
+        sendTo.email,
+        SENDQUIZ_SUBJECT,
+        {
+          firstName: createdBy.profile?.firstName,
+          lastName: createdBy.profile?.lastName,
+        },
+      );
+    }
   }
 }

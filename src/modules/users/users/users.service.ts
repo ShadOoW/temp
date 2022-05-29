@@ -13,8 +13,12 @@ import { EmailsService } from '@users/emails/emails.service';
 import {
   ACTIVE_USER_SUBJECT,
   ACTIVE_USER_TEMPLATE,
+  ADMIN_CREATE_USER_SUBJECT,
+  ADMIN_CREATE_USER_TEMPLATE,
   CREATE_USER_SUBJECT,
   CREATE_USER_TEMPLATE,
+  REFUSED_USER_SUBJECT,
+  REFUSED_USER_TEMPLATE,
   // CREATE_USER_SUBJECT,
   // CREATE_USER_TEMPLATE,
 } from '@shared/emails';
@@ -58,10 +62,19 @@ export class UsersService {
         profile: createdProfile,
       });
       const savedUser = await this.repo.save(createdUser);
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         CREATE_USER_TEMPLATE,
         savedUser.email,
         CREATE_USER_SUBJECT,
+        {
+          firstName: createdProfile?.firstName,
+          lastName: createdProfile?.lastName,
+        },
+      );
+      await this.emailService.sendMail(
+        ADMIN_CREATE_USER_TEMPLATE,
+        process.env.ADMIN_EMAIL,
+        ADMIN_CREATE_USER_SUBJECT,
         {
           firstName: createdProfile?.firstName,
           lastName: createdProfile?.lastName,
@@ -328,13 +341,24 @@ export class UsersService {
    * @returns {object} removed user data or exeption
    */
   async remove(id: string): Promise<UserDto> {
-    const userToDelete = await this.repo.findOne(id);
+    const userToDelete = await this.repo.findOne(id, {
+      relations: ['profile'],
+    });
     if (!userToDelete) {
       throw new HttpException(
         ERROR_MESSAGES.UNAUTHORIZE,
         HttpStatus.BAD_REQUEST,
       );
     }
+    await this.emailService.sendMail(
+      REFUSED_USER_TEMPLATE,
+      userToDelete.email,
+      REFUSED_USER_SUBJECT,
+      {
+        firstName: userToDelete?.profile?.firstName,
+        lastName: userToDelete?.profile?.lastName,
+      },
+    );
     await this.repo.delete(id);
     return userToDelete.toDto();
   }

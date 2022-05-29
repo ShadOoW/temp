@@ -1,7 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
+import { UsersService } from '@src/modules/users/users/users.service';
 import { UtilsService } from '@src/providers/utils.service';
+import { SENDFILE_SUBJECT, SENDFILE_TEMPLATE } from '@src/shared/emails';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
 import { In, Repository } from 'typeorm';
 import { CreateFileInput } from './dto/create-file.input';
@@ -14,6 +17,8 @@ import { FileEntity } from './entities/file.entity';
 export class FilesService {
   constructor(
     @InjectRepository(FileEntity) private readonly repo: Repository<FileEntity>,
+    private usersService: UsersService,
+    private emailService: EmailsService,
   ) {}
 
   async create(createFileInput: CreateFileInput, user: any) {
@@ -146,7 +151,8 @@ export class FilesService {
   }
 
   async update(id: string, updateFileInput: UpdateFileInput) {
-    const file = await this.repo.findOne({ id });
+    const file = await this.repo.findOne({ id }, { relations: ['user'] });
+    console.log(file);
     if (!file) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
@@ -155,6 +161,10 @@ export class FilesService {
     }
     const createdFile = await this.repo.create({ id, ...updateFileInput });
     await this.repo.save(createdFile);
+    const sendEmailPromise = updateFileInput.sharedWith.map((sendTo) =>
+      this.sendFileEmail(file.user.id, sendTo),
+    );
+    await Promise.all(sendEmailPromise);
     return await this.findOne(id);
   }
 
@@ -162,5 +172,27 @@ export class FilesService {
     const fileToDelete = await this.findOne(id);
     await this.repo.delete(id);
     return fileToDelete;
+  }
+
+  async sendFileEmail(createdById: any, sendToId: any) {
+    const createdBy = await this.usersService.findOne(createdById);
+    const sendTo = await this.usersService.findOne(sendToId);
+    if (!createdBy && !sendTo) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (sendTo && createdBy) {
+      this.emailService.sendMail(
+        SENDFILE_TEMPLATE,
+        sendTo.email,
+        SENDFILE_SUBJECT,
+        {
+          firstName: createdBy.profile?.firstName,
+          lastName: createdBy.profile?.lastName,
+        },
+      );
+    }
   }
 }

@@ -1,5 +1,11 @@
 export const CREATE_USER_TEMPLATE = 'create.user';
 export const CREATE_USER_SUBJECT = 'M2M plateforme : Compte créé avec succès';
+export const REFUSED_USER_TEMPLATE = 'refused.user';
+export const REFUSED_USER_SUBJECT =
+  "M2M plateforme :  Refus d'inscription à  la plateforme";
+export const ADMIN_CREATE_USER_TEMPLATE = 'create.useradmin';
+export const ADMIN_CREATE_USER_SUBJECT =
+  'M2M plateforme : Nouvelles inscriptions';
 export const ACTIVE_USER_TEMPLATE = 'active.user';
 export const ACTIVE_USER_SUBJECT = 'M2M plateforme : Compte activé avec succès';
 export const RESET_PASSWORD_TEMPLATE = 'reset.password';
@@ -8,3 +14,10 @@ export const RESET_PASSWORD_SUBJECT =
 export const SUBSCRIBER_TEMPLATE = 'create.subscriber';
 export const SUBSCRIBER_SUBJECT =
   'M2M plateforme : Vous avez un nouvel abonnement';
+export const SESSION_TEMPLATE = 'create.session';
+export const SESSION_SUBJECT = 'M2M plateforme : Vous avez un nouvel session';
+export const SENDFILE_TEMPLATE = 'create.sendfile';
+export const SENDFILE_SUBJECT = 'M2M plateforme : Vous avez un nouvel document';
+export const SENDQUIZ_TEMPLATE = 'create.sendquiz';
+export const SENDQUIZ_SUBJECT =
+  'M2M plateforme : Vous avez un nouvel Questionnaire';
