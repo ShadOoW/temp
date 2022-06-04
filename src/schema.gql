@@ -26,6 +26,7 @@ input AnswerInput {
 
 type BadgeDto {
   createdAt: DateTime
+  deletedAt: DateTime
 
   """description of the badge"""
   description: String!
@@ -53,6 +54,7 @@ type BadgesPageDto {
 
 type BalanceDto {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   points: [PointDto!]!
   score: Int!
@@ -259,6 +261,7 @@ scalar DateTime
 
 type DomainDto {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   name: String!
   parent: String
@@ -269,6 +272,7 @@ type DomainDto {
 type EventDto {
   command: String
   createdAt: DateTime
+  deletedAt: DateTime
   from: UserDto
   id: String
   module: String
@@ -301,6 +305,7 @@ type EventsPageDto {
 
 type FileDto {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   link: String
   name: String
@@ -315,6 +320,7 @@ type FileDto {
 type FileTagDto {
   color: String
   createdAt: DateTime
+  deletedAt: DateTime
   files: [FileDto!]
   id: String
   name: String!
@@ -334,6 +340,7 @@ type FilesPageDto {
 
 type MessageDto {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   sender: UserDto!
   text: String!
@@ -400,6 +407,7 @@ type Mutation {
 
 type ObjectifDto {
   createdAt: DateTime
+  deletedAt: DateTime
   dueDate: DateTime
   id: String
   mentee: UserDto
@@ -424,6 +432,7 @@ type PageMetaDto {
 
 type PermissionDto {
   createdAt: DateTime
+  deletedAt: DateTime
   description: String!
   id: String
   name: String!
@@ -439,6 +448,7 @@ type PointDto {
   """the action to get the point"""
   action: String!
   createdAt: DateTime
+  deletedAt: DateTime
 
   """description of the point"""
   description: String!
@@ -469,6 +479,7 @@ type ProfileDto {
   country: String
   createdAt: DateTime
   currentPost: String
+  deletedAt: DateTime
   domainExpertise: [DomainDto!]
   facebook: String
   firstName: String
@@ -502,6 +513,8 @@ type Query {
   badge(id: String!): BadgeDto!
   badges(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): BadgesPageDto!
   canRequest(mentee: String!): Boolean!
+  deletedSubscriptions(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): SubscriptionsPageDto!
+  deletedUsers(active: Boolean = null, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
   domain(id: String!): DomainDto!
   domains: [DomainDto!]!
   emailExists(email: String!): Boolean!
@@ -511,6 +524,7 @@ type Query {
   fileTags(order: String = "ASC", page: Int = 1, search: String, searchBy: String, take: Int = 2): FileTagsPageDto!
   files(order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, tags: String, take: Int = 2): FilesPageDto!
   filesM2m(mentee: String!, mentor: String!, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String, tags: String, take: Int = 2): FilesPageDto!
+  getRequests(mentee: String, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestsPageDto!
   menteePublicRequest(mentee: String!, mentor: String, order: String = "ASC", page: Int = 1, proposition: Boolean, search: String, searchBy: String, status: String, take: Int = 2): RequestDto
   menteesCount(id: String!): Int!
   mentorsByDomain(active: Boolean = null, domainId: String, isAdmin: Boolean = null, order: String = "ASC", page: Int = 1, search: String, searchBy: String, status: String = null, take: Int = 2): UsersPageDto!
@@ -578,6 +592,7 @@ input QuestionInput {
 
 type QuizDto {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   mentees: [UserDto!]
   mentor: UserDto
@@ -594,6 +609,7 @@ type QuizSolutionDto {
   """Answer of the quizSolution"""
   answers: [AnswerDto!]
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   mentee: UserDto
   mentor: UserDto
@@ -622,9 +638,10 @@ input Relationship {
 
 type RequestDto {
   createdAt: DateTime
+  deletedAt: DateTime
   expectations: String
   id: String
-  mentee: UserDto!
+  mentee: UserDto
   mentor: UserDto
   message: String
   proposition: Boolean
@@ -640,6 +657,7 @@ type RequestsPageDto {
 
 type RoleDto {
   createdAt: DateTime
+  deletedAt: DateTime
   description: String
   id: String
   name: String!
@@ -657,6 +675,7 @@ type RolesPageDto {
 
 type SessionDto {
   createdAt: DateTime
+  deletedAt: DateTime
   description: String
   duration: Int
   id: String
@@ -859,6 +878,7 @@ input UpdateUserInput {
 type UserDto {
   active: Boolean
   createdAt: DateTime
+  deletedAt: DateTime
   email: String!
   id: String
   isAdmin: Boolean!
@@ -873,6 +893,7 @@ type UserDto {
 
 type UserSubscription {
   createdAt: DateTime
+  deletedAt: DateTime
   id: String
   subscribedTo: UserDto!
   subscriber: UserDto!

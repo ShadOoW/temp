@@ -167,7 +167,7 @@ export class SessionsService {
       );
     }
     if (mentee && mentor) {
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SESSION_TEMPLATE,
         mentee.email,
         SESSION_SUBJECT,
@@ -176,7 +176,7 @@ export class SessionsService {
           lastName: mentee.profile?.lastName,
         },
       );
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SESSION_TEMPLATE,
         mentor.email,
         SESSION_SUBJECT,

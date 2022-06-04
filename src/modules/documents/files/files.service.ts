@@ -184,13 +184,13 @@ export class FilesService {
       );
     }
     if (sendTo && createdBy) {
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SENDFILE_TEMPLATE,
         sendTo.email,
         SENDFILE_SUBJECT,
         {
-          firstName: createdBy.profile?.firstName,
-          lastName: createdBy.profile?.lastName,
+          firstName: sendTo.profile?.firstName,
+          lastName: sendTo.profile?.lastName,
         },
       );
     }

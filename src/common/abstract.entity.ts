@@ -2,6 +2,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 import { UtilsService } from '../providers/utils.service';
@@ -20,6 +21,11 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
     type: 'timestamp',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    type: 'timestamp',
+  })
+  deletedAt?: Date;
 
   abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
 

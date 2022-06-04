@@ -28,7 +28,7 @@ import { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import { UserDto } from './dto/user.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { ProfileDto } from '../profiles/dto/profile.dto';
 
 @Injectable()
@@ -86,6 +86,32 @@ export class UsersService {
     }
   }
 
+  async findAllDelete(
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<UsersPageDto> {
+    const [users, usersCount] = await this.repo.findAndCount({
+      relations: [
+        'role',
+        'role.permissions',
+        'profile',
+        'profile.coachingDomains',
+        'profile.wantedDomains',
+      ],
+      where: {
+        deletedAt: Not(IsNull()),
+        ...UtilsService.getOptions(pageOptionsDto),
+        // active: true,
+      },
+      withDeleted: true,
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: usersCount,
+    });
+    return new UsersPageDto(users.toDtos(), pageMetaDto);
+  }
+
   /**
    * Finds all users related with (user role & role permissions)
    * @returns  {Array} of users info
@@ -136,6 +162,7 @@ export class UsersService {
       : whereDomain;
     const [users, usersCount] = await whereStatus
       .andWhere('users.active = :active', { active: true })
+      .andWhere('users.deletedAt IS NULL')
       .andWhere('role.name = :role', { role: 'mentor' })
       .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
       .take(pageOptionsDto.take)
@@ -171,6 +198,7 @@ export class UsersService {
         : q;
       const [users, usersCount] = await q
         // .andWhere('users.active = :active', { active: true })
+        .andWhere('users.deletedAt IS NULL')
         .andWhere('role.name = :role', { role: 'mentor' })
         .skip(pageOptionsDto.take * (pageOptionsDto.page - 1))
         .take(pageOptionsDto.take)
@@ -202,7 +230,7 @@ export class UsersService {
       ],
       where: {
         ...UtilsService.getOptions(pageOptionsDto),
-        // role: roleId,
+        deletedAt: IsNull(),
       },
       ...UtilsService.pagination(pageOptionsDto),
     });
@@ -239,6 +267,7 @@ export class UsersService {
         'profile.coachingDomains',
         'profile.wantedDomains',
       ],
+      withDeleted: true,
     });
     return user ? user.toDto() : null;
   }
@@ -311,6 +340,7 @@ export class UsersService {
    */
   async updatePassword(id: string, password: string) {
     const user = await this.repo.findOne(id, {
+      where: { deletedAt: IsNull() },
       relations: ['profile'],
     });
     if (!user) {
@@ -326,7 +356,9 @@ export class UsersService {
   }
 
   async checkUserPassword(id: string, password: string) {
-    const user = await this.repo.findOne(id);
+    const user = await this.repo.findOne(id, {
+      where: { deletedAt: IsNull() },
+    });
     if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
@@ -350,16 +382,17 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.emailService.sendMail(
-      REFUSED_USER_TEMPLATE,
-      userToDelete.email,
-      REFUSED_USER_SUBJECT,
-      {
-        firstName: userToDelete?.profile?.firstName,
-        lastName: userToDelete?.profile?.lastName,
-      },
-    );
-    await this.repo.delete(id);
+    await this.repo.softDelete(id);
+    if (!userToDelete.active)
+      await this.emailService.sendMail(
+        REFUSED_USER_TEMPLATE,
+        userToDelete.email,
+        REFUSED_USER_SUBJECT,
+        {
+          firstName: userToDelete?.profile?.firstName,
+          lastName: userToDelete?.profile?.lastName,
+        },
+      );
     return userToDelete.toDto();
   }
 
@@ -371,7 +404,7 @@ export class UsersService {
   async findByLogin(loginDTO: LoginDto): Promise<UserDto> {
     const { email, password } = loginDTO;
     const user = await this.repo.findOne({
-      where: { email },
+      where: { email, deletedAt: IsNull() },
       relations: [
         'role',
         'role.permissions',
@@ -411,6 +444,7 @@ export class UsersService {
     const { email } = loginDTO;
     const userByName = await this.repo.findOne({
       where: [{ email }],
+      withDeleted: true,
     });
     return userByName ? userByName.toDto() : null;
   }

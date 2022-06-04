@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SUBSCRIBER_TEMPLATE, SUBSCRIBER_SUBJECT } from '@shared/emails';
+import {
+  SUBSCRIBER_TEMPLATE,
+  SUBSCRIBER_SUBJECT,
+  ADMIN_USUBSCRIBE_SUBJECT,
+  ADMIN_USUBSCRIBE_TEMPLATE,
+} from '@shared/emails';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
+import { PageOptionsDto } from '@src/common/dto/page-options.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { EmailsService } from '@users/emails/emails.service';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
@@ -43,6 +49,25 @@ export class SubscriptionsService {
     return new SubscriptionsPageDto(subscribers.toDtos(), pageMetaDto);
   }
 
+  async findDeletedSubscriptions(pageOptionsDto: PageOptionsDto) {
+    const [subscriptions, subscriptionsCount] = await this.repo.findAndCount({
+      where: { deletedAt: Not(IsNull()) },
+      relations: [
+        'subscribedTo',
+        'subscribedTo.profile',
+        'subscriber',
+        'subscriber.profile',
+      ],
+      withDeleted: true,
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: subscriptionsCount,
+    });
+    return new SubscriptionsPageDto(subscriptions.toDtos(), pageMetaDto);
+  }
+
   async findSubscriptions(pageOptionsDto: SubscriptionsPageOptionsDto) {
     const [subscriptions, subscriptionsCount] = await this.repo.findAndCount({
       where: UtilsService.getOptions({ subscriber: pageOptionsDto.id }),
@@ -65,7 +90,13 @@ export class SubscriptionsService {
   async remove(id: string) {
     const subscriptionToDelete = await this.repo.findOne(id);
     if (subscriptionToDelete) {
-      await this.repo.delete(id);
+      await this.repo.softDelete(id);
+      await this.emailService.sendMail(
+        ADMIN_USUBSCRIBE_TEMPLATE,
+        process.env.ADMIN_EMAIL,
+        ADMIN_USUBSCRIBE_SUBJECT,
+        {},
+      );
       return subscriptionToDelete;
     }
   }
@@ -80,7 +111,7 @@ export class SubscriptionsService {
       );
     }
     if (subscriber && subscribedTo) {
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SUBSCRIBER_TEMPLATE,
         subscriber.email,
         SUBSCRIBER_SUBJECT,
@@ -89,7 +120,7 @@ export class SubscriptionsService {
           lastName: subscribedTo.profile?.lastName,
         },
       );
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SUBSCRIBER_TEMPLATE,
         subscribedTo.email,
         SUBSCRIBER_SUBJECT,

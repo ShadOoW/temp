@@ -9,10 +9,13 @@ export class AbstractDto {
   createdAt: Date;
   @Field(() => Date, { nullable: true })
   updatedAt: Date;
+  @Field(() => Date, { nullable: true })
+  deletedAt?: Date;
 
   constructor(entity: AbstractEntity) {
     this.id = entity.id;
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;
+    this.deletedAt = entity.deletedAt;
   }
 }

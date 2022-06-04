@@ -25,8 +25,8 @@ export class RequestDto extends AbstractDto {
   @Field(() => UserDto, { nullable: true })
   mentor?: UserEntity;
 
-  @Field(() => UserDto)
-  mentee: UserEntity;
+  @Field(() => UserDto, { nullable: true })
+  mentee?: UserEntity;
 
   constructor(request: RequestEntity) {
     super(request);

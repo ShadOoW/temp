@@ -13,6 +13,11 @@ import { RequestsPageDto } from './dto/requests-page.dto';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { UsersService } from '../users/users.service';
+import { EmailsService } from '../emails/emails.service';
+import {
+  REFUSED_REQUEST_SUBJECT,
+  REFUSED_REQUEST_TEMPLATE,
+} from '@src/shared/emails';
 
 @Injectable()
 export class RequestsService {
@@ -21,6 +26,7 @@ export class RequestsService {
     private readonly repo: Repository<RequestEntity>,
     private subscriptionService: SubscriptionsService,
     private usersService: UsersService,
+    private emailService: EmailsService,
   ) {}
 
   async canRequest(mentee: string): Promise<boolean> {
@@ -162,6 +168,27 @@ export class RequestsService {
     return this.findAll(condition, pageOptionsDto);
   }
 
+  async findAllRequests(
+    pageOptionsDto: RequestsPageOptionsDto,
+  ): Promise<RequestsPageDto> {
+    const [requests, requestsCount] = await this.repo.findAndCount({
+      relations: [
+        'to',
+        'from',
+        'to.profile',
+        'to.profile.coachingDomains',
+        'from.profile',
+        'from.profile.wantedDomains',
+      ],
+      ...UtilsService.pagination(pageOptionsDto),
+    });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: requestsCount,
+    });
+    return new RequestsPageDto(requests.toDtos(), pageMetaDto);
+  }
+
   // TODO add skip order page ...
   async findAll(
     condition,
@@ -232,6 +259,21 @@ export class RequestsService {
         subscriber: request.from,
         subscribedTo: request.to,
       });
+    }
+    if (status == 'refused') {
+      const subscriber = await this.usersService.findOne(request.from.id);
+      const subscribedTo = await this.usersService.findOne(request.to.id);
+      await this.emailService.sendMail(
+        REFUSED_REQUEST_TEMPLATE,
+        subscriber.email,
+        REFUSED_REQUEST_SUBJECT,
+        {
+          fromFirstName: subscriber.profile?.firstName,
+          fromLastName: subscriber.profile?.lastName,
+          firstName: subscribedTo.profile?.firstName,
+          lastName: subscribedTo.profile?.lastName,
+        },
+      );
     }
     await this.repo.save(createdRequest);
     return this.findOne(id);

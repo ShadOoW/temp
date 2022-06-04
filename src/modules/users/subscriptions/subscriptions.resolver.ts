@@ -1,4 +1,5 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { PageOptionsDto } from '@src/common/dto/page-options.dto';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
@@ -16,6 +17,14 @@ export class SubscriptionsResolver {
   ) {
     return this.subscriptionsService.create(createSubscriptionInput);
   }
+
+  @Query(() => SubscriptionsPageDto, { name: 'deletedSubscriptions' })
+  deletedSubscriptions(@Args() pageOptionsDto: PageOptionsDto) {
+    return this.subscriptionsService.findDeletedSubscriptions({
+      ...pageOptionsDto,
+    });
+  }
+
   // TODO Get user id
   @Query(() => SubscriptionsPageDto, { name: 'subscriptions' })
   findSubscriptions(

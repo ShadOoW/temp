@@ -4,6 +4,7 @@ export const ERROR_MESSAGES = {
   USER_NOT_EXISTS: 'Ce compte n’existe pas',
   USER_NOT_ACTIVATED: 'Votre compte compte n’est pas encore active',
   EXISTED: 'Already exists',
+  EXISTED_ACCOUNT: 'This account is already exists',
   NOT_EXISTED: 'Not exists',
   PRODUCT_NOT_FOUND: 'Product not found',
   NOT_OWNING_PRODUCT: 'You do not own this product',

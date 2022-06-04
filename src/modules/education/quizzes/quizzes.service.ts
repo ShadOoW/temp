@@ -89,13 +89,13 @@ export class QuizzesService {
       );
     }
     if (sendTo && createdBy) {
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         SENDQUIZ_TEMPLATE,
         sendTo.email,
         SENDQUIZ_SUBJECT,
         {
-          firstName: createdBy.profile?.firstName,
-          lastName: createdBy.profile?.lastName,
+          firstName: sendTo.profile?.firstName,
+          lastName: sendTo.profile?.lastName,
         },
       );
     }

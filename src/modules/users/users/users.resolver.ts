@@ -45,7 +45,7 @@ export class UsersResolver {
         email: existUser.email,
         sub: existUser.id,
       };
-      this.emailService.sendMail(
+      await this.emailService.sendMail(
         RESET_PASSWORD_TEMPLATE,
         email,
         RESET_PASSWORD_SUBJECT,
@@ -92,6 +92,11 @@ export class UsersResolver {
   @Query(() => UsersPageDto, { name: 'users' })
   findAll(@Args() pageOptionsDto: UsersPageOptionsDto) {
     return this.usersService.findAll(pageOptionsDto);
+  }
+
+  @Query(() => UsersPageDto, { name: 'deletedUsers' })
+  findAllDelete(@Args() pageOptionsDto: UsersPageOptionsDto) {
+    return this.usersService.findAllDelete(pageOptionsDto);
   }
 
   @Query(() => UsersPageDto, { name: 'suggestMentors' })

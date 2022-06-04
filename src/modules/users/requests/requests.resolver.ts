@@ -56,6 +56,13 @@ export class RequestsResolver {
     return this.requestsService.create(createPublicRequestInput);
   }
 
+  @Query(() => RequestsPageDto, { name: 'getRequests' })
+  findAllRequests(
+    @Args() args: RequestsPageOptionsDto,
+  ): Promise<RequestsPageDto> {
+    return this.requestsService.findAllRequests(args);
+  }
+
   @Query(() => RequestsPageDto, { name: 'requests' })
   findAll(@Args() args: RequestsPageOptionsDto): Promise<RequestsPageDto> {
     return this.requestsService.getRequests(args);
