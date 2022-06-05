@@ -1,5 +1,12 @@
 <p>Bonjour <%= firstName %> <%= lastName %>,</p>
-<p>Félicitation votre compte a été créer avec succès sur notre plateforme M2M.</p>
-<p>Un de nos équipe va procéder à l’activation de votre compte dans les plus brefs délais.</p>
-<p>Un email de confirmation sera envoyer une fois votre compte est activé.</p>
-<p>L'équipe M2M</p>
+<%if (role === 'mentee') { %>
+<p>Félicitations ! l’équipe de modération. Une fois celle-ci acceptée, vous recevrez un email de confirmation pour vous
+    connecter à votre espace Mentee.</p>
+<% } %>
+<%if (role === 'mentor') { %>
+<p>Félicitations ! Votre demande d’inscription au programme de Mentorat est prise en charge par l’équipe de modération.
+    Une fois celle-ci acceptée, vous recevrez un email de confirmation pour vous connecter à votre espace Mentor.</p>
+<% } %>
+<p>Cordialement</p>
+<p>L’équipe Mentoring MeM CGEM</p>
+<p>Veuillez ne pas répondre à ce message</p>

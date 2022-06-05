@@ -6,4 +6,5 @@ export interface EmailParams {
   createdAt?: string;
   active?: boolean;
   link?: string;
+  role?: string;
 }

@@ -1,8 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  SUBSCRIBER_TEMPLATE,
-  SUBSCRIBER_SUBJECT,
+  SUBSCRIBER_MENTOR_TEMPLATE,
+  SUBSCRIBER_MENTOR_SUBJECT,
+  SUBSCRIBER_MENTEE_TEMPLATE,
+  SUBSCRIBER_MENTEE_SUBJECT,
   ADMIN_USUBSCRIBE_SUBJECT,
   ADMIN_USUBSCRIBE_TEMPLATE,
 } from '@shared/emails';
@@ -112,21 +114,25 @@ export class SubscriptionsService {
     }
     if (subscriber && subscribedTo) {
       await this.emailService.sendMail(
-        SUBSCRIBER_TEMPLATE,
+        SUBSCRIBER_MENTEE_TEMPLATE,
         subscriber.email,
-        SUBSCRIBER_SUBJECT,
-        {
-          firstName: subscribedTo.profile?.firstName,
-          lastName: subscribedTo.profile?.lastName,
-        },
-      );
-      await this.emailService.sendMail(
-        SUBSCRIBER_TEMPLATE,
-        subscribedTo.email,
-        SUBSCRIBER_SUBJECT,
+        SUBSCRIBER_MENTEE_SUBJECT,
         {
           firstName: subscriber.profile?.firstName,
           lastName: subscriber.profile?.lastName,
+          fromFirstName: subscribedTo.profile?.firstName,
+          fromLastName: subscribedTo.profile?.lastName,
+        },
+      );
+      await this.emailService.sendMail(
+        SUBSCRIBER_MENTOR_TEMPLATE,
+        subscribedTo.email,
+        SUBSCRIBER_MENTOR_SUBJECT,
+        {
+          firstName: subscribedTo.profile?.firstName,
+          lastName: subscribedTo.profile?.lastName,
+          fromFirstName: subscriber.profile?.firstName,
+          fromLastName: subscriber.profile?.lastName,
         },
       );
     }

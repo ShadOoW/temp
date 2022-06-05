@@ -19,8 +19,6 @@ import {
   CREATE_USER_TEMPLATE,
   REFUSED_USER_SUBJECT,
   REFUSED_USER_TEMPLATE,
-  // CREATE_USER_SUBJECT,
-  // CREATE_USER_TEMPLATE,
 } from '@shared/emails';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { UsersPageDto } from './dto/users-page.dto';
@@ -62,6 +60,7 @@ export class UsersService {
         profile: createdProfile,
       });
       const savedUser = await this.repo.save(createdUser);
+      const getRegistedUser = await this.findOne(savedUser.id);
       await this.emailService.sendMail(
         CREATE_USER_TEMPLATE,
         savedUser.email,
@@ -69,6 +68,7 @@ export class UsersService {
         {
           firstName: createdProfile?.firstName,
           lastName: createdProfile?.lastName,
+          role: getRegistedUser.role.name,
         },
       );
       await this.emailService.sendMail(
@@ -80,7 +80,7 @@ export class UsersService {
           lastName: createdProfile?.lastName,
         },
       );
-      return await this.findOne(savedUser.id);
+      return getRegistedUser;
     } catch (error) {
       console.log(error);
     }
@@ -309,7 +309,7 @@ export class UsersService {
   async update(id: string, updateUserInput: UpdateUserInput): Promise<UserDto> {
     const { active } = updateUserInput;
     const user = await this.repo.findOne(id, {
-      relations: ['profile'],
+      relations: ['role', 'profile'],
     });
     if (!user) {
       throw new HttpException(
@@ -325,6 +325,7 @@ export class UsersService {
         {
           firstName: user.profile?.firstName,
           lastName: user.profile?.lastName,
+          role: user.role?.name,
         },
       );
     }

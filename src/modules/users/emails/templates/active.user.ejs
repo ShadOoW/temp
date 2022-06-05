@@ -1,5 +1,14 @@
 <p>Bonjour <%= firstName %> <%= lastName %>,</p>
-<p>Félicitation votre compte a été activé avec succès.</p>
-<p>Vous pouvez dès maintenants profiter de toutes les fonctionnalités disponible sur la plateforme M2M.</p>
+<%if (role === 'mentee') { %>
+<p>Félicitations! votre compte a été activé avec succès. Nous vous proposerons très prochainement des
+    Mentors correspondant à votre profil. Vous pouvez dès maintenant découvrir toutes les fonctionnalités disponibles au
+    sein de la plateforme Mentoring MeM CGEM. </p>
+<% } %>
+<%if (role === 'mentor') { %>
+<p>Félicitations! votre compte a été activé avec succès. Nous vous proposerons très prochainement des
+    Mentees correspondant à votre profil. Vous pouvez dès maintenant découvrir toutes les fonctionnalités disponibles au
+    sein de la plateforme Mentoring MeM CGEM. </p>
+<% } %>
 <p>Cordialement</p>
-<p>L'équipe M2M</p>
+<p>L’équipe Mentoring MeM CGEM</p>
+<p>Veuillez ne pas répondre à ce message</p>
