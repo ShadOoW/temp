@@ -383,6 +383,11 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const updatedUser = await this.repo.create({
+      id,
+      email: `${userToDelete.email}_deleted`,
+    });
+    await this.repo.save(updatedUser);
     await this.repo.softDelete(id);
     if (!userToDelete.active)
       await this.emailService.sendMail(

@@ -152,7 +152,6 @@ export class FilesService {
 
   async update(id: string, updateFileInput: UpdateFileInput) {
     const file = await this.repo.findOne({ id }, { relations: ['user'] });
-    console.log(file);
     if (!file) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
@@ -161,10 +160,15 @@ export class FilesService {
     }
     const createdFile = await this.repo.create({ id, ...updateFileInput });
     await this.repo.save(createdFile);
-    const sendEmailPromise = updateFileInput.sharedWith.map((sendTo) =>
-      this.sendFileEmail(file.user.id, sendTo),
-    );
-    await Promise.all(sendEmailPromise);
+    if (
+      updateFileInput.status !== 'deleted' &&
+      updateFileInput?.sharedWith.length > 0
+    ) {
+      const sendEmailPromise = updateFileInput.sharedWith.map((sendTo) =>
+        this.sendFileEmail(file.user.id, sendTo),
+      );
+      await Promise.all(sendEmailPromise);
+    }
     return await this.findOne(id);
   }
 

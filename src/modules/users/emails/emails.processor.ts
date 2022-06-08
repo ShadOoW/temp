@@ -51,7 +51,7 @@ export class EmailProcessor {
             Data: subject,
           },
         },
-        Source: 'M2M plateforme <noreply@abwebcommunity.com>',
+        Source: 'Mentoring MeM CGEM plateforme <noreply@abwebcommunity.com>',
       };
 
       const sendEmail = ses.sendEmail(email).promise();
