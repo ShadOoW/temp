@@ -46,6 +46,8 @@ import { FileTagsModule } from '@documents/file-tags/file-tags.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       installSubscriptionHandlers: true,
+      playground: false,
+      debug: false,
       context: ({ req, connection }) =>
         connection ? { req: connection.context } : { req },
     }),
@@ -94,3 +96,4 @@ import { FileTagsModule } from '@documents/file-tags/file-tags.module';
   exports: ['PUB_SUB'],
 })
 export class AppModule {}
+

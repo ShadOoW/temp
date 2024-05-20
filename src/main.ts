@@ -13,6 +13,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as redisIoAdapter from 'socket.io-redis';
+import * as multer from 'multer';
 
 const redisAdapter = redisIoAdapter({ host: 'localhost', port: 6379 });
 
@@ -34,6 +35,10 @@ async function bootstrap() {
   });
   app.useWebSocketAdapter(new RedisIoAdapter(app));
 
+  // configure multer middleware
+  const storage = multer.memoryStorage();
+  app.use(multer({ storage }).single('file'));
+
   app.setGlobalPrefix('api/v1');
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(
@@ -47,6 +52,7 @@ async function bootstrap() {
     SwaggerModule.setup('docs', app, document);
   }
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3001);
 }
 bootstrap();
+

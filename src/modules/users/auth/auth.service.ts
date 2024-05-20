@@ -51,6 +51,8 @@ export class AuthService {
    */
   async registerUser(registerUserInputs: CreateUserInput) {
     const { provider } = registerUserInputs;
+    delete registerUserInputs.isAdmin;
+    delete registerUserInputs.active;
     const findUser = await this.usersService.findByUserName(registerUserInputs);
     if (findUser) {
       if (provider === 'local')
@@ -80,3 +82,4 @@ export class AuthService {
     return user;
   }
 }
+

@@ -1,11 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { FilesService } from './files.service';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 import { CreateFileInput } from './dto/create-file.input';
-import { UpdateFileInput } from './dto/update-file.input';
 import { FileDto } from './dto/file.dto';
 import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
-import { User as CurrentUser } from '@src/decorators/user.decorator';
+import { UpdateFileInput } from './dto/update-file.input';
+import { FilesService } from './files.service';
 
 @Resolver(() => FileDto)
 export class FilesResolver {
@@ -54,3 +54,4 @@ export class FilesResolver {
     return this.filesService.remove(id);
   }
 }
+

@@ -23,10 +23,15 @@ export class SessionsResolver {
     @Args('createSessionInput') createSessionInput: CreateSessionInput,
     @CurrentUser() user,
   ) {
-    return this.sessionsService.create(createSessionInput).then((event) => {
-      this.eventEmitter.emit('session.created', { ...event, userId: user.id });
-      return event;
-    });
+    return this.sessionsService
+      .create(createSessionInput, user.role.name)
+      .then((event) => {
+        this.eventEmitter.emit('session.created', {
+          ...event,
+          userId: user.id,
+        });
+        return event;
+      });
   }
 
   @Query(() => SessionsPageDto, { name: 'sessionsM2m' })
@@ -84,10 +89,15 @@ export class SessionsResolver {
     @Args('updateSessionInput') updateSessionInput: UpdateSessionInput,
     @CurrentUser() user,
   ) {
-    return this.sessionsService.update(id, updateSessionInput).then((event) => {
-      this.eventEmitter.emit('session.updated', { ...event, userId: user.id });
-      return event;
-    });
+    return this.sessionsService
+      .update(id, user.role.name, updateSessionInput)
+      .then((event) => {
+        this.eventEmitter.emit('session.updated', {
+          ...event,
+          userId: user.id,
+        });
+        return event;
+      });
   }
 
   @Query(() => SessionsCalcsDto, { name: 'sessionCalcs' })
@@ -124,3 +134,4 @@ export class SessionsResolver {
     });
   }
 }
+

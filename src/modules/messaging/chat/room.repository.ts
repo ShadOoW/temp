@@ -41,6 +41,8 @@ export class RoomRepository extends Repository<RoomEntity> {
     nroom.members = [sender, receiver];
     nroom.isPrivate = true;
     nroom.name = this.generatePrivateRoomName(sender, receiver);
+    console.log('creating new room');
+    console.log({nroom});
     await this.save(nroom);
     return nroom;
   }
@@ -53,7 +55,16 @@ export class RoomRepository extends Repository<RoomEntity> {
       ],
     });
   }
-
+  async checkAllMessages(roomId, sender, receiver): Promise<RoomEntity> {
+    return await this.findOne(
+      { id: roomId },
+      {
+        where: [{ members: [sender, receiver] }],
+        relations: ['messages'],
+        order: { createdAt: -1 },
+      },
+    );
+  }
   generatePrivateRoomName(sender, receiver): string {
     if (sender.id.localeCompare(receiver.id) === -1) {
       // firstUsername is "<" (before) secondUsername
@@ -67,3 +78,4 @@ export class RoomRepository extends Repository<RoomEntity> {
     }
   }
 }
+

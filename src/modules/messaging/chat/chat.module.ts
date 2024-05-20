@@ -9,9 +9,16 @@ import { RoomRepository } from './room.repository';
 import { AuthModule } from '@users/auth/auth.module';
 import { ConfigService } from '@shared/services/config.service';
 import { MessagesResolver } from './messages.resolver';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
 
 @Module({
-  providers: [MessagesResolver, ChatGateway, ChatService, ConfigService],
+  providers: [
+    MessagesResolver,
+    ChatGateway,
+    ChatService,
+    ConfigService,
+    EmailsService,
+  ],
   imports: [
     TypeOrmModule.forFeature([MessageRepository, RoomRepository]),
     forwardRef(() => UsersModule),
@@ -20,3 +27,4 @@ import { MessagesResolver } from './messages.resolver';
   exports: [TypeOrmModule],
 })
 export class ChatModule {}
+

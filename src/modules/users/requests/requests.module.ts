@@ -15,6 +15,9 @@ import { UserEntity } from '../users/entities/user.entity';
 import { ProfileEntity } from '../profiles/entities/profile.entity';
 import { ProfilesService } from '../profiles/profiles.service';
 import { EmailsService } from '../emails/emails.service';
+import { ChatService } from '@modules/messaging/chat/chat.service';
+import { MessageRepository } from '@modules/messaging/chat/message.repository';
+import { RoomRepository } from '@modules/messaging/chat/room.repository';
 
 @Module({
   imports: [
@@ -31,6 +34,9 @@ import { EmailsService } from '../emails/emails.service';
     UsersService,
     RequestsResolver,
     RequestsService,
+    ChatService,
+    MessageRepository,
+    RoomRepository,
     SubscriptionsService,
     Listeners,
     EventsService,

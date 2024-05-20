@@ -1,9 +1,9 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsString,
-  IsOptional,
-  IsEmail,
   IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
   IsUUID,
 } from 'class-validator';
 // import { UserEntity } from '../entities/user.entity';
@@ -12,6 +12,7 @@ import { CreateProfileInput } from '@users/profiles/dto/create-profile.input';
 
 @InputType()
 export class CreateUserInput {
+  [x: string]: any;
   @Field(() => String)
   @IsString()
   username: string;
@@ -50,3 +51,4 @@ export class CreateUserInput {
   @Field(() => CreateProfileInput, { nullable: true })
   profile: any;
 }
+

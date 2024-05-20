@@ -20,6 +20,10 @@ import {
 } from '@shared/emails';
 import { User as CurrentUser } from '@src/decorators/user.decorator';
 import { ERROR_MESSAGES } from '@src/shared/ERROR_MESSAGES';
+import { CheckPolicies } from '@src/decorators/check-policies.decorator';
+import { AppAbility } from '../casl/casl-ability.factory';
+import { Actions } from '@src/shared/actions';
+import { UserEntity } from './entities/user.entity';
 
 @Resolver(() => UserDto)
 @UseGuards(PoliciesGuard)
@@ -52,16 +56,17 @@ export class UsersResolver {
         {
           link: `${
             process.env.HOST
-          }/auth/reset-password?token=${this.jwtService.sign(payload)}`,
+          }/platform/auth/reset-password?token=${this.jwtService.sign(payload)}`,
         },
       );
-      return true;
-    } else {
-      throw new HttpException(
-        ERROR_MESSAGES.NOT_EXISTED,
-        HttpStatus.BAD_REQUEST,
-      );
     }
+    return true;
+    // else {
+    //   throw new HttpException(
+    //     ERROR_MESSAGES.NOT_EXISTED,
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
   }
 
   @Query(() => Boolean, { name: 'passwordIsCorrect' })
@@ -80,7 +85,9 @@ export class UsersResolver {
     if (user.id)
       return await this.usersService.updatePassword(user.id, password);
   }
-
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Manage, UserEntity),
+  )
   @Mutation(() => UserDto)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
@@ -88,7 +95,7 @@ export class UsersResolver {
     return await this.usersService.create(createUserInput);
   }
 
-  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
   @Query(() => UsersPageDto, { name: 'users' })
   findAll(@Args() pageOptionsDto: UsersPageOptionsDto) {
     return this.usersService.findAll(pageOptionsDto);
@@ -115,7 +122,9 @@ export class UsersResolver {
     return this.usersService.findMentorsByDomain(pageOptionsDto, domainId);
   }
 
-  // @CheckPolicies((ability: AppAbility) => ability.can(Actions.Read, UserEntity))
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Actions.Manage, UserEntity),
+  )
   @Query(() => UsersPageDto, { name: 'usersByRole' })
   findByRole(
     @Args() pageOptionsDto: UsersPageOptionsDto,
@@ -151,7 +160,8 @@ export class UsersResolver {
   //   ability.can(Actions.Delete, UserEntity),
   // )
   @Mutation(() => UserDto)
-  removeUser(@Args('id', { type: () => String }) id: string) {
-    return this.usersService.remove(id);
+  async removeUser(@Args('id', { type: () => String }) id: string) {
+    return await this.usersService.remove(id);
   }
 }
+

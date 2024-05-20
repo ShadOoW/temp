@@ -22,3 +22,4 @@ import { ProfileEntity } from '@src/modules/users/profiles/entities/profile.enti
   ],
 })
 export class SessionsModule {}
+

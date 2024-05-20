@@ -8,6 +8,7 @@ import { UserEntity } from '@users/users/entities/user.entity';
 import { ProfilesService } from '@src/modules/users/profiles/profiles.service';
 import { EmailsService } from '@src/modules/users/emails/emails.service';
 import { ProfileEntity } from '@src/modules/users/profiles/entities/profile.entity';
+import { UploadController } from './upload.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FileEntity, UserEntity, ProfileEntity])],
@@ -18,5 +19,7 @@ import { ProfileEntity } from '@src/modules/users/profiles/entities/profile.enti
     ProfilesService,
     EmailsService,
   ],
+  controllers: [UploadController],
 })
 export class FilesModule {}
+

@@ -7,6 +7,8 @@ import {
   SUBSCRIBER_MENTEE_SUBJECT,
   ADMIN_USUBSCRIBE_SUBJECT,
   ADMIN_USUBSCRIBE_TEMPLATE,
+  UNSUBSCRIBE_TO_SUBJECT,
+  UNSUBSCRIBE_TO_TEMPLATE,
 } from '@shared/emails';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
@@ -19,6 +21,9 @@ import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
 import { SubscriptionsPageDto } from './dto/subscriptions-page.dto';
 import { SubscriptionEntity } from './entities/subscription.entity';
+import { ChatService } from '@modules/messaging/chat/chat.service';
+import { MENTOR_MENTEE_WELCOME } from '@shared/chat';
+import { UserEntity } from '@users/users/entities/user.entity';
 
 @Injectable()
 export class SubscriptionsService {
@@ -26,6 +31,7 @@ export class SubscriptionsService {
     @InjectRepository(SubscriptionEntity)
     private readonly repo: Repository<SubscriptionEntity>,
     private emailService: EmailsService,
+    private chatService: ChatService,
     private usersService: UsersService,
   ) {}
 
@@ -33,6 +39,7 @@ export class SubscriptionsService {
     const createdSubscription = await this.repo.create(createSubscriptionInput);
     const { subscriber, subscribedTo } = createSubscriptionInput;
     await this.sendSubscriptionEmail(subscriber.id, subscribedTo.id);
+    await this.sendSubscriptionMessage(subscriber, subscribedTo);
     return (await this.repo.save(createdSubscription)).toDto();
   }
 
@@ -89,9 +96,23 @@ export class SubscriptionsService {
     });
   }
 
-  async remove(id: string) {
-    const subscriptionToDelete = await this.repo.findOne(id);
+  async remove(id: string, role: string) {
+    const subscriptionToDelete = await this.repo.findOne(id, {
+      relations: [
+        'subscriber',
+        'subscribedTo',
+        'subscribedTo.profile',
+        'subscriber.profile',
+      ],
+    });
     if (subscriptionToDelete) {
+      if (role == 'mentee') {
+        await this.sendEmailToUnsubscribed(
+          subscriptionToDelete.subscribedTo.id,
+        );
+      } else if (role == 'mentor') {
+        await this.sendEmailToUnsubscribed(subscriptionToDelete.subscriber.id);
+      }
       await this.repo.softDelete(id);
       await this.emailService.sendMail(
         ADMIN_USUBSCRIBE_TEMPLATE,
@@ -134,6 +155,46 @@ export class SubscriptionsService {
           fromFirstName: subscriber.profile?.firstName,
           fromLastName: subscriber.profile?.lastName,
         },
+      );
+    }
+  }
+  async sendEmailToUnsubscribed(Id: any) {
+    const user = await this.usersService.findOne(Id);
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return await this.emailService.sendMail(
+      UNSUBSCRIBE_TO_TEMPLATE,
+      user?.email,
+      UNSUBSCRIBE_TO_SUBJECT,
+      {
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+      },
+    );
+  }
+
+  async sendSubscriptionMessage(
+    subscriber: UserEntity,
+    subscribedTo: UserEntity,
+  ) {
+    const subscriberDto = await this.usersService.findOne(subscriber.id);
+    const subscribedToDto = await this.usersService.findOne(subscribedTo.id);
+    if (!subscriberDto || !subscribedToDto) {
+      console.log('HTTP EXCEPTION');
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (subscriber && subscribedTo) {
+      await this.chatService.createPrivateMessage(
+        subscribedTo,
+        subscriberDto,
+        MENTOR_MENTEE_WELCOME,
       );
     }
   }

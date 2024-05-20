@@ -15,8 +15,11 @@ import { MessagesPageOptionsDto } from './dto/messages-page-options.dto';
 import { UtilsService } from '@src/providers/utils.service';
 import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { MessagesPageDto } from './dto/messages-page.dto';
-// import { MessageDto } from './dto/message.dto';
 
+// import { MessageDto } from './dto/message.dto';
+import { MESSAGE_TO_TEMPLATE, MESSAGE_TO_SUBEJCT } from '@shared/emails';
+import { EmailsService } from '@src/modules/users/emails/emails.service';
+import { isObject } from 'class-validator';
 @Injectable()
 export class ChatService {
   constructor(
@@ -24,6 +27,7 @@ export class ChatService {
     public readonly messageRepository: MessageRepository,
     @InjectRepository(RoomRepository)
     public readonly roomRepository: RoomRepository,
+    public readonly emailService: EmailsService,
   ) {}
 
   // deprecated
@@ -46,16 +50,40 @@ export class ChatService {
       receiver,
     );
     if (!room) {
+        console.log({sender, receiver});
       room = await this.roomRepository.createPrivateRoom(sender, receiver);
+        console.log('room doesnt exist');
+        console.log({room});
     }
-    const createdMsg = await this.messageRepository.save({
-      text: msg,
-      room: room,
-      sender: sender,
-    });
+    let createdMsg;
+    try {
+      createdMsg = await this.messageRepository.save({
+        text: msg,
+        room: room,
+        sender: sender,
+      });
+    } catch (error) {
+      console.log({ error });
+    }
+    if (createdMsg) {
+      console.log({ createdMsg });
+      // const messages = await this.roomRepository.checkAllMessages(
+      //   room.id,
+      //   sender,
+      //   receiver,
+      // );
+      await this.emailService.sendMail(
+        MESSAGE_TO_TEMPLATE,
+        receiver.email,
+        MESSAGE_TO_SUBEJCT,
+        {
+          firstName: receiver.profile.firstName,
+          lastName: receiver.profile.lastName,
+        },
+      );
+    }
     return createdMsg;
   }
-
   async findCreatedMsg(id) {
     const findCreatedMsg = await this.messageRepository.findOne(id, {
       relations: ['sender', 'sender.profile'],

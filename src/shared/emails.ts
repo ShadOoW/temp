@@ -34,3 +34,20 @@ export const SENDFILE_SUBJECT =
 export const SENDQUIZ_TEMPLATE = 'create.sendquiz';
 export const SENDQUIZ_SUBJECT =
   'Mentoring MeM CGEM plateforme : Vous avez un nouveau questionnaire';
+//? create request send email to admin
+export const REQUEST_TO_ADMIN_TEMPLATE = 'create.request';
+export const REQUEST_TO_ADMIN_SUBJECT =
+  'Vous avez une nouvelle demande de mentorat';
+
+// send email to user if session is acccepted
+export const SESSION_ACCEPTED_TEMPLATE = 'accept.session';
+export const SESSION_ACCEPTED_SUBJECT =
+  'Mentoring MeM CGEM plateforme : Votre Session a été acceptée ';
+// send email to user if not logged in to platform after getting a message,
+export const MESSAGE_TO_TEMPLATE = 'create.message';
+export const MESSAGE_TO_SUBEJCT =
+  'Mentoring MeM CGEM plateforme : Vous avez un nouveau message';
+// send email to user if he unsubscribed
+export const UNSUBSCRIBE_TO_TEMPLATE = 'unsubscribe.user';
+export const UNSUBSCRIBE_TO_SUBJECT = 'Mentoring MeM CGEM plateforme : Fin de la mission';
+

@@ -1,5 +1,6 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PageOptionsDto } from '@src/common/dto/page-options.dto';
+import { User as CurrentUser } from '@src/decorators/user.decorator';
 import { CreateSubscriptionInput } from './dto/create-subscription.input';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionsPageOptionsDto } from './dto/subscriptions-page-options.dto';
@@ -53,7 +54,9 @@ export class SubscriptionsResolver {
   @Mutation(() => SubscriptionDto)
   removeSubscription(
     @Args('id', { type: () => String }) id: string,
+    @CurrentUser() user,
   ): Promise<SubscriptionDto> {
-    return this.subscriptionsService.remove(id);
+    return this.subscriptionsService.remove(id, user.role.name);
   }
 }
+

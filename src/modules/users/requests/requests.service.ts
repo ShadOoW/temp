@@ -17,6 +17,8 @@ import { EmailsService } from '../emails/emails.service';
 import {
   REFUSED_REQUEST_SUBJECT,
   REFUSED_REQUEST_TEMPLATE,
+  REQUEST_TO_ADMIN_SUBJECT,
+  REQUEST_TO_ADMIN_TEMPLATE,
 } from '@src/shared/emails';
 
 @Injectable()
@@ -79,6 +81,9 @@ export class RequestsService {
         proposition,
       });
       const savedRequest = await this.repo.save(createdRequest);
+      // email to admin when request is created
+
+      await this.send_request_email_to_admin(savedRequest.from);
       return this.findOne(savedRequest.id);
     } catch (error) {
       throw new HttpException(
@@ -286,4 +291,23 @@ export class RequestsService {
       return requestToDelete;
     }
   }
+  async send_request_email_to_admin(Id: any) {
+    const user = await this.usersService.findOne(Id);
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return await this.emailService.sendMail(
+      REQUEST_TO_ADMIN_TEMPLATE,
+      process.env.ADMIN_EMAIL,
+      REQUEST_TO_ADMIN_SUBJECT,
+      {
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+      },
+    );
+  }
 }
+

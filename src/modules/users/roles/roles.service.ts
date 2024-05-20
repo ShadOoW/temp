@@ -27,7 +27,7 @@ export class RolesService {
     return (await this.repo.save(createdRole)).toDto();
   }
 
-  async findByNames(names) {
+  async findByNames(names: any) {
     return (
       await this.repo.find({
         where: { name: In(names) },
@@ -71,3 +71,4 @@ export class RolesService {
     return roleToDelete.toDto();
   }
 }
+

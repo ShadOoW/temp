@@ -2,8 +2,6 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
-// import { UserEntity } from './entities/user.entity';
-// import { createQueryBuilder, Like, Repository } from 'typeorm';
 import { ERROR_MESSAGES } from '@shared/ERROR_MESSAGES';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../auth/dto/login.dto';
@@ -383,9 +381,10 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const date = new Date();
     const updatedUser = await this.repo.create({
       id,
-      email: `${userToDelete.email}_deleted`,
+      email: `${userToDelete.email}_deleted_${date.getTime()}`,
     });
     await this.repo.save(updatedUser);
     await this.repo.softDelete(id);
@@ -455,3 +454,4 @@ export class UsersService {
     return userByName ? userByName.toDto() : null;
   }
 }
+

@@ -31,16 +31,18 @@ export class CaslAbilityFactory {
       Ability<[Actions, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
     if (user) {
-      const { permissions, profile } = user;
+      const { role, profile } = user;
       if (user.isAdmin) can(Actions.Manage, 'all');
 
       // authorize RUD by check userId
       if (args.id === user.id) can([Actions.Update], UserEntity);
 
       // authorize role management
-      // if (permissions.some((p) => p.name === 'manage:role'))
-      //   can(Actions.Manage, RoleEntity);
+      if (role.permissions.some((p) => p.name === 'manage:user'))
+        can(Actions.Manage, UserEntity);
 
+      if (role.permissions.some((p) => p.name === 'create:user'))
+        can(Actions.Create, UserEntity);
       // // authorize permission management
       // if (permissions.some((p) => p.name === 'manage:permission'))
       //   can(Actions.Manage, Permission);
@@ -71,3 +73,4 @@ export class CaslAbilityFactory {
     });
   }
 }
+

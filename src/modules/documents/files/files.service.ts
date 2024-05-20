@@ -12,15 +12,54 @@ import { FilesPageOptionsDto } from './dto/files-page-options.dto';
 import { FilesPageDto } from './dto/files-page.dto';
 import { UpdateFileInput } from './dto/update-file.input';
 import { FileEntity } from './entities/file.entity';
+import * as multer from 'multer';
+import { s3 } from '@src/aws';
 
 @Injectable()
 export class FilesService {
+  private readonly storage = multer.memoryStorage();
+  private readonly upload = multer({ storage: this.storage });
+
   constructor(
     @InjectRepository(FileEntity) private readonly repo: Repository<FileEntity>,
     private usersService: UsersService,
     private emailService: EmailsService,
   ) {}
 
+  public getFileFilter(fieldName: string) {
+    return this.upload.fields([{ name: fieldName, maxCount: 1 }]);
+  }
+
+  public async uploadFile(file, userId) {
+    const { originalname, buffer } = file;
+
+    const params = {
+      ACL: 'public-read',
+      Body: buffer,
+      Bucket: process.env.S3_BUCKET,
+      Key: `${userId}/${originalname}`,
+    };
+    console.log(s3);
+    try {
+      await s3.upload(params).promise();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    const url = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${userId}/${originalname}`;
+    return url;
+  }
+
+  public async deleteFile(fileId) {
+    try {
+      const params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: fileId,
+      };
+      await s3.deleteObject(params).promise();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
   async create(createFileInput: CreateFileInput, user: any) {
     const createdFile = await this.repo.create({ ...createFileInput, user });
     const savedFile = await this.repo.save(createdFile);
@@ -200,3 +239,4 @@ export class FilesService {
     }
   }
 }
+

@@ -12,7 +12,12 @@ import { PageMetaDto } from '@src/common/dto/page-meta.dto';
 import { SessionsPageDto } from './dto/sessions-page.dto';
 import { UsersService } from '@src/modules/users/users/users.service';
 import { EmailsService } from '@src/modules/users/emails/emails.service';
-import { SESSION_SUBJECT, SESSION_TEMPLATE } from '@src/shared/emails';
+import {
+  SESSION_ACCEPTED_SUBJECT,
+  SESSION_ACCEPTED_TEMPLATE,
+  SESSION_SUBJECT,
+  SESSION_TEMPLATE,
+} from '@src/shared/emails';
 
 @Injectable()
 export class SessionsService {
@@ -23,13 +28,18 @@ export class SessionsService {
     private emailService: EmailsService,
   ) {}
 
-  async create(createSessionInput: CreateSessionInput): Promise<SessionDto> {
+  async create(
+    createSessionInput: CreateSessionInput,
+    role: string,
+  ): Promise<SessionDto> {
     const createdSession = await this.repo.create(createSessionInput);
     const savedSession = await this.repo.save(createdSession);
-    await this.sendSessionEmail(
-      createSessionInput.mentee,
-      createSessionInput.mentor,
-    );
+    if (role == 'mentee') {
+      await this.sendSessionEmail(createSessionInput.mentor);
+    } else if (role == 'mentor') {
+      await this.sendSessionEmail(createSessionInput.mentee);
+    }
+
     return this.findOne(savedSession.id);
   }
   // TODO WHERE & PAGE OPTIONS
@@ -129,7 +139,11 @@ export class SessionsService {
     return session ? session.toDtos() : null;
   }
 
-  async update(id: string, updateSessionInput: UpdateSessionInput) {
+  async update(
+    id: string,
+    role: string,
+    updateSessionInput: UpdateSessionInput,
+  ) {
     const session = await this.repo.findOne({ id });
     if (!session) {
       throw new HttpException(
@@ -145,8 +159,19 @@ export class SessionsService {
       ...updateSessionInput,
       duration,
     });
-    await this.repo.save(createdSession);
-    return this.findOne(id);
+    const updatedSessionToAccepted = await this.repo.save(createdSession);
+
+    if (updatedSessionToAccepted.status === 'accepted') {
+      const users = await this.repo.findOne(id, {
+        relations: ['mentee', 'mentor', 'mentee.profile', 'mentor.profile'],
+      });
+      if (role == 'mentee') {
+        await this.sendSessionEmailAccepted(users.mentor.id);
+      } else if (role == 'mentor') {
+        await this.sendSessionEmailAccepted(users.mentee.id);
+      }
+    }
+    return this.findOne(id); 
   }
 
   async remove(id: string) {
@@ -157,34 +182,41 @@ export class SessionsService {
     }
   }
 
-  async sendSessionEmail(menteeId: any, mentorId: any) {
-    const mentee = await this.usersService.findOne(menteeId);
-    const mentor = await this.usersService.findOne(mentorId);
-    if (!mentee || !mentor) {
+  async sendSessionEmail(Id: any) {
+    const user = await this.usersService.findOne(Id);
+    if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.NOT_EXISTED,
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (mentee && mentor) {
-      await this.emailService.sendMail(
-        SESSION_TEMPLATE,
-        mentee.email,
-        SESSION_SUBJECT,
-        {
-          firstName: mentee.profile?.firstName,
-          lastName: mentee.profile?.lastName,
-        },
-      );
-      await this.emailService.sendMail(
-        SESSION_TEMPLATE,
-        mentor.email,
-        SESSION_SUBJECT,
-        {
-          firstName: mentor.profile?.firstName,
-          lastName: mentor.profile?.lastName,
-        },
+    return await this.emailService.sendMail(
+      SESSION_TEMPLATE,
+      user?.email,
+      SESSION_SUBJECT,
+      {
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+      },
+    );
+  }
+  async sendSessionEmailAccepted(Id: any) {
+    const user = await this.usersService.findOne(Id);
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.NOT_EXISTED,
+        HttpStatus.BAD_REQUEST,
       );
     }
+    return await this.emailService.sendMail(
+      SESSION_ACCEPTED_TEMPLATE,
+      user?.email,
+      SESSION_ACCEPTED_SUBJECT,
+      {
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+      },
+    );
   }
 }
+
